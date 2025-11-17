@@ -5,6 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yu-Gi-Oh! XYZ - Banlist</title>
     <link rel="stylesheet" href="../estilos/styles.css" />
+    <script src="../JS/script.js"></script>
+    <style>
+        .external-links {
+            text-align: center;
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .external-link {
+            background: var(--primary);
+            color: var(--dark);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(246, 208, 0, 0.3);
+        }
+        
+        .external-link:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(246, 208, 0, 0.4);
+        }
+        
+        .file-info {
+            text-align: center;
+            color: var(--text-secondary);
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
 
@@ -21,8 +59,19 @@
 
 <section class="container">
     <h2 class="title">Lista de Cartas Prohibidas / Limitadas</h2>
-    <p class="subtitle">Actualizado: Enero 2025</p>
-
+    
+    <!-- Enlaces externos mejorados -->
+    <div class="external-links">
+        <a href="https://www.ygoprog.com/BanlistBuilder" class="external-link" target="_blank">
+            🛠️ Banlist Builder
+        </a>
+        
+        <!-- Sección de descarga -->
+        <button class="download-btn" onclick="descargarBanlist()">
+            ⬇️ Descargar Archivo de Banlist
+        </button>
+    </div>
+    
     <div class="card">
         <h3>Prohibidas</h3>
         <ul>
