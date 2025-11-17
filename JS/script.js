@@ -2,7 +2,7 @@
 
 function descargarBanlist() {
     // En lugar de tener el contenido hardcodeado, ahora apunta a tu archivo
-    const url = './banlist/XYZ_banlist.lflist.conf';
+    const url = '../banlist/!XYZ_banlist.lflist.conf';
     
     // Crear un enlace temporal para la descarga
     const a = document.createElement('a');
@@ -55,3 +55,4 @@ if (!document.querySelector('#notificacion-styles')) {
 
 
 console.log('Script de banlist cargado correctamente');
+
