@@ -123,7 +123,7 @@ header h1 {
 }
 
 .card:hover {
-    transform: translateY(-5px) rotate(1deg);
+    transform: translateY(-5px); /* quitado rotate */
     box-shadow: 0 0 25px var(--accent);
 }
 
@@ -132,6 +132,32 @@ header h1 {
     color: var(--primary);
     margin-bottom: 1rem;
     font-size: 1.6rem;
+}
+
+/* ===========================
+   IMÁGENES RESPONSIVAS
+   =========================== */
+.card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* ===========================
+   LISTAS EN CARDS (Reglas)
+   =========================== */
+/* Listas dentro de las cards centradas */
+.card ul {
+    list-style-position: inside;   /* el punto se alinea con el texto */
+    padding-left: 0;               /* elimina sangría extra */
+    margin: 0 auto;                /* centra el bloque dentro de la card */
+    text-align: center;            /* centra el texto */
+}
+
+.card li {
+    margin: 0.4rem 0;
 }
 
 /* ===========================
@@ -169,7 +195,7 @@ body.noticias-full {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center; /* centra los textos */
+    align-items: center;
     text-align: center;
     padding: 1rem;
 }
@@ -207,7 +233,7 @@ body.noticias-full {
 }
 
 .videos-grid iframe:hover {
-    transform: scale(1.08) rotateY(5deg);
+    transform: scale(1.08); /* quitado rotateY */
 }
 
 /* ===========================
