@@ -4,10 +4,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@400;700&display=swap');
 
 :root {
-    --primary: #f6d000;       /* dorado */
-    --secondary: #7a5cff;     /* violeta */
-    --accent: #ff3c7d;        /* rosa mágico */
-    --dark: #0b0b0f;          /* fondo oscuro */
+    --primary: #f6d000;
+    --primary-dark: #c9aa00;
+    --secondary: #7a5cff;
+    --accent: #ff3c7d;
+    --dark: #0b0b0f;
     --card-bg: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
     --text: #ffffff;
     --text-secondary: #cccccc;
@@ -75,7 +76,8 @@ header h1 {
     position: relative;
 }
 
-.menu a:hover {
+.menu a:hover,
+.menu a.active {
     background: var(--accent);
     color: #fff;
     box-shadow: 0 0 15px var(--accent);
@@ -88,7 +90,7 @@ header h1 {
 .hero {
     padding: 6rem 2rem;
     text-align: center;
-    background: linear-gradient(rgba(13, 13, 13, 0.8), rgba(13, 13, 13, 0.9)), 
+    background: linear-gradient(rgba(13, 13, 13, 0.8), rgba(13, 13, 13, 0.9)),
                 url('https://images8.alphacoders.com/132/1327981.jpeg') center/cover;
     position: relative;
 }
@@ -109,6 +111,17 @@ header h1 {
 }
 
 /* ===========================
+   CONTENEDOR PRINCIPAL
+   =========================== */
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    flex: 1;
+}
+
+/* ===========================
    CARDS
    =========================== */
 .card {
@@ -123,7 +136,7 @@ header h1 {
 }
 
 .card:hover {
-    transform: translateY(-5px); /* quitado rotate */
+    transform: translateY(-5px);
     box-shadow: 0 0 25px var(--accent);
 }
 
@@ -148,16 +161,102 @@ header h1 {
 /* ===========================
    LISTAS EN CARDS (Reglas)
    =========================== */
-/* Listas dentro de las cards centradas */
 .card ul {
-    list-style-position: inside;   /* el punto se alinea con el texto */
-    padding-left: 0;               /* elimina sangría extra */
-    margin: 0 auto;                /* centra el bloque dentro de la card */
-    text-align: center;            /* centra el texto */
+    list-style-position: inside;
+    padding-left: 0;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .card li {
     margin: 0.4rem 0;
+}
+
+/* ===========================
+   BOTÓN DE DESCARGA
+   =========================== */
+.download-btn {
+    display: inline-block;
+    background: var(--primary);
+    color: var(--dark);
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(246, 208, 0, 0.4);
+    font-family: 'Roboto', sans-serif;
+}
+
+.download-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(246, 208, 0, 0.6);
+}
+
+/* ===========================
+   SECCIÓN DE DESCARGA (en cards)
+   =========================== */
+.download-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.download-info {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+}
+
+/* ===========================
+   ENLACES EXTERNOS (Banlist)
+   =========================== */
+.external-links {
+    text-align: center;
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.external-link {
+    background: var(--primary);
+    color: var(--dark);
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(246, 208, 0, 0.3);
+}
+
+.external-link:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(246, 208, 0, 0.4);
+}
+
+/* ===========================
+   GRID DE TORNEOS
+   =========================== */
+.torneos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.torneos-grid .card {
+    margin: 0;
 }
 
 /* ===========================
@@ -233,7 +332,7 @@ body.noticias-full {
 }
 
 .videos-grid iframe:hover {
-    transform: scale(1.08); /* quitado rotateY */
+    transform: scale(1.08);
 }
 
 /* ===========================
@@ -246,6 +345,7 @@ footer {
     border-top: 3px solid var(--primary);
     color: var(--text-secondary);
     font-size: 0.9rem;
+    margin-top: auto;
 }
 
 /* ===========================
@@ -269,6 +369,9 @@ footer {
         width: 45%;
         height: 180px;
     }
+    .torneos-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
 }
 
 @media (max-width: 480px) {
@@ -289,5 +392,12 @@ footer {
     .videos-grid iframe {
         width: 100%;
         height: 200px;
+    }
+    .torneos-grid {
+        grid-template-columns: 1fr;
+    }
+    .external-links {
+        flex-direction: column;
+        align-items: center;
     }
 }
