@@ -115,10 +115,34 @@ header h1 {
    =========================== */
 .container {
     width: 100%;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1.5rem;
     flex: 1;
+}
+
+/* ===========================
+   GRID DE CARDS
+   =========================== */
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    align-items: stretch;
+}
+
+.container--single {
+    grid-template-columns: 1fr;
+    max-width: 700px;
+    flex: none;
+    align-self: flex-start;
+}
+
+/* Títulos y subtítulos ocupan todo el ancho */
+.container .title,
+.container .subtitle,
+.container .external-links {
+    grid-column: 1 / -1;
 }
 
 /* ===========================
@@ -127,12 +151,15 @@ header h1 {
 .card {
     background: var(--card-bg);
     padding: 2rem;
-    margin: 1.5rem 0;
+    margin: 0;
     border-radius: 12px;
     border: 2px solid var(--secondary);
     box-shadow: 0 0 20px rgba(122, 92, 255, 0.4);
     transition: all 0.3s ease;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .card:hover {
@@ -145,6 +172,10 @@ header h1 {
     color: var(--primary);
     margin-bottom: 1rem;
     font-size: 1.6rem;
+}
+
+.card-full {
+    grid-column: 1 / -1;
 }
 
 /* ===========================
@@ -369,8 +400,12 @@ footer {
         width: 45%;
         height: 180px;
     }
+    /* 1 columna en tablet */
+    .container {
+        grid-template-columns: 1fr;
+    }
     .torneos-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -392,6 +427,9 @@ footer {
     .videos-grid iframe {
         width: 100%;
         height: 200px;
+    }
+    .container {
+        grid-template-columns: 1fr;
     }
     .torneos-grid {
         grid-template-columns: 1fr;
