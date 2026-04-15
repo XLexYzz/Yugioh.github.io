@@ -1,31 +1,135 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yu-Gi-Oh! XYZ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>Yu-Gi-Oh! XYZ - Tierlist</title>
+    <meta name="description" content="Tierlist interactiva de Yu-Gi-Oh! XYZ para comparar categorías de mazos y ver imágenes de cada nivel de fuerza." />
+    <meta property="og:title" content="Yu-Gi-Oh! XYZ - Tierlist" />
+    <meta property="og:description" content="Tierlist interactiva de Yu-Gi-Oh! XYZ para comparar categorías de mazos y ver imágenes de cada nivel de fuerza." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f5b800" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../estilos/styles.css" />
+    <script src="../JS/script.js" defer></script>
 </head>
 <body>
 
 <header>
-    <h1>Tierlist</h1>
-    <nav class="menu">
-        <a href="../index.html">Inicio</a>
-        <a href="../porfolio/torneos.html">Torneos</a>
-        <a href="../porfolio/banlist.html">Banlist</a>
-        <a href="../porfolio/reglas.html">Reglas</a>
-        <a href="./tierlist.html" class="active">Tierlist</a>
-    </nav>
-</header>
-<section class="container">
-    <div class="card card-full">
-        <img src="../tierlist/tierlist.png">
+    <div class="header-inner">
+        <h1>Tierlist</h1>
+        <nav class="menu" aria-label="Menú principal">
+            <a href="../index.html">Inicio</a>
+            <a href="./torneos.html">Torneos</a>
+            <a href="./banlist.html">Banlist</a>
+            <a href="./reglas.html">Reglas</a>
+            <a href="./tierlist.html">Tierlist</a>
+        </nav>
     </div>
-</section>
+</header>
+
+<main>
+    <section class="section animate-up">
+        <div class="section-head">
+            <h2>Tierlist interactiva</h2>
+            <p>Filtra por nivel y mira los jugadores por imagen en cada categoría.</p>
+        </div>
+
+        <div class="tierlist-header">
+            <p>Haz clic en una categoría para verla sola.</p>
+            <div class="tierlist-filter">
+                <button class="active" data-tier="all">Todo</button>
+                <button data-tier="nah">NAH I’D WIN</button>
+                <button data-tier="special">Special Grade</button>
+                <button data-tier="grade1">Grade 1</button>
+                <button data-tier="grade2">Grade 2</button>
+                <button data-tier="semigrade2">Semi Grade 2</button>
+                <button data-tier="ok">Ok</button>
+                <button data-tier="meh">MEH I’D LOSE</button>
+            </div>
+        </div>
+
+        <div class="tierlist-categories">
+            <section class="tierlist-category" data-tier="nah">
+                <h3>NAH I’D WIN</h3>
+                <div class="tierlist-grid">
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Tier NAH" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Tier NAH" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Tier NAH" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Tier NAH" /></figure>
+                </div>
+            </section>
+
+            <section class="tierlist-category" data-tier="special">
+                <h3>Special Grade</h3>
+                <div class="tierlist-grid">
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Tier Special" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Tier Special" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Tier Special" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Tier Special" /></figure>
+                </div>
+            </section>
+
+            <section class="tierlist-category" data-tier="grade1">
+                <h3>Grade 1</h3>
+                <div class="tierlist-grid">
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Grade 1" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Grade 1" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Grade 1" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Grade 1" /></figure>
+                </div>
+            </section>
+
+            <section class="tierlist-category" data-tier="grade2">
+                <h3>Grade 2</h3>
+                <div class="tierlist-grid">
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Grade 2" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Grade 2" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Grade 2" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Grade 2" /></figure>
+                </div>
+            </section>
+
+            <section class="tierlist-category" data-tier="semigrade2">
+                <h3>Semi Grade 2</h3>
+                <div class="tierlist-grid">
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Semi Grade 2" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Semi Grade 2" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Semi Grade 2" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Semi Grade 2" /></figure>
+                </div>
+            </section>
+
+            <section class="tierlist-category" data-tier="ok">
+                <h3>Ok</h3>
+                <div class="tierlist-grid">
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Ok" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Ok" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Ok" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Ok" /></figure>
+                </div>
+            </section>
+
+            <section class="tierlist-category" data-tier="meh">
+                <h3>MEH I’D LOSE</h3>
+                <div class="tierlist-grid">
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Meh" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Meh" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Meh" /></figure>
+                    <figure><img src="../tierlist/tierlist.png" alt="Jugador Meh" /></figure>
+                </div>
+            </section>
+        </div>
+    </section>
+</main>
 
 <footer>
-    <p>© 2026 Yu-Gi-Oh! XYZ</p>
+    <div class="footer-content">
+        <p class="footer-copyright">© 2026 Yu-Gi-Oh! XYZ</p>
+    </div>
 </footer>
+
 </body>
 </html>

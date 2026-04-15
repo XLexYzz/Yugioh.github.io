@@ -1,53 +1,134 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <title>Yu-Gi-Oh! XYZ</title>
+    <meta name="description" content="Yu-Gi-Oh! XYZ es tu portal de Yu-Gi-Oh! con torneos, banlist, reglas y análisis del meta. Usa YGO Omega para competir online." />
+    <meta property="og:title" content="Yu-Gi-Oh! XYZ - Portal de Yu-Gi-Oh!" />
+    <meta property="og:description" content="Yu-Gi-Oh! XYZ es tu portal de Yu-Gi-Oh! con torneos, banlist, reglas y análisis del meta. Usa YGO Omega para competir online." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f5b800" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./estilos/styles.css" />
+    <script src="./JS/script.js" defer></script>
 </head>
 <body>
 
 <header>
-    <h1>Yu-Gi-Oh</h1>
-    <nav class="menu">
-        <a href="./index.html" class="active">Inicio</a>
-        <a href="./porfolio/torneos.html">Torneos</a>
-        <a href="./porfolio/banlist.html">Banlist</a>
-        <a href="./porfolio/reglas.html">Reglas</a>
-        <a href="./porfolio/tierlist.html">Tierlist</a>
-        <a href="./porfolio/cartas.html">Cartas</a>
-        <a href="./porfolio/deckbuilder.html">Deck Builder</a>
-        <a href="./porfolio/noticias.html">Noticias</a>
-    </nav>
+    <div class="header-inner">
+        <h1>Yu-Gi-Oh! XYZ</h1>
+        <nav class="menu" aria-label="Menú principal">
+            <a href="./index.html">Inicio</a>
+            <a href="./porfolio/torneos.html">Torneos</a>
+            <a href="./porfolio/banlist.html">Banlist</a>
+            <a href="./porfolio/reglas.html">Reglas</a>
+            <a href="./porfolio/tierlist.html">Tierlist</a>
+        </nav>
+    </div>
 </header>
 
-<section class="hero">
-    <h2>Bienvenido Duelista</h2>
-    <p>Explora torneos, banlists, reglas y el meta actual.</p>
-</section>
+<main>
+    <section class="hero animate-up">
+        <div class="hero-copy">
+            <span class="eyebrow">Portal de Duelo</span>
+            <h2>Todo lo que necesitas para dominar tus partidas</h2>
+            <p>Descubre torneos, banlists, reglas actualizadas y el meta más relevante de Yu-Gi-Oh! en un solo sitio.</p>
+            <div class="hero-actions">
+                <a class="button button-primary" href="./porfolio/torneos.html">Ver Torneos</a>
+                <a class="button button-secondary" href="./porfolio/banlist.html">Descargar Banlist</a>
+                <a class="button button-secondary" href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Visitar YGO Omega</a>
+            </div>
+        </div>
 
-<section class="videos-tutoriales">
-  <h2 class="title">🎥 Tutoriales Yu-Gi-Oh</h2>
-  <p class="subtitle">Aprende a jugar y mejora tus estrategias</p>
+        <div class="hero-visual">
+            <article class="hero-card">
+                <h3>Acceso rápido</h3>
+                <ul>
+                    <li>Banlist personalizada para XYZ</li>
+                    <li>Torneos y brackets en alta resolución</li>
+                    <li>Guía de reglas para duelos competitivos</li>
+                    <li>Tierlist visual para seleccionar tu mejor deck</li>
+                </ul>
+            </article>
+            <article class="hero-card">
+                <h3>Diseñado para jugadores</h3>
+                <p>Interfaz clara, navegación rápida y contenido actualizado para que tus duelos sean más profesionales y efectivos.</p>
+                <span class="card-tag">Experiencia 100% móvil</span>
+            </article>
+        </div>
+    </section>
 
-  <div class="videos-grid">
-    <iframe src="https://www.youtube.com/embed/NyfbetvDGgA" 
-      title="Tutorial Yu-Gi-Oh Introductorio" frameborder="0" allowfullscreen></iframe>
+    <section class="section animate-up">
+        <div class="section-head">
+            <h2>Explora la plataforma</h2>
+            <p>Secciones pensadas para duelos reales: torneos, normativa, estrategias y datos meta.</p>
+        </div>
+        <div class="cards-grid">
+            <article class="card">
+                <h3>Torneos</h3>
+                <p>Consulta los resultados, revisa brackets y analiza rivales con imágenes detalladas de cada enfrentamiento.</p>
+                <span class="card-tag">Competencia</span>
+            </article>
+            <article class="card">
+                <h3>Banlist</h3>
+                <p>Descarga rápidamente la lista de cartas permitidas, limitadas y prohibidas para mazos competitivos.</p>
+                <span class="card-tag">Actualizada</span>
+            </article>
+            <article class="card">
+                <h3>Reglas</h3>
+                <p>Aprende la estructura de turno, condiciones de victoria y las zonas de campo para evitar errores en el duelo.</p>
+                <span class="card-tag">Oficial</span>
+            </article>
+            <article class="card">
+                <h3>Tierlist</h3>
+                <p>Consulta la lista visual de fuerza de mazos para elegir la mejor estrategia del meta actual.</p>
+                <span class="card-tag">Meta</span>
+            </article>
+        </div>
+    </section>
 
-    <iframe src="https://www.youtube.com/embed/q0q90zCd6gE" 
-      title="Guía avanzada de deckbuilding" frameborder="0" allowfullscreen></iframe>
+    <section class="section section-dark animate-up">
+        <div class="section-head">
+            <h2>🎥 Tutoriales esenciales</h2>
+            <p>Mejora tu juego con videos seleccionados para principiantes y duelistas avanzados.</p>
+        </div>
+        <div class="videos-grid">
+            <iframe src="https://www.youtube.com/embed/NyfbetvDGgA" title="Tutorial Yu-Gi-Oh Introductorio" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/q0q90zCd6gE" title="Guía avanzada de deckbuilding" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/-LnD1uxP7EA" title="Reglas básicas Yu-Gi-Oh" allowfullscreen></iframe>
+        </div>
+    </section>
 
-    <iframe src="https://www.youtube.com/embed/-LnD1uxP7EA" 
-      title="Reglas básicas Yu-Gi-Oh" frameborder="0" allowfullscreen></iframe>
-  </div>
-</section>
-
+    <section class="section animate-up">
+        <div class="section-head">
+            <h2>Últimas tendencias</h2>
+            <p>Revisa lo que está marcando el meta y prepara tu próximo duelo con ventaja.</p>
+        </div>
+        <div class="cards-grid">
+            <article class="card">
+                <h3>Meta actual</h3>
+                <p>Los decks más relevantes del momento, con foco en velocidad, control y explosión de campo.</p>
+            </article>
+            <article class="card">
+                <h3>Consejos de torneo</h3>
+                <p>Revisa consejos clave para gestionar recursos y tomar mejores decisiones en cada fase de duelo.</p>
+            </article>
+            <article class="card">
+                <h3>Actualizaciones</h3>
+                <p>Mantente en línea con las listas oficiales y cambios de reglas para evitar sorpresas en tus partidas.</p>
+            </article>
+        </div>
+    </section>
+</main>
 
 <footer>
-    <p>© 2025 Yu-Gi-Oh! XYZ</p>
+    <div class="footer-content">
+        <p class="footer-copyright">© 2026 Yu-Gi-Oh! XYZ</p>
+    </div>
 </footer>
 
 </body>
 </html>
-

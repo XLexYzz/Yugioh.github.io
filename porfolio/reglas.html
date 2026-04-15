@@ -1,86 +1,95 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yu-Gi-Oh! XYZ</title>
-    <link rel="stylesheet" href="../estilos/styles.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>Yu-Gi-Oh! XYZ - Reglas</title>
+    <meta name="description" content="Reglas básicas y esenciales de Yu-Gi-Oh! para duelos competitivos. Aprende turnos, zonas del campo y condiciones de victoria." />
+    <meta property="og:title" content="Yu-Gi-Oh! XYZ - Reglas" />
+    <meta property="og:description" content="Reglas básicas y esenciales de Yu-Gi-Oh! para duelos competitivos. Aprende turnos, zonas del campo y condiciones de victoria." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f5b800" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../estilos/styles.css" />
+    <script src="../JS/script.js" defer></script>
 </head>
 <body>
 
 <header>
-    <h1>Reglas del Duelo</h1>
-    <nav class="menu">
-        <a href="../index.html">Inicio</a>
-        <a href="../porfolio/torneos.html">Torneos</a>
-        <a href="../porfolio/banlist.html">Banlist</a>
-        <a href="./reglas.html" class="active">Reglas</a>
-        <a href="../porfolio/tierlist.html">Tierlist</a>
-    </nav>
+    <div class="header-inner">
+        <h1>Reglas</h1>
+        <nav class="menu" aria-label="Menú principal">
+            <a href="../index.html">Inicio</a>
+            <a href="./torneos.html">Torneos</a>
+            <a href="./banlist.html">Banlist</a>
+            <a href="./reglas.html">Reglas</a>
+            <a href="./tierlist.html">Tierlist</a>
+        </nav>
+    </div>
 </header>
 
-<section class="container">
-    <h2 class="title">📖 Reglas Oficiales del Juego</h2>
-    <p class="subtitle">Domina las reglas para convertirte en un verdadero Rey de Juegos</p>
+<main>
+    <section class="section animate-up">
+        <div class="section-head">
+            <h2>Reglas del Duelo</h2>
+            <p>Las normas esenciales que todo duelista debe conocer antes de salir a competir.</p>
+        </div>
 
-    <div class="card">
-        <h3>🎯 Condiciones de Victoria</h3>
-        <ul>
-            <li>Reducir los Life Points del oponente a 0</li>
-            <li>Deck Out - Cuando el oponente no puede robar cartas</li>
-            <li>Cartas con condiciones de victoria alternativas</li>
-            <li>Rendición del oponente</li>
-        </ul>
-    </div>
+        <div class="cards-grid">
+            <article class="card">
+                <h3>Condiciones de Victoria</h3>
+                <ul class="card-list">
+                    <li>Reducir los Life Points del oponente a cero</li>
+                    <li>Deck Out cuando el oponente no puede robar</li>
+                    <li>Cartas con victoria alternativa</li>
+                    <li>Rendición voluntaria del rival</li>
+                </ul>
+            </article>
 
-    <div class="card">
-        <h3>🔄 Estructura del Turno</h3>
-        <ul>
-            <li><strong>Draw Phase:</strong> Roba 1 carta</li>
-            <li><strong>Standby Phase:</strong> Efectos de standby se activan</li>
-            <li><strong>Main Phase 1:</strong> Invocaciones y activaciones</li>
-            <li><strong>Battle Phase:</strong> Batalla con monstruos</li>
-            <li><strong>Main Phase 2:</strong> Más invocaciones después de la batalla</li>
-            <li><strong>End Phase:</strong> Fin del turno, resolver efectos</li>
-        </ul>
-    </div>
+            <article class="card">
+                <h3>Estructura del Turno</h3>
+                <ul class="card-list">
+                    <li>Draw Phase</li>
+                    <li>Standby Phase</li>
+                    <li>Main Phase 1</li>
+                    <li>Battle Phase</li>
+                    <li>Main Phase 2</li>
+                    <li>End Phase</li>
+                </ul>
+            </article>
 
-    <div class="card">
-        <h3>🃏 Tipos de Cartas</h3>
-        <ul>
-            <li><strong>Monstruos:</strong> Normales, Efecto, Ritual, Fusión, Sincro, Xyz, Péndulo, Link</li>
-            <li><strong>Mágicas:</strong> Normales, Continuas, Equipo, Campo, Rápidas, Rituales</li>
-            <li><strong>Trampas:</strong> Normales, Continuas, Contraefectos</li>
-            <li><strong>Extra Deck:</strong> Monstruos especiales que requieren condiciones</li>
-        </ul>
-    </div>
+            <article class="card">
+                <h3>Tipos de Cartas</h3>
+                <ul class="card-list">
+                    <li>Monstruos: Normales, Efecto, Ritual, Fusión, Sincro, Xyz, Péndulo, Link</li>
+                    <li>Mágicas: Normales, Continuas, Equipo, Campo, Rápidas, Rituales</li>
+                    <li>Trampas: Normales, Continuas, Contraefectos</li>
+                    <li>Extra Deck: cartas especiales con condiciones propias</li>
+                </ul>
+            </article>
 
-    <div class="card">
-        <h3>⚡ Zonas del Campo</h3>
-        <ul>
-            <li>Zona de Monstruos (5 zonas principales)</li>
-            <li>Zona de Magia y Trampas (5 zonas)</li>
-            <li>Zona del Campo (1 zona)</li>
-            <li>Cementerio</li>
-            <li>Deck y Extra Deck</li>
-            <li>Zona de Péndulo (2 zonas)</li>
-            <li>Zona de Monstruos Extra (Zona Extra + zonas link)</li>
-        </ul>
-    </div>
-    
-    <div class="card">
-        <h3>⚔️  Duelo</h3>
-        <ul>
-            <li>Tiempo 480 Segundos</li>
-            <li>8000 LP</li>
-            <li>Mazos meta</li>
-            <li><a href="../porfolio/banlist.html">Banlist</a></li>
-        </ul>
-    </div>
-</section>
+            <article class="card">
+                <h3>Zonas del Campo</h3>
+                <ul class="card-list">
+                    <li>Zona de Monstruos (5 espacios)</li>
+                    <li>Zona de Magia y Trampas (5 espacios)</li>
+                    <li>Zona de Campo</li>
+                    <li>Cementerio</li>
+                    <li>Deck y Extra Deck</li>
+                    <li>Zonas de Péndulo y Link</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+</main>
 
 <footer>
-    <p>© 2026 Yu-Gi-Oh! XYZ</p>
+    <div class="footer-content">
+        <p class="footer-copyright">© 2026 Yu-Gi-Oh! XYZ</p>
+    </div>
 </footer>
+
 </body>
 </html>

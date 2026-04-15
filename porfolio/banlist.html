@@ -1,80 +1,69 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <title>Yu-Gi-Oh! XYZ - Banlist</title>
+    <meta name="description" content="Descarga la banlist oficial para Yu-Gi-Oh! XYZ y mantén tu mazo actualizado con las restricciones actuales." />
+    <meta property="og:title" content="Yu-Gi-Oh! XYZ - Banlist" />
+    <meta property="og:description" content="Descarga la banlist oficial para Yu-Gi-Oh! XYZ y mantén tu mazo actualizado con las restricciones actuales." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f5b800" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../estilos/styles.css" />
-    <script src="../JS/script.js"></script>
-    <style>
-        .external-links {
-            text-align: center;
-            margin: 2rem 0;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .external-link {
-            background: var(--primary);
-            color: var(--dark);
-            padding: 12px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(246, 208, 0, 0.3);
-        }
-        
-        .external-link:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(246, 208, 0, 0.4);
-        }
-        
-        .file-info {
-            text-align: center;
-            color: var(--text-secondary);
-            margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-    </style>
+    <script src="../JS/script.js" defer></script>
 </head>
 <body>
 
 <header>
-    <h1>Banlist</h1>
-    <nav class="menu">
-        <a href="../index.html">Inicio</a>
-        <a href="../porfolio/torneos.html">Torneos</a>
-        <a href="./banlist.html" class="active">Banlist</a>
-        <a href="../porfolio/reglas.html">Reglas</a>
-        <a href="../porfolio/tierlist.html">Tierlist</a>
-    </nav>
+    <div class="header-inner">
+        <h1>Banlist</h1>
+        <nav class="menu" aria-label="Menú principal">
+            <a href="../index.html">Inicio</a>
+            <a href="./torneos.html">Torneos</a>
+            <a href="./banlist.html">Banlist</a>
+            <a href="./reglas.html">Reglas</a>
+            <a href="./tierlist.html">Tierlist</a>
+        </nav>
+    </div>
 </header>
 
-<section class="container container--single">
-    <h2 class="title">Cartas Prohibidas / Limitadas</h2>
-    
-    <!-- Enlaces externos mejorados -->
-    <div class="external-links">
-        <a href="https://www.ygoprog.com/BanlistBuilder" class="external-link" target="_blank">
-            🛠️ Banlist Builder
-        </a>
-        
-        <!-- Sección de descarga -->
-        <button class="download-btn" onclick="descargarBanlist()">
-            ⬇️ Descargar Archivo de Banlist
-        </button>
-    </div>
-</section>
+<main>
+    <section class="section animate-up">
+        <div class="section-head">
+            <h2>Banlist Oficial</h2>
+            <p>Descarga la lista de restricciones para cartas prohibidas, limitadas y semi-limitadas.</p>
+        </div>
+
+        <div class="cards-grid">
+            <article class="card">
+                <h3>Descarga rápida</h3>
+                <p>Mantén tu mazo legal en cada duelo con una banlist actualizada e inmediata.</p>
+                <button class="download-btn" onclick="descargarBanlist()">⬇️ Descargar Banlist</button>
+                <p class="file-info">Archivo disponible en formato .lflist para herramientas de gestión de decks.</p>
+                <a href="https://www.ygoprog.com/BanlistBuilder" class="external-link" target="_blank">🛠️ Crear Banlist Personalizada</a>
+            </article>
+
+            <article class="card">
+                <h3>Guía de categorías</h3>
+                <ul class="card-list">
+                    <li>Prohibidas</li>
+                    <li>Limitadas</li>
+                    <li>Semi-limitadas</li>
+                    <li>Permitidas</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+</main>
 
 <footer>
-    <p>© 2026 Yu-Gi-Oh! XYZ</p>
+    <div class="footer-content">
+        <p class="footer-copyright">© 2026 Yu-Gi-Oh! XYZ</p>
+    </div>
 </footer>
+
 </body>
 </html>

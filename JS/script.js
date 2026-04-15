@@ -1,60 +1,141 @@
-// JS/script.js
+﻿const toastContainer = document.createElement('div');
+toastContainer.className = 'toast-container';
+document.body.appendChild(toastContainer);
+
+function mostrarToast(mensaje) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = mensaje;
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3200);
+}
 
 function descargarBanlist() {
-    // En lugar de tener el contenido hardcodeado, ahora apunta a tu archivo
-    const url = '../banlist/Untitled Banlist.lflist.conf';
-    
-    // Crear un enlace temporal para la descarga
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = '!XYZ banlist.lflist.conf';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    
-    // Mostrar notificación de descarga exitosa
-    mostrarNotificacion('¡Archivo descargado correctamente!');
+    const basePath = window.location.pathname.includes('/porfolio/')
+        ? '../banlist/'
+        : './banlist/';
+
+    const url = `${basePath}Untitled Banlist.lflist.conf`;
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = '!XYZ-banlist.lflist.conf';
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+
+    mostrarToast('¡Archivo de banlist descargado correctamente!');
 }
 
-function mostrarNotificacion(mensaje) {
-    const notificacion = document.createElement('div');
-    notificacion.textContent = mensaje;
-    notificacion.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: var(--primary);
-        color: var(--dark);
-        padding: 12px 20px;
-        border-radius: 8px;
-        font-weight: bold;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 1000;
-        animation: slideIn 0.3s ease;
-    `;
-    
-    document.body.appendChild(notificacion);
-    
-    setTimeout(() => {
-        notificacion.remove();
-    }, 3000);
-}
+function highlightActiveMenu() {
+    const links = document.querySelectorAll('.menu a');
+    const path = window.location.pathname.split('/').pop() || 'index.html';
 
-// Agregar estilos para la animación si no existen
-if (!document.querySelector('#notificacion-styles')) {
-    const style = document.createElement('style');
-    style.id = 'notificacion-styles';
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+    links.forEach(link => {
+        const href = link.getAttribute('href');
+        const normalized = href.replace(/^\.\/?/, '');
+
+        if (path === normalized || (path === 'index.html' && normalized === 'index.html')) {
+            link.classList.add('active');
         }
-    `;
-    document.head.appendChild(style);
+    });
 }
 
+function setupLazyMedia() {
+    document.querySelectorAll('img').forEach(img => {
+        img.loading = 'lazy';
+    });
+    document.querySelectorAll('iframe').forEach(iframe => {
+        iframe.loading = 'lazy';
+    });
+}
 
-console.log('Script de banlist cargado correctamente');
+function setupScrollReveal() {
+    const elements = document.querySelectorAll('.animate-up');
+    if (!elements.length) return;
 
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.18 });
 
+    elements.forEach(el => observer.observe(el));
+}
 
+function createModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+
+    const content = document.createElement('div');
+    content.className = 'modal-content';
+
+    const closeButton = document.createElement('button');
+    closeButton.className = 'modal-close';
+    closeButton.textContent = '×';
+    closeButton.addEventListener('click', () => modal.classList.remove('active'));
+
+    const image = document.createElement('img');
+    content.appendChild(image);
+    content.appendChild(closeButton);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+
+    return { modal, image };
+}
+
+function setupImageModal() {
+    const galleryItems = document.querySelectorAll('.image-grid img, .tierlist-grid img');
+    if (!galleryItems.length) return;
+
+    const { modal, image } = createModal();
+
+    galleryItems.forEach(item => {
+        item.style.cursor = 'zoom-in';
+        item.addEventListener('click', () => {
+            image.src = item.src;
+            image.alt = item.alt || 'Imagen ampliada';
+            modal.classList.add('active');
+        });
+    });
+}
+
+function setupTierlistFilters() {
+    const buttons = document.querySelectorAll('.tierlist-filter button');
+    const categories = document.querySelectorAll('.tierlist-category[data-tier]');
+    if (!buttons.length || !categories.length) return;
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            const selected = button.dataset.tier;
+
+            categories.forEach(category => {
+                const visible = selected === 'all' || category.dataset.tier === selected;
+                category.style.display = visible ? 'block' : 'none';
+            });
+        });
+    });
+}
+
+function initPage() {
+    highlightActiveMenu();
+    setupScrollReveal();
+    setupLazyMedia();
+    setupImageModal();
+    setupTierlistFilters();
+}
+
+document.addEventListener('DOMContentLoaded', initPage);
