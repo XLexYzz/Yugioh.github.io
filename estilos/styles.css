@@ -208,6 +208,28 @@ header h1 {
     transform: translateY(-2px);
 }
 
+/* Botón Editor de Banlist */
+.btn-editor {
+    background: linear-gradient(135deg, var(--secondary) 0%, #9d7fff 100%);
+    box-shadow: 0 8px 32px rgba(123, 101, 255, 0.35);
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.btn-editor:hover {
+    background: linear-gradient(135deg, #8a6fff 0%, #b094ff 100%);
+    box-shadow: 0 12px 40px rgba(123, 101, 255, 0.5);
+}
+
+.btn-editor svg {
+    transition: transform 0.25s ease;
+}
+
+.btn-editor:hover svg {
+    transform: translate(2px, -2px);
+}
+
 .hero-visual {
     display: grid;
     gap: 1.2rem;
@@ -422,6 +444,16 @@ header h1 {
     overflow: hidden;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.08);
+}
+
+.tierlist-category[data-tier="nah"] .tierlist-grid {
+    justify-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 260px));
+}
+
+.tierlist-category[data-tier="nah"] .tierlist-grid figure {
+    max-width: 260px;
+    width: 100%;
 }
 
 .tierlist-grid img {
