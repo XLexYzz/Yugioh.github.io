@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@400;700&display=swap" />
     <title>Yu-Gi-Oh! XYZ - Tierlist</title>
     <meta name="description" content="Tierlist interactiva de Yu-Gi-Oh! XYZ para comparar categorías de mazos y ver imágenes de cada nivel de fuerza." />
     <meta property="og:title" content="Yu-Gi-Oh! XYZ - Tierlist" />
@@ -34,11 +35,14 @@
     <section class="section animate-up">
         <div class="section-head">
             <h2>Tierlist interactiva</h2>
-            <p>Filtra por nivel y mira los jugadores por imagen en cada categoría.</p>
+            <p>Filtra por nivel, busca un deck y haz clic en cualquier imagen para verla en grande.</p>
         </div>
 
         <div class="tierlist-header">
-            <p>Haz clic en una categoría para verla sola.</p>
+            <label class="search-field">
+                <span class="visually-hidden">Buscar en la tierlist</span>
+                <input type="search" id="tierSearch" placeholder="Buscar deck o personaje…" autocomplete="off" />
+            </label>
             <div class="tierlist-filter">
                 <button class="active" data-tier="all">Todo</button>
                 <button data-tier="nah">NAH I’D WIN</button>
@@ -51,123 +55,125 @@
             </div>
         </div>
 
+        <p class="empty-state" id="tierEmpty" hidden>No hay ningún deck que coincida con la búsqueda.</p>
+
         <div class="tierlist-categories">
             <section class="tierlist-category" data-tier="nah">
                 <h3>NAH I’D WIN</h3>
                 <div class="tierlist-grid">
-                    <figure><img src="../tierlist/yubel.png" alt="Jugador Tier NAH" /></figure>
+                    <figure><img src="../tierlist/yubel.png" alt="Yubel" /><figcaption>Yubel</figcaption></figure>
                 </div>
             </section>
 
             <section class="tierlist-category" data-tier="special">
                 <h3>Special Grade</h3>
                 <div class="tierlist-grid">
-                    <figure><img src="../tierlist/Nash.png" alt="Jugador Tier Special" /></figure>
-                    <figure><img src="../tierlist/yusei.png" alt="Jugador Tier Special" /></figure>
-                    <figure><img src="../tierlist/kaiba.png" alt="Jugador Tier Special" /></figure>
-                    <figure><img src="../tierlist/snake_eyes.png" alt="Jugador Tier Special" /></figure>
-                    <figure><img src="../tierlist/jack.png" alt="Jugador Tier Special" /></figure>
+                    <figure><img src="../tierlist/Nash.png" alt="Nash" /><figcaption>Nash</figcaption></figure>
+                    <figure><img src="../tierlist/yusei.png" alt="Yusei" /><figcaption>Yusei</figcaption></figure>
+                    <figure><img src="../tierlist/kaiba.png" alt="Kaiba" /><figcaption>Kaiba</figcaption></figure>
+                    <figure><img src="../tierlist/snake_eyes.png" alt="Snake-Eye" /><figcaption>Snake-Eye</figcaption></figure>
+                    <figure><img src="../tierlist/jack.png" alt="Jack" /><figcaption>Jack</figcaption></figure>
                 </div>
             </section>
 
             <section class="tierlist-category" data-tier="grade1">
                 <h3>Grade 1</h3>
                 <div class="tierlist-grid">
-                    <figure><img src="../tierlist/shun.png" alt="Jugador Grade 1" /></figure>
-                    <figure><img src="../tierlist/yuma.png" alt="Jugador Grade 1" /></figure>
-                    <figure><img src="../tierlist/playmaker.png" alt="Jugador Grade 1" /></figure>
-                    <figure><img src="../tierlist/soulburner.png" alt="Jugador Grade 1" /></figure>
-                    <figure><img src="../tierlist/mirrorjade.png" alt="Jugador Grade 1" /></figure>
-                    <figure><img src="../tierlist/quatro.png" alt="Jugador Grade 1" /></figure>
-                    <figure><img src="../tierlist/mizael.png" alt="Jugador Grade 1" /></figure>
-                    <figure><img src="../tierlist/dino.png" alt="Jugador Grade 1" /></figure>
-                    <figure><img src="../tierlist/revolver.png" alt="Jugador Grade 1" /></figure>
-                    <figure><img src="../tierlist/six.png" alt="Jugador Grade 1" /></figure>
+                    <figure><img src="../tierlist/shun.png" alt="Shun" /><figcaption>Shun</figcaption></figure>
+                    <figure><img src="../tierlist/yuma.png" alt="Yuma" /><figcaption>Yuma</figcaption></figure>
+                    <figure><img src="../tierlist/playmaker.png" alt="Playmaker" /><figcaption>Playmaker</figcaption></figure>
+                    <figure><img src="../tierlist/soulburner.png" alt="Soulburner" /><figcaption>Soulburner</figcaption></figure>
+                    <figure><img src="../tierlist/mirrorjade.png" alt="Mirrorjade" /><figcaption>Mirrorjade</figcaption></figure>
+                    <figure><img src="../tierlist/quatro.png" alt="Quatro" /><figcaption>Quatro</figcaption></figure>
+                    <figure><img src="../tierlist/mizael.png" alt="Mizael" /><figcaption>Mizael</figcaption></figure>
+                    <figure><img src="../tierlist/dino.png" alt="Dino" /><figcaption>Dino</figcaption></figure>
+                    <figure><img src="../tierlist/revolver.png" alt="Revolver" /><figcaption>Revolver</figcaption></figure>
+                    <figure><img src="../tierlist/six.png" alt="Six" /><figcaption>Six</figcaption></figure>
                 </div>
             </section>
 
             <section class="tierlist-category" data-tier="grade2">
                 <h3>Grade 2</h3>
                 <div class="tierlist-grid">
-                    <figure><img src="../tierlist/mimighoul.png" alt="Jugador Grade 2" /></figure>
-                    <figure><img src="../tierlist/fiendsmith.png" alt="Jugador Grade 2" /></figure>
-                    <figure><img src="../tierlist/rescue-ace.png" alt="Jugador Grade 2" /></figure>
-                    <figure><img src="../tierlist/zarc.png" alt="Jugador Grade 2" /></figure>
-                    <figure><img src="../tierlist/kaito.png" alt="Jugador Grade 2" /></figure>
-                    <figure><img src="../tierlist/voiless.png" alt="Jugador Grade 2" /></figure>
-                    <figure><img src="../tierlist/centurion.png" alt="Jugador Grade 2" /></figure>
-                    <figure><img src="../tierlist/unchained.png" alt="Jugador Grade 2" /></figure>
-                    <figure><img src="../tierlist/crow.png" alt="Jugador Grade 2" /></figure>
-                    <figure><img src="../tierlist/yugi.png" alt="Jugador Grade 2" /></figure>
-                    <figure><img src="../tierlist/ghost.png" alt="Jugador Grade 2" /></figure>
+                    <figure><img src="../tierlist/mimighoul.png" alt="Mimighoul" /><figcaption>Mimighoul</figcaption></figure>
+                    <figure><img src="../tierlist/fiendsmith.png" alt="Fiendsmith" /><figcaption>Fiendsmith</figcaption></figure>
+                    <figure><img src="../tierlist/rescue-ace.png" alt="Rescue-ACE" /><figcaption>Rescue-ACE</figcaption></figure>
+                    <figure><img src="../tierlist/zarc.png" alt="Zarc" /><figcaption>Zarc</figcaption></figure>
+                    <figure><img src="../tierlist/kaito.png" alt="Kaito" /><figcaption>Kaito</figcaption></figure>
+                    <figure><img src="../tierlist/voiless.png" alt="Voiceless Voice" /><figcaption>Voiceless Voice</figcaption></figure>
+                    <figure><img src="../tierlist/centurion.png" alt="Centurion" /><figcaption>Centurion</figcaption></figure>
+                    <figure><img src="../tierlist/unchained.png" alt="Unchained" /><figcaption>Unchained</figcaption></figure>
+                    <figure><img src="../tierlist/crow.png" alt="Crow" /><figcaption>Crow</figcaption></figure>
+                    <figure><img src="../tierlist/yugi.png" alt="Yugi" /><figcaption>Yugi</figcaption></figure>
+                    <figure><img src="../tierlist/ghost.png" alt="Ghost" /><figcaption>Ghost</figcaption></figure>
                 </div>
             </section>
 
             <section class="tierlist-category" data-tier="semigrade2">
                 <h3>Semi Grade 2</h3>
                 <div class="tierlist-grid">
-                    <figure><img src="../tierlist/typhoon.png" alt="Jugador Semi Grade 2" /></figure>
-                    <figure><img src="../tierlist/akaba.png" alt="Jugador Semi Grade 2" /></figure>
-                    <figure><img src="../tierlist/magistus.png" alt="Jugador Semi Grade 2" /></figure>
-                    <figure><img src="../tierlist/dracotail.png" alt="Jugador Semi Grade 2" /></figure>
-                    <figure><img src="../tierlist/k9.png" alt="Jugador Semi Grade 2" /></figure>
-                    <figure><img src="../tierlist/orcust.png" alt="Jugador Semi Grade 2" /></figure>
-                    <figure><img src="../tierlist/flame_swordman.png" alt="Jugador Semi Grade 2" /></figure>
+                    <figure><img src="../tierlist/typhoon.png" alt="Typhoon" /><figcaption>Typhoon</figcaption></figure>
+                    <figure><img src="../tierlist/akaba.png" alt="Akaba" /><figcaption>Akaba</figcaption></figure>
+                    <figure><img src="../tierlist/magistus.png" alt="Magistus" /><figcaption>Magistus</figcaption></figure>
+                    <figure><img src="../tierlist/dracotail.png" alt="Dracotail" /><figcaption>Dracotail</figcaption></figure>
+                    <figure><img src="../tierlist/k9.png" alt="K9" /><figcaption>K9</figcaption></figure>
+                    <figure><img src="../tierlist/orcust.png" alt="Orcust" /><figcaption>Orcust</figcaption></figure>
+                    <figure><img src="../tierlist/flame_swordman.png" alt="Flame Swordsman" /><figcaption>Flame Swordsman</figcaption></figure>
                 </div>
             </section>
 
             <section class="tierlist-category" data-tier="ok">
                 <h3>Ok</h3>
                 <div class="tierlist-grid">
-                    <figure><img src="../tierlist/hermanosparadoja.png" alt="Jugador Ok" /></figure>
-                    <figure><img src="../tierlist/zane.png" alt="Jugador Ok" /></figure>
-                    <figure><img src="../tierlist/sergey.png" alt="Jugador Ok" /></figure>
-                    <figure><img src="../tierlist/ai.png" alt="Jugador Ok" /></figure>
-                    <figure><img src="../tierlist/makotsunami.png" alt="Jugador Ok" /></figure>
-                    <figure><img src="../tierlist/yuto.png" alt="Jugador Ok" /></figure>
-                    <figure><img src="../tierlist/alito.png" alt="Jugador Ok" /></figure>
-                    <figure><img src="../tierlist/flowwandareeze.png" alt="Jugador Ok" /></figure>
-                    <figure><img src="../tierlist/purrely.png" alt="Jugador Ok" /></figure>
+                    <figure><img src="../tierlist/hermanosparadoja.png" alt="Hermanos Paradoja" /><figcaption>Hermanos Paradoja</figcaption></figure>
+                    <figure><img src="../tierlist/zane.png" alt="Zane" /><figcaption>Zane</figcaption></figure>
+                    <figure><img src="../tierlist/sergey.png" alt="Sergey" /><figcaption>Sergey</figcaption></figure>
+                    <figure><img src="../tierlist/ai.png" alt="Ai" /><figcaption>Ai</figcaption></figure>
+                    <figure><img src="../tierlist/makotsunami.png" alt="Mako Tsunami" /><figcaption>Mako Tsunami</figcaption></figure>
+                    <figure><img src="../tierlist/yuto.png" alt="Yuto" /><figcaption>Yuto</figcaption></figure>
+                    <figure><img src="../tierlist/alito.png" alt="Alito" /><figcaption>Alito</figcaption></figure>
+                    <figure><img src="../tierlist/flowwandareeze.png" alt="Floowandereeze" /><figcaption>Floowandereeze</figcaption></figure>
+                    <figure><img src="../tierlist/purrely.png" alt="Purrely" /><figcaption>Purrely</figcaption></figure>
                 </div>
             </section>
 
             <section class="tierlist-category" data-tier="meh">
                 <h3>MEH I’D LOSE</h3>
                 <div class="tierlist-grid">
-                    <figure><img src="../tierlist/crawler.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/skull.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/ghoti.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/tenpai.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/swordsoul.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/thunderdragon.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/labyrinth.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/akiza.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/abc.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/drytron.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/infernoid.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/train.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/yummy.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/mannadium.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/artmage.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/roboppy.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/psy.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/darklords.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/elfennotes.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/atem.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/whiteforest.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/memento.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/bakura.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/jaden.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/maxi.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/yuri.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/marincess.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/odion.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/marik.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/yugo.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/battlewasp.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/gem.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/ryzeal.png" alt="Jugador Meh" /></figure>
-                    <figure><img src="../tierlist/sueldo.png" alt="Jugador Meh" /></figure>
+                    <figure><img src="../tierlist/crawler.png" alt="Crawler" /><figcaption>Crawler</figcaption></figure>
+                    <figure><img src="../tierlist/skull.png" alt="Skull" /><figcaption>Skull</figcaption></figure>
+                    <figure><img src="../tierlist/ghoti.png" alt="Ghoti" /><figcaption>Ghoti</figcaption></figure>
+                    <figure><img src="../tierlist/tenpai.png" alt="Tenpai" /><figcaption>Tenpai</figcaption></figure>
+                    <figure><img src="../tierlist/swordsoul.png" alt="Swordsoul" /><figcaption>Swordsoul</figcaption></figure>
+                    <figure><img src="../tierlist/thunderdragon.png" alt="Thunder Dragon" /><figcaption>Thunder Dragon</figcaption></figure>
+                    <figure><img src="../tierlist/labyrinth.png" alt="Labyrinth" /><figcaption>Labyrinth</figcaption></figure>
+                    <figure><img src="../tierlist/akiza.png" alt="Akiza" /><figcaption>Akiza</figcaption></figure>
+                    <figure><img src="../tierlist/abc.png" alt="ABC" /><figcaption>ABC</figcaption></figure>
+                    <figure><img src="../tierlist/drytron.png" alt="Drytron" /><figcaption>Drytron</figcaption></figure>
+                    <figure><img src="../tierlist/infernoid.png" alt="Infernoid" /><figcaption>Infernoid</figcaption></figure>
+                    <figure><img src="../tierlist/train.png" alt="Train" /><figcaption>Train</figcaption></figure>
+                    <figure><img src="../tierlist/yummy.png" alt="Yummy" /><figcaption>Yummy</figcaption></figure>
+                    <figure><img src="../tierlist/mannadium.png" alt="Mannadium" /><figcaption>Mannadium</figcaption></figure>
+                    <figure><img src="../tierlist/artmage.png" alt="Artmage" /><figcaption>Artmage</figcaption></figure>
+                    <figure><img src="../tierlist/roboppy.png" alt="Roboppy" /><figcaption>Roboppy</figcaption></figure>
+                    <figure><img src="../tierlist/psy.png" alt="PSY-Framegear" /><figcaption>PSY-Framegear</figcaption></figure>
+                    <figure><img src="../tierlist/darklords.png" alt="Darklords" /><figcaption>Darklords</figcaption></figure>
+                    <figure><img src="../tierlist/elfennotes.png" alt="Elfnote" /><figcaption>Elfnote</figcaption></figure>
+                    <figure><img src="../tierlist/atem.png" alt="Atem" /><figcaption>Atem</figcaption></figure>
+                    <figure><img src="../tierlist/whiteforest.png" alt="White Forest" /><figcaption>White Forest</figcaption></figure>
+                    <figure><img src="../tierlist/memento.png" alt="Memento" /><figcaption>Memento</figcaption></figure>
+                    <figure><img src="../tierlist/bakura.png" alt="Bakura" /><figcaption>Bakura</figcaption></figure>
+                    <figure><img src="../tierlist/jaden.png" alt="Jaden" /><figcaption>Jaden</figcaption></figure>
+                    <figure><img src="../tierlist/maxi.png" alt="Maxi" /><figcaption>Maxi</figcaption></figure>
+                    <figure><img src="../tierlist/yuri.png" alt="Yuri" /><figcaption>Yuri</figcaption></figure>
+                    <figure><img src="../tierlist/marincess.png" alt="Marincess" /><figcaption>Marincess</figcaption></figure>
+                    <figure><img src="../tierlist/odion.png" alt="Odion" /><figcaption>Odion</figcaption></figure>
+                    <figure><img src="../tierlist/marik.png" alt="Marik" /><figcaption>Marik</figcaption></figure>
+                    <figure><img src="../tierlist/yugo.png" alt="Yugo" /><figcaption>Yugo</figcaption></figure>
+                    <figure><img src="../tierlist/battlewasp.png" alt="Battlewasp" /><figcaption>Battlewasp</figcaption></figure>
+                    <figure><img src="../tierlist/gem.png" alt="Gem" /><figcaption>Gem</figcaption></figure>
+                    <figure><img src="../tierlist/ryzeal.png" alt="Ryzeal" /><figcaption>Ryzeal</figcaption></figure>
+                    <figure><img src="../tierlist/sueldo.png" alt="Sueldo" /><figcaption>Sueldo</figcaption></figure>
                 </div>
             </section>
         </div>
