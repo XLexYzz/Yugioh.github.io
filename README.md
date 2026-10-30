@@ -12,6 +12,8 @@ Portal de la comunidad Yu-Gi-Oh! XYZ, publicado con GitHub Pages: torneos, banli
 | `porfolio/reglas.html` | Reglas básicas del duelo |
 | `porfolio/tierlist.html` | Tierlist con filtro por nivel y buscador |
 
+Los filtros se pueden compartir con un enlace: por ejemplo `porfolio/tierlist.html#grade1` o `porfolio/banlist.html#limitadas`.
+
 ## Cómo actualizar el contenido
 
 - **Banlist:** sustituye `banlist/Untitled Banlist.lflist.conf` por la nueva exportación. La página la lee automáticamente, no hace falta tocar el HTML.

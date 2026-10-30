@@ -41,6 +41,13 @@ function highlightActiveMenu() {
         if (path === file) {
             link.classList.add('active');
             link.setAttribute('aria-current', 'page');
+
+            // En móvil el menú se desliza: centra el enlace activo para que se vea
+            const menu = link.parentElement;
+            if (menu.scrollWidth > menu.clientWidth) {
+                const offset = link.getBoundingClientRect().left - menu.getBoundingClientRect().left;
+                menu.scrollLeft += offset - (menu.clientWidth - link.offsetWidth) / 2;
+            }
         }
     });
 }
@@ -232,30 +239,62 @@ function setupTierlistFilters() {
         if (empty) empty.hidden = anyVisible;
     }
 
+    function select(button) {
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-pressed', 'false');
+        });
+        button.classList.add('active');
+        button.setAttribute('aria-pressed', 'true');
+        selected = button.dataset.tier;
+        apply();
+    }
+
     buttons.forEach(button => {
         button.setAttribute('aria-pressed', button.classList.contains('active'));
         button.addEventListener('click', () => {
-            buttons.forEach(btn => {
-                btn.classList.remove('active');
-                btn.setAttribute('aria-pressed', 'false');
-            });
-            button.classList.add('active');
-            button.setAttribute('aria-pressed', 'true');
-            selected = button.dataset.tier;
-            apply();
+            select(button);
+            setHash(selected === 'all' ? '' : selected);
         });
     });
 
     search?.addEventListener('input', apply);
+
+    // tierlist.html#grade1 abre directamente ese nivel
+    const fromHash = [...buttons].find(btn => btn.dataset.tier === location.hash.slice(1));
+    if (fromHash) select(fromHash);
+}
+
+// Guarda el filtro en la URL para poder compartir el enlace, sin añadir entradas al historial
+function setHash(value) {
+    const url = value ? `#${value}` : location.pathname + location.search;
+    history.replaceState(null, '', url);
+}
+
+/* ===========================
+   VOLVER ARRIBA
+   =========================== */
+function setupBackToTop() {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'back-to-top';
+    button.setAttribute('aria-label', 'Volver arriba');
+    button.textContent = '↑';
+    button.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    document.body.appendChild(button);
+
+    const update = () => button.classList.toggle('show', window.scrollY > window.innerHeight);
+    window.addEventListener('scroll', update, { passive: true });
+    update();
 }
 
 /* ===========================
    BANLIST
    =========================== */
 const BAN_STATUS = {
-    0: { titulo: 'Prohibidas', clase: 'forbidden', copias: 'Prohibida' },
-    1: { titulo: 'Limitadas', clase: 'limited', copias: '1 copia' },
-    2: { titulo: 'Semi-limitadas', clase: 'semi', copias: '2 copias' },
+    0: { titulo: 'Prohibidas', clase: 'forbidden', copias: 'Prohibida', slug: 'prohibidas' },
+    1: { titulo: 'Limitadas', clase: 'limited', copias: '1 copia', slug: 'limitadas' },
+    2: { titulo: 'Semi-limitadas', clase: 'semi', copias: '2 copias', slug: 'semilimitadas' },
 };
 
 // Formato .lflist.conf: "<id> <copias> --<nombre>"
@@ -328,17 +367,35 @@ async function setupBanlistViewer() {
         }
     }
 
+    function select(button) {
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-pressed', 'false');
+        });
+        button.classList.add('active');
+        button.setAttribute('aria-pressed', 'true');
+        selected = button.dataset.status;
+        render();
+    }
+
     buttons.forEach(button => {
+        button.setAttribute('aria-pressed', button.classList.contains('active'));
         button.addEventListener('click', () => {
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            selected = button.dataset.status;
-            render();
+            select(button);
+            setHash(BAN_STATUS[selected]?.slug || '');
         });
     });
     search?.addEventListener('input', render);
 
-    render();
+    // banlist.html#limitadas abre directamente esa categoría
+    const fromHash = Object.entries(BAN_STATUS).find(([, info]) => info.slug === location.hash.slice(1));
+    const initial = fromHash && [...buttons].find(btn => btn.dataset.status === fromHash[0]);
+    if (initial) {
+        select(initial);
+        document.getElementById('lista')?.scrollIntoView();
+    } else {
+        render();
+    }
 }
 
 function initPage() {
@@ -348,6 +405,7 @@ function initPage() {
     setupTierlistFilters();
     setupImageModal();
     setupBanlistViewer();
+    setupBackToTop();
 }
 
 document.addEventListener('DOMContentLoaded', initPage);

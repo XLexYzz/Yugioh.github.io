@@ -977,3 +977,123 @@ main > .section > * {
 .not-found .hero-actions {
     justify-content: center;
 }
+
+/* Botón volver arriba */
+.back-to-top {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 900;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(245, 184, 0, 0.4);
+    background: rgba(7, 10, 23, 0.92);
+    color: var(--primary);
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease, background 0.2s ease;
+}
+
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+}
+
+.back-to-top:hover {
+    background: var(--primary);
+    color: #111;
+}
+
+/* Enlaces del pie */
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+}
+
+/* Móvil: cabecera compacta y filtros en una sola fila deslizable */
+@media (max-width: 560px) {
+    header {
+        position: relative;
+    }
+
+    .header-inner {
+        padding: 0.75rem 1rem;
+        gap: 0.6rem;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .menu {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        gap: 0.5rem;
+        margin: 0 -1rem;
+        padding: 0 1rem 0.25rem;
+        scrollbar-width: none;
+    }
+
+    .menu::-webkit-scrollbar,
+    .tierlist-filter::-webkit-scrollbar {
+        display: none;
+    }
+
+    .menu a {
+        flex-shrink: 0;
+        padding: 0.55rem 0.9rem;
+        font-size: 0.92rem;
+    }
+
+    .section {
+        padding: 2.5rem 1rem;
+    }
+
+    .tierlist-header,
+    .banlist-toolbar {
+        align-items: stretch;
+    }
+
+    .tierlist-filter {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        width: calc(100% + 2rem);
+        max-width: none;
+        margin: 0 -1rem;
+        padding: 0 1rem 0.25rem;
+        scrollbar-width: none;
+    }
+
+    .tierlist-filter button {
+        flex-shrink: 0;
+        padding: 0.7rem 1rem;
+    }
+
+    .tierlist-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .back-to-top {
+        right: 1rem;
+        bottom: 1rem;
+    }
+}
