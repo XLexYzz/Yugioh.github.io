@@ -2,7 +2,7 @@
 
 Portal de la comunidad Yu-Gi-Oh! XYZ, publicado con GitHub Pages: torneos, banlist, reglas, tierlist y herramientas. Los duelos se juegan en [YGO Omega](https://omega.duelistsunite.org/).
 
-Sitio público: <https://xlexyzzz.github.io/Yugioh.github.io/>
+Sitio público: <https://xlexyzz.github.io/Yugioh.github.io/>
 
 ## Secciones
 
@@ -42,7 +42,7 @@ que no sea `.webp`/`.jpg`.
 - `manifest.webmanifest` + iconos en `img/`: instalable como app y usable offline.
 - `sw.js`: precachea la cáscara del sitio y revalida el resto en segundo plano.
   Al cambiar páginas/css/js, aumenta `SHELL_VERSION` para que se refresque la caché.
-- `sitemap.xml` y `robots.txt` apuntan a `https://xlexyzzz.github.io/Yugioh.github.io/`.
+- `sitemap.xml` y `robots.txt` apuntan a `https://xlexyzz.github.io/Yugioh.github.io/`.
 - Cada página tiene `canonical`, Open Graph y `og:image` (`img/og-image.png`).
 
 ## Probarlo en local

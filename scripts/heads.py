@@ -9,7 +9,7 @@ import os
 import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_URL = "https://xlexyzzz.github.io/Yugioh.github.io"
+BASE_URL = "https://xlexyzz.github.io/Yugioh.github.io"
 
 # rel: (raíz de assets, href de herramientas, canonical)
 PAGES = {

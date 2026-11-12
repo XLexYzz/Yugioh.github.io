@@ -2,7 +2,7 @@
     "name": "Yu-Gi-Oh! XYZ",
     "short_name": "YGO XYZ",
     "description": "Portal de Yu-Gi-Oh! XYZ: torneos, banlist, reglas y tierlist.",
-    "id": "https://xlexyzzz.github.io/Yugioh.github.io/",
+    "id": "https://xlexyzz.github.io/Yugioh.github.io/",
     "start_url": "./index.html",
     "scope": "./",
     "display": "standalone",

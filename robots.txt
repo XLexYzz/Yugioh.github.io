@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://xlexyzzz.github.io/Yugioh.github.io/sitemap.xml
+Sitemap: https://xlexyzz.github.io/Yugioh.github.io/sitemap.xml
