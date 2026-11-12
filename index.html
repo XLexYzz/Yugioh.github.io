@@ -12,11 +12,21 @@
     <meta property="og:description" content="Yu-Gi-Oh! XYZ es tu portal de Yu-Gi-Oh! con torneos, banlist, reglas y análisis del meta. Usa YGO Omega para competir online." />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#f5b800" />
+
+    <meta property="og:url" content="https://xlexyzzz.github.io/Yugioh.github.io/" />
+    <meta property="og:image" content="https://xlexyzzz.github.io/Yugioh.github.io/img/og-image.png" />
+    <meta property="og:site_name" content="Yu-Gi-Oh! XYZ" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://xlexyzzz.github.io/Yugioh.github.io/" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./img/apple-touch-icon.png" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./estilos/styles.css" />
     <script src="./JS/script.js" defer></script>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <header>
     <div class="header-inner">
@@ -27,11 +37,12 @@
             <a href="./porfolio/banlist.html">Banlist</a>
             <a href="./porfolio/reglas.html">Reglas</a>
             <a href="./porfolio/tierlist.html">Tierlist</a>
+            <a href="./porfolio/herramientas.html">Herramientas</a>
         </nav>
     </div>
 </header>
 
-<main>
+<main id="contenido">
     <section class="hero animate-up">
         <div class="hero-copy">
             <span class="eyebrow">Portal de Duelo</span>
@@ -97,9 +108,30 @@
             <p>Mejora tu juego con videos seleccionados para principiantes y duelistas avanzados.</p>
         </div>
         <div class="videos-grid">
-            <iframe src="https://www.youtube-nocookie.com/embed/NyfbetvDGgA" title="Tutorial Yu-Gi-Oh Introductorio" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <iframe src="https://www.youtube-nocookie.com/embed/q0q90zCd6gE" title="Guía avanzada de deckbuilding" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <iframe src="https://www.youtube-nocookie.com/embed/-LnD1uxP7EA" title="Reglas básicas Yu-Gi-Oh" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <figure class="video-embed" data-video="NyfbetvDGgA" data-title="Tutorial Yu-Gi-Oh Introductorio">
+                <img src="./img/video-1.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" />
+                <button type="button" class="video-play" aria-label="Reproducir: Tutorial Yu-Gi-Oh Introductorio">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor" />
+                    </svg>
+                </button>
+            </figure>
+            <figure class="video-embed" data-video="q0q90zCd6gE" data-title="Guía avanzada de deckbuilding">
+                <img src="./img/video-2.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" />
+                <button type="button" class="video-play" aria-label="Reproducir: Guía avanzada de deckbuilding">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor" />
+                    </svg>
+                </button>
+            </figure>
+            <figure class="video-embed" data-video="-LnD1uxP7EA" data-title="Reglas básicas Yu-Gi-Oh">
+                <img src="./img/video-3.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" />
+                <button type="button" class="video-play" aria-label="Reproducir: Reglas básicas Yu-Gi-Oh">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor" />
+                    </svg>
+                </button>
+            </figure>
         </div>
     </section>
 

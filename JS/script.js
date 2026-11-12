@@ -138,6 +138,10 @@ function setupImageModal() {
         show(img);
         viewer.modal.classList.add('active');
         document.body.classList.add('no-scroll');
+        // El CSS retira `visibility:hidden` de inmediato al abrir (solo el
+        // fundido se transiciona); forzamos la recolocación de estilos para
+        // que el botón de cierre sea enfocable antes de darle el foco.
+        void viewer.modal.offsetHeight;
         viewer.closeButton.focus();
     }
 
@@ -179,6 +183,21 @@ function setupImageModal() {
         if (event.key === 'Escape') close();
         if (event.key === 'ArrowLeft') step(-1);
         if (event.key === 'ArrowRight') step(1);
+
+        // Trampa de foco: Tab no sale del visor mientras está abierto
+        if (event.key === 'Tab') {
+            const focusables = [viewer.closeButton, viewer.prev, viewer.next].filter(el => !el.hidden);
+            if (!focusables.length) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        }
     });
 
     // Deslizar en móvil
@@ -398,6 +417,165 @@ async function setupBanlistViewer() {
     }
 }
 
+/* ===========================
+   VÍDEOS: CARGAR AL HACER CLIC
+   =========================== */
+function setupVideoEmbeds() {
+    const embeds = document.querySelectorAll('.video-embed[data-video]');
+    if (!embeds.length) return;
+
+    embeds.forEach(embed => {
+        const button = embed.querySelector('.video-play');
+        if (!button) return;
+        button.addEventListener('click', () => {
+            const frame = document.createElement('iframe');
+            frame.src = `https://www.youtube-nocookie.com/embed/${embed.dataset.video}?autoplay=1&rel=0`;
+            frame.title = embed.dataset.title || 'Vídeo de Yu-Gi-Oh!';
+            frame.allow = 'accelerometer; encrypted-media; gyroscope; picture-in-picture';
+            frame.referrerPolicy = 'strict-origin-when-cross-origin';
+            frame.allowFullscreen = true;
+            embed.replaceChildren(frame);
+        });
+    });
+}
+
+/* ===========================
+   TEMPORIZADOR DE DUELO
+   =========================== */
+function setupDuelTimer() {
+    const display = document.getElementById('timerDisplay');
+    if (!display) return;
+    const status = document.getElementById('timerStatus');
+    const toggle = document.getElementById('timerToggle');
+    const reset = document.getElementById('timerReset');
+    const presets = document.querySelectorAll('.timer-presets button');
+
+    let total = 20 * 60;
+    let remaining = total;
+    let running = false;
+    let endTime = 0;
+    let warned = false;
+    let tick = null;
+
+    function render() {
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        display.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function setStatus(text) {
+        status.textContent = text;
+    }
+
+    function beep(times, freq) {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioCtx();
+            for (let i = 0; i < times; i++) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.value = 0.12;
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(ctx.currentTime + i * 0.35);
+                osc.stop(ctx.currentTime + i * 0.35 + 0.25);
+            }
+        } catch {
+            /* sin audio: el aviso visual ya está */
+        }
+    }
+
+    function stop() {
+        running = false;
+        if (tick) {
+            clearInterval(tick);
+            tick = null;
+        }
+    }
+
+    function onTick() {
+        remaining = Math.max(0, Math.round((endTime - Date.now()) / 1000));
+        if (!warned && remaining === 60) {
+            warned = true;
+            display.classList.add('warning');
+            setStatus('¡Falta 1 minuto!');
+            beep(1, 660);
+        }
+        render();
+        if (remaining <= 0) {
+            stop();
+            display.classList.add('finished');
+            setStatus('¡Tiempo agotado!');
+            beep(3, 660);
+        }
+    }
+
+    toggle.addEventListener('click', () => {
+        if (running) {
+            stop();
+            toggle.textContent = 'Reanudar';
+            setStatus('En pausa');
+            return;
+        }
+        if (remaining <= 0) {
+            setStatus('Tiempo agotado. Reinicia para un nuevo duelo.');
+            return;
+        }
+        running = true;
+        endTime = Date.now() + remaining * 1000;
+        tick = setInterval(onTick, 250);
+        toggle.textContent = 'Pausar';
+        display.classList.remove('finished');
+        setStatus('Duelo en curso');
+    });
+
+    reset.addEventListener('click', () => {
+        stop();
+        remaining = total;
+        warned = false;
+        display.className = 'timer-display';
+        toggle.textContent = 'Iniciar duelo';
+        render();
+        setStatus('Listo para el duelo');
+    });
+
+    presets.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (running) {
+                setStatus('El duelo está en curso. Pausa o reinicia antes de cambiar la duración.');
+                return;
+            }
+            presets.forEach(b => b.classList.toggle('active', b === btn));
+            total = Number(btn.dataset.mins) * 60;
+            remaining = total;
+            warned = false;
+            display.classList.remove('warning', 'finished');
+            toggle.textContent = 'Iniciar duelo';
+            render();
+            setStatus('Listo para el duelo');
+        });
+    });
+
+    render();
+}
+
+/* ===========================
+   SERVICE WORKER (OFFLINE)
+   =========================== */
+function setupServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    const isSecure = location.protocol === 'https:'
+        || location.hostname === 'localhost'
+        || location.hostname === '127.0.0.1';
+    if (!isSecure) return;
+
+    const swPath = window.location.pathname.includes('/porfolio/') ? '../sw.js' : './sw.js';
+    navigator.serviceWorker.register(swPath).catch(() => {
+        /* offline no disponible en este contexto */
+    });
+}
+
 function initPage() {
     highlightActiveMenu();
     setupScrollReveal();
@@ -406,6 +584,9 @@ function initPage() {
     setupImageModal();
     setupBanlistViewer();
     setupBackToTop();
+    setupVideoEmbeds();
+    setupDuelTimer();
+    setupServiceWorker();
 }
 
 document.addEventListener('DOMContentLoaded', initPage);

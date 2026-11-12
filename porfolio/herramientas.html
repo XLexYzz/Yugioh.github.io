@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@400;700&display=swap" />
+    <title>Yu-Gi-Oh! XYZ - Herramientas</title>
+    <meta name="description" content="Temporizador de duelo para partidas de Yu-Gi-Oh! online y presenciales: presets de duración, aviso final y recordatorios." />
+    <meta property="og:title" content="Yu-Gi-Oh! XYZ - Herramientas" />
+    <meta property="og:description" content="Temporizador de duelo para partidas de Yu-Gi-Oh! online y presenciales: presets de duración, aviso final y recordatorios." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f5b800" />
+    <meta property="og:url" content="https://xlexyzzz.github.io/Yugioh.github.io/porfolio/herramientas.html" />
+    <meta property="og:image" content="https://xlexyzzz.github.io/Yugioh.github.io/img/og-image.png" />
+    <meta property="og:site_name" content="Yu-Gi-Oh! XYZ" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://xlexyzzz.github.io/Yugioh.github.io/porfolio/herramientas.html" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="../img/apple-touch-icon.png" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../estilos/styles.css" />
+    <script src="../JS/script.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header>
+    <div class="header-inner">
+        <h1>Herramientas</h1>
+        <nav class="menu" aria-label="Menú principal">
+            <a href="../index.html">Inicio</a>
+            <a href="./torneos.html">Torneos</a>
+            <a href="./banlist.html">Banlist</a>
+            <a href="./reglas.html">Reglas</a>
+            <a href="./tierlist.html">Tierlist</a>
+            <a href="./herramientas.html">Herramientas</a>
+        </nav>
+    </div>
+</header>
+
+<main id="contenido">
+    <section class="section animate-up">
+        <div class="section-head">
+            <h2>Temporizador de duelo</h2>
+            <p>Elige la duración del duelo, arranca el reloj y no pierdas la partida por el tiempo.</p>
+        </div>
+
+        <div class="timer">
+            <div class="timer-display" id="timerDisplay" role="timer" aria-label="Tiempo restante">20:00</div>
+            <p class="timer-status" id="timerStatus" role="status">Listo para el duelo</p>
+
+            <div class="timer-presets" role="group" aria-label="Duración del duelo">
+                <button type="button" data-mins="10">10 min</button>
+                <button type="button" data-mins="15">15 min</button>
+                <button type="button" data-mins="20" class="active">20 min</button>
+                <button type="button" data-mins="30">30 min</button>
+            </div>
+
+            <div class="timer-actions">
+                <button id="timerToggle" class="button button-primary" type="button">Iniciar duelo</button>
+                <button id="timerReset" class="button button-secondary" type="button">Reiniciar</button>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <article class="card">
+                <h3>¿Cuánto dura un duelo?</h3>
+                <ul class="card-list">
+                    <li>Online en YGO Omega: entre 10 y 15 minutos</li>
+                    <li>En presencial: 15 a 20 minutos es lo habitual</li>
+                    <li>Si se agota el tiempo, gana quien tenga más puntos de vida</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>Consejos</h3>
+                <ul class="card-list">
+                    <li>Avisa a tu rival cuando falten 2 minutos para preparar el Side Deck</li>
+                    <li>Si el duelo se alarga, acordad antes si extendéis el reloj</li>
+                    <li>Descuidar el reloj te puede costar el duelo, aunque lleves ganando</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>Formatos rápidos</h3>
+                <ul class="card-list">
+                    <li>10 min: partidas rápidas y pruebas de mazos</li>
+                    <li>15 min: estándar online</li>
+                    <li>20–30 min: torneos presenciales y ligas</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <nav class="footer-links" aria-label="Enlaces externos">
+            <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Jugar en YGO Omega</a>
+            <a href="https://github.com/XLexYzz/Yugioh.github.io" target="_blank" rel="noopener">Código en GitHub</a>
+        </nav>
+        <p class="footer-copyright">© 2026 Yu-Gi-Oh! XYZ</p>
+    </div>
+</footer>
+
+</body>
+</html>

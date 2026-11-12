@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b0b18"/>
+      <stop offset="1" stop-color="#06060e"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="1.05" r="0.9">
+      <stop offset="0" stop-color="#f5b800" stop-opacity="0.14"/>
+      <stop offset="0.45" stop-color="#f5b800" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#f5b800" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="1" cy="0" r="0.8">
+      <stop offset="0" stop-color="#7b65ff" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#7b65ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#base)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <rect width="1600" height="900" fill="url(#glow2)"/>
+  <!-- banda de luz diagonal -->
+  <polygon points="0,0 520,0 1600,900 1080,900" fill="#ffffff" opacity="0.015"/>
+  <!-- anillos tipo disco de duelo, casi imperceptibles -->
+  <g fill="none" stroke="#f5b800">
+    <circle cx="1310" cy="330" r="240" stroke-opacity="0.07" stroke-width="1.5"/>
+    <circle cx="1310" cy="330" r="170" stroke-opacity="0.05" stroke-width="1"/>
+    <circle cx="140" cy="780" r="180" stroke-opacity="0.06" stroke-width="1.5"/>
+  </g>
+</svg>

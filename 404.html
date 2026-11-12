@@ -3,17 +3,30 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+    // GitHub Pages sirve esta página desde la ruta que pidió el usuario
+    // (p. ej. /algo/que-no-existe), así que los enlaces relativos fallarían.
+    // En producción fijamos la raíz en la carpeta del sitio; en local
+    // (servidor en la raíz) no se inyecta nada y todo resuelve desde /.
+    if (location.pathname.indexOf('/Yugioh.github.io/') === 0) {
+        var _base = document.createElement('base');
+        _base.href = '/Yugioh.github.io/';
+        document.head.insertBefore(_base, document.head.firstChild);
+    }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@400;700&display=swap" />
     <title>Yu-Gi-Oh! XYZ - Página no encontrada</title>
     <meta name="theme-color" content="#f5b800" />
-    <!-- GitHub Pages sirve esta página desde cualquier ruta: base fija la carpeta del sitio -->
-    <base href="/Yugioh.github.io/" />
+
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./img/apple-touch-icon.png" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./estilos/styles.css" />
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <header>
     <div class="header-inner">
@@ -24,11 +37,12 @@
             <a href="./porfolio/banlist.html">Banlist</a>
             <a href="./porfolio/reglas.html">Reglas</a>
             <a href="./porfolio/tierlist.html">Tierlist</a>
+            <a href="./porfolio/herramientas.html">Herramientas</a>
         </nav>
     </div>
 </header>
 
-<main>
+<main id="contenido">
     <section class="section not-found">
         <div class="section-head">
             <h2>404</h2>
