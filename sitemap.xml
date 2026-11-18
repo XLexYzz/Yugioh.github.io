@@ -27,7 +27,12 @@
     </url>
     <url>
         <loc>https://xlexyzz.github.io/Yugioh.github.io/porfolio/herramientas.html</loc>
-        <lastmod>2026-11-12</lastmod>
+        <lastmod>2026-11-18</lastmod>
         <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://xlexyzz.github.io/Yugioh.github.io/porfolio/mazos.html</loc>
+        <lastmod>2026-11-18</lastmod>
+        <priority>0.8</priority>
     </url>
 </urlset>

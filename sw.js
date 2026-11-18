@@ -5,9 +5,12 @@
    - fuentes de Google: caché sin caducidad
    Aumenta SHELL_VERSION al cambiar el contenido de la cáscara.
 */
-const SHELL_VERSION = 'v2';
+const SHELL_VERSION = 'v3';
 const CACHE_SHELL = `xyz-shell-${SHELL_VERSION}`;
 const CACHE_STATIC = `xyz-static-${SHELL_VERSION}`;
+// Imágenes y datos de cartas de YGOPRODeck: se conservan entre versiones
+const CACHE_CARDS = 'xyz-cartas';
+const MAX_CARD_IMAGES = 400;
 
 const SHELL = [
     './',
@@ -17,9 +20,16 @@ const SHELL = [
     './porfolio/reglas.html',
     './porfolio/tierlist.html',
     './porfolio/herramientas.html',
+    './porfolio/mazos.html',
     './404.html',
     './estilos/styles.css',
     './JS/script.js',
+    './JS/interactivo.js',
+    './JS/mazos.js',
+    './JS/herramientas.js',
+    './JS/reglas.js',
+    './JS/tiermaker.js',
+    './estilos/interactivo.css',
     './manifest.webmanifest',
     './favicon.svg',
     './img/hero.svg',
@@ -49,7 +59,7 @@ self.addEventListener('activate', (event) => {
         (async () => {
             const keys = await caches.keys();
             await Promise.all(keys
-                .filter((key) => key !== CACHE_SHELL && key !== CACHE_STATIC)
+                .filter((key) => key !== CACHE_SHELL && key !== CACHE_STATIC && key !== CACHE_CARDS)
                 .map((key) => caches.delete(key)));
             await self.clients.claim();
         })()
@@ -74,6 +84,43 @@ self.addEventListener('fetch', (event) => {
                 }
                 return response;
             })
+        );
+        return;
+    }
+
+    // Imágenes de cartas: caché primero (así no se piden una y otra vez a YGOPRODeck)
+    if (url.origin === 'https://images.ygoprodeck.com') {
+        event.respondWith(
+            caches.open(CACHE_CARDS).then(async (cache) => {
+                const hit = await cache.match(request);
+                if (hit) return hit;
+                const response = await fetch(request);
+                if (response.ok || response.type === 'opaque') {
+                    await cache.put(request, response.clone()).catch(() => {});
+                    const keys = await cache.keys();
+                    const images = keys.filter((k) => k.url.startsWith('https://images.ygoprodeck.com'));
+                    if (images.length > MAX_CARD_IMAGES) {
+                        await Promise.all(images.slice(0, images.length - MAX_CARD_IMAGES).map((k) => cache.delete(k)));
+                    }
+                }
+                return response;
+            })
+        );
+        return;
+    }
+
+    // Datos de cartas: red primero; sin conexión, la última respuesta guardada
+    if (url.origin === 'https://db.ygoprodeck.com') {
+        event.respondWith(
+            fetch(request)
+                .then((response) => {
+                    if (response.ok) {
+                        const copy = response.clone();
+                        caches.open(CACHE_CARDS).then((cache) => cache.put(request, copy)).catch(() => {});
+                    }
+                    return response;
+                })
+                .catch(async () => (await caches.match(request)) || Response.error())
         );
         return;
     }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;500;700&family=Cinzel+Decorative:wght@700&display=swap" />
     <title>Yu-Gi-Oh! XYZ - Tierlist</title>
     <meta name="description" content="Tierlist interactiva de Yu-Gi-Oh! XYZ para comparar categorías de mazos y ver imágenes de cada nivel de fuerza." />
     <meta property="og:title" content="Yu-Gi-Oh! XYZ - Tierlist" />
@@ -23,7 +23,10 @@
     <link rel="apple-touch-icon" href="../img/apple-touch-icon.png" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../estilos/styles.css" />
+    <link rel="stylesheet" href="../estilos/interactivo.css" />
     <script src="../JS/script.js" defer></script>
+    <script src="../JS/interactivo.js" defer></script>
+    <script src="../JS/tiermaker.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -37,6 +40,7 @@
             <a href="./banlist.html">Banlist</a>
             <a href="./reglas.html">Reglas</a>
             <a href="./tierlist.html">Tierlist</a>
+            <a href="./mazos.html">Mazos</a>
             <a href="./herramientas.html">Herramientas</a>
         </nav>
     </div>
@@ -188,6 +192,20 @@
                 </div>
             </section>
         </div>
+    </section>
+
+    <section class="section section-dark" id="crea">
+        <div class="section-head">
+            <h2>Crea tu tierlist</h2>
+            <p>Arrastra cada deck al nivel que quieras. En el móvil, toca un deck y después el nivel. Se guarda en este navegador.</p>
+        </div>
+        <div class="tm-toolbar">
+            <button type="button" class="button button-primary" id="tmExport">Descargar imagen</button>
+            <button type="button" class="button button-secondary" id="tmPreset">Partir del ranking XYZ</button>
+            <button type="button" class="button button-secondary" id="tmClear">Vaciar niveles</button>
+        </div>
+        <p class="tm-hint" id="tmHint" role="status" aria-live="polite">Con teclado: elige un deck con Tab y pulsa 1–5 para moverlo a un nivel, 0 para devolverlo o ← → para ordenarlo.</p>
+        <div class="tm" id="tiermaker"></div>
     </section>
 </main>
 

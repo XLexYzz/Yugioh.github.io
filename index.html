@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;500;700&family=Cinzel+Decorative:wght@700&display=swap" />
     <title>Yu-Gi-Oh! XYZ</title>
     <meta name="description" content="Yu-Gi-Oh! XYZ es tu portal de Yu-Gi-Oh! con torneos, banlist, reglas y análisis del meta. Usa YGO Omega para competir online." />
     <meta property="og:title" content="Yu-Gi-Oh! XYZ - Portal de Yu-Gi-Oh!" />
@@ -23,7 +23,9 @@
     <link rel="apple-touch-icon" href="./img/apple-touch-icon.png" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./estilos/styles.css" />
+    <link rel="stylesheet" href="./estilos/interactivo.css" />
     <script src="./JS/script.js" defer></script>
+    <script src="./JS/interactivo.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -37,6 +39,7 @@
             <a href="./porfolio/banlist.html">Banlist</a>
             <a href="./porfolio/reglas.html">Reglas</a>
             <a href="./porfolio/tierlist.html">Tierlist</a>
+            <a href="./porfolio/mazos.html">Mazos</a>
             <a href="./porfolio/herramientas.html">Herramientas</a>
         </nav>
     </div>
@@ -70,6 +73,19 @@
                 <p>Interfaz clara, navegación rápida y contenido actualizado para que tus duelos sean más profesionales y efectivos.</p>
                 <span class="card-tag">Experiencia 100% móvil</span>
             </article>
+        </div>
+    </section>
+
+    <section class="section" aria-labelledby="herramientasTitulo">
+        <div class="section-head">
+            <h2 id="herramientasTitulo">Para tu próximo duelo</h2>
+            <p>Herramientas que funcionan en el móvil, incluso sin conexión. Pulsa <kbd>Ctrl</kbd> <kbd>K</kbd> para buscar cualquier carta o deck.</p>
+        </div>
+        <div class="tools-strip">
+            <a class="tool-link" href="./porfolio/mazos.html"><b aria-hidden="true">40</b><strong>Validar mi mazo</strong><span>Pega tu YDK y mira si es legal</span></a>
+            <a class="tool-link" href="./porfolio/herramientas.html#vida"><b aria-hidden="true">LP</b><strong>Contar puntos de vida</strong><span>Dos duelistas, historial y deshacer</span></a>
+            <a class="tool-link" href="./porfolio/tierlist.html#crea"><b aria-hidden="true">S</b><strong>Crear mi tierlist</strong><span>Arrastra decks y descarga la imagen</span></a>
+            <a class="tool-link" href="./porfolio/reglas.html#test"><b aria-hidden="true">?</b><strong>Hacer el test de reglas</strong><span>Diez preguntas con explicación</span></a>
         </div>
     </section>
 

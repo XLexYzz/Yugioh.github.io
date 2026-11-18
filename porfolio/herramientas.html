@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;500;700&family=Cinzel+Decorative:wght@700&display=swap" />
     <title>Yu-Gi-Oh! XYZ - Herramientas</title>
-    <meta name="description" content="Temporizador de duelo para partidas de Yu-Gi-Oh! online y presenciales: presets de duración, aviso final y recordatorios." />
+    <meta name="description" content="Herramientas para duelos de Yu-Gi-Oh!: puntos de vida, temporizador, moneda y dado, y probabilidad de robo." />
     <meta property="og:title" content="Yu-Gi-Oh! XYZ - Herramientas" />
-    <meta property="og:description" content="Temporizador de duelo para partidas de Yu-Gi-Oh! online y presenciales: presets de duración, aviso final y recordatorios." />
+    <meta property="og:description" content="Herramientas para duelos de Yu-Gi-Oh!: puntos de vida, temporizador, moneda y dado, y probabilidad de robo." />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#f5b800" />
     <meta property="og:url" content="https://xlexyzz.github.io/Yugioh.github.io/porfolio/herramientas.html" />
@@ -22,7 +22,10 @@
     <link rel="apple-touch-icon" href="../img/apple-touch-icon.png" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../estilos/styles.css" />
+    <link rel="stylesheet" href="../estilos/interactivo.css" />
     <script src="../JS/script.js" defer></script>
+    <script src="../JS/interactivo.js" defer></script>
+    <script src="../JS/herramientas.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -35,13 +38,122 @@
             <a href="./banlist.html">Banlist</a>
             <a href="./reglas.html">Reglas</a>
             <a href="./tierlist.html">Tierlist</a>
+            <a href="./mazos.html">Mazos</a>
             <a href="./herramientas.html">Herramientas</a>
         </nav>
     </div>
 </header>
 
 <main id="contenido">
-    <section class="section animate-up">
+    <section class="section" id="vida">
+        <div class="section-head">
+            <h2>Puntos de vida</h2>
+            <p>Escribe una cantidad y pulsa a quién se la restas o sumas. Se guarda solo, aunque cierres la página.</p>
+        </div>
+
+        <div class="lp">
+            <div class="lp-player" data-p="0">
+                <label class="visually-hidden" for="lpName0">Nombre del primer duelista</label>
+                <input class="lp-name" id="lpName0" value="Duelista 1" maxlength="20" autocomplete="off" />
+                <output class="lp-value" aria-live="polite">8000</output>
+                <div class="lp-bar" aria-hidden="true"><span></span></div>
+                <div class="lp-btns">
+                    <button type="button" class="lp-minus" data-op="-">Restar</button>
+                    <button type="button" class="lp-plus" data-op="+">Sumar</button>
+                    <button type="button" data-op="half">Mitad</button>
+                </div>
+            </div>
+
+            <div class="lp-center">
+                <label class="lp-amount">
+                    <span>Cantidad</span>
+                    <input id="lpAmount" inputmode="numeric" pattern="[0-9]*" placeholder="0" autocomplete="off" />
+                </label>
+                <div class="lp-keypad" role="group" aria-label="Teclado numérico">
+                    <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+                    <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+                    <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+                    <button type="button" data-k="00">00</button><button type="button" data-k="0">0</button><button type="button" data-k="back" aria-label="Borrar un dígito">⌫</button>
+                </div>
+                <div class="lp-chips" role="group" aria-label="Cantidades rápidas">
+                    <button type="button" data-set="100">100</button>
+                    <button type="button" data-set="500">500</button>
+                    <button type="button" data-set="1000">1000</button>
+                    <button type="button" data-set="2000">2000</button>
+                </div>
+                <div class="lp-actions">
+                    <button type="button" class="button button-secondary" id="lpUndo">Deshacer</button>
+                    <button type="button" class="button button-secondary" id="lpReset">Nuevo duelo</button>
+                </div>
+            </div>
+
+            <div class="lp-player" data-p="1">
+                <label class="visually-hidden" for="lpName1">Nombre del segundo duelista</label>
+                <input class="lp-name" id="lpName1" value="Duelista 2" maxlength="20" autocomplete="off" />
+                <output class="lp-value" aria-live="polite">8000</output>
+                <div class="lp-bar" aria-hidden="true"><span></span></div>
+                <div class="lp-btns">
+                    <button type="button" class="lp-minus" data-op="-">Restar</button>
+                    <button type="button" class="lp-plus" data-op="+">Sumar</button>
+                    <button type="button" data-op="half">Mitad</button>
+                </div>
+            </div>
+        </div>
+
+        <details class="lp-history">
+            <summary>Historial del duelo <span class="tier-count" id="lpCount">0</span></summary>
+            <ol id="lpLog"></ol>
+            <p class="lp-empty" id="lpEmpty">Todavía no hay cambios en este duelo.</p>
+        </details>
+    </section>
+
+    <section class="section section-dark" id="azar">
+        <div class="section-head">
+            <h2>Moneda y dado</h2>
+            <p>Para cartas que piden lanzar una moneda o un dado, o para decidir quién empieza.</p>
+        </div>
+        <div class="chance">
+            <div class="chance-item">
+                <div class="coin" id="coin" aria-hidden="true">
+                    <div class="coin-face coin-heads">Cara</div>
+                    <div class="coin-face coin-tails">Cruz</div>
+                </div>
+                <button type="button" class="button button-primary" id="coinFlip">Lanzar moneda</button>
+            </div>
+            <div class="chance-item">
+                <div class="die" id="die" aria-hidden="true" data-v="1"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                <button type="button" class="button button-primary" id="dieRoll">Tirar dado</button>
+            </div>
+        </div>
+        <p class="chance-result" id="chanceResult" role="status" aria-live="polite">Lanza la moneda o el dado.</p>
+        <p class="chance-log" id="chanceLog"></p>
+    </section>
+
+    <section class="section" id="probabilidad">
+        <div class="section-head">
+            <h2>Probabilidad de robo</h2>
+            <p>Cuántas opciones tienes de ver una carta concreta en la mano. Útil para decidir si llevas 2 o 3 copias.</p>
+        </div>
+        <div class="odds">
+            <form class="odds-form" id="oddsForm">
+                <label><span>Cartas en el deck</span><input type="number" id="oddsN" min="1" max="60" value="40" /></label>
+                <label><span>Copias que te valen</span><input type="number" id="oddsK" min="0" max="60" value="3" /></label>
+                <label><span>Cartas que robas</span><input type="number" id="oddsH" min="1" max="60" value="5" /></label>
+                <label><span>Quiero ver al menos</span><input type="number" id="oddsX" min="1" max="60" value="1" /></label>
+                <div class="odds-presets" role="group" aria-label="Tamaño de la mano">
+                    <button type="button" data-h="5">Voy primero (5)</button>
+                    <button type="button" data-h="6">Voy segundo (6)</button>
+                </div>
+            </form>
+            <div class="odds-out">
+                <output class="odds-big" id="oddsBig" for="oddsN oddsK oddsH oddsX">0 %</output>
+                <p class="odds-text" id="oddsText"></p>
+                <div class="odds-bars" id="oddsBars"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-dark" id="temporizador">
         <div class="section-head">
             <h2>Temporizador de duelo</h2>
             <p>Elige la duración del duelo, arranca el reloj y no pierdas la partida por el tiempo.</p>

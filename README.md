@@ -11,11 +11,14 @@ Sitio público: <https://xlexyzz.github.io/Yugioh.github.io/>
 | `index.html` | Portada con accesos rápidos y vídeos (se cargan al hacer clic) |
 | `porfolio/torneos.html` | Brackets de cada torneo (se pueden ampliar y pasar con las flechas) |
 | `porfolio/banlist.html` | Descarga de la banlist y listado con buscador de las cartas restringidas |
-| `porfolio/reglas.html` | Reglas básicas del duelo |
-| `porfolio/tierlist.html` | Tierlist con filtro por nivel y buscador |
-| `porfolio/herramientas.html` | Temporizador de duelo (10/15/20/30 min, aviso a 1 min) |
+| `porfolio/reglas.html` | Reglas básicas, fases del turno paso a paso, mapa clicable del campo y test autocorregible |
+| `porfolio/tierlist.html` | Tierlist con filtro y buscador, y **Crea tu tierlist** (arrastrar y soltar, se guarda y se descarga como PNG) |
+| `porfolio/mazos.html` | **Validador de mazos**: pega un YDK o un enlace `ydke://` y comprueba la banlist XYZ, los límites de cada deck y la probabilidad de robo de cada carta |
+| `porfolio/herramientas.html` | Contador de puntos de vida, temporizador, moneda y dado, y calculadora de probabilidad |
 
-Los filtros se pueden compartir con un enlace: por ejemplo `porfolio/tierlist.html#grade1` o `porfolio/banlist.html#limitadas`.
+En todas las páginas, **Ctrl+K** (o `/`) abre un buscador de páginas, herramientas, decks y cartas de la banlist.
+
+Los filtros se pueden compartir con un enlace: por ejemplo `porfolio/tierlist.html#grade1`, `porfolio/banlist.html#limitadas` o `porfolio/banlist.html?q=Nibiru`. Un mazo validado se comparte con el enlace `porfolio/mazos.html#ydke=…` que genera el botón "Copiar enlace al mazo".
 
 ## Cómo actualizar el contenido
 
@@ -45,6 +48,12 @@ que no sea `.webp`/`.jpg`.
 - `sitemap.xml` y `robots.txt` apuntan a `https://xlexyzz.github.io/Yugioh.github.io/`.
 - Cada página tiene `canonical`, Open Graph y `og:image` (`img/og-image.png`).
 
+## Datos de cartas
+
+El validador de mazos y las vistas previas de la banlist usan la API pública de
+[YGOPRODeck](https://ygoprodeck.com/api-guide/). Los datos se guardan en el navegador y las
+imágenes en la caché del service worker, para no repetir peticiones.
+
 ## Probarlo en local
 
 El listado de la banlist se carga con `fetch` y el service worker necesita servidor,
@@ -56,3 +65,15 @@ py -3 -m http.server 8000
 ```
 
 y abre http://localhost:8000.
+
+### Pruebas automáticas
+
+Con el servidor en marcha en el puerto 8765:
+
+```bash
+py -3 scripts/check_refs.py
+py -3 scripts/e2e.py
+```
+
+`e2e.py` (Playwright) recorre la web en escritorio y móvil y prueba cada herramienta.
+Las instrucciones para mantener la web están en `.claude/skills/mantener-web-xyz/SKILL.md`.

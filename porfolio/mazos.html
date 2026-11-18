@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;500;700&family=Cinzel+Decorative:wght@700&display=swap" />
+    <title>Yu-Gi-Oh! XYZ - Validador de mazos</title>
+    <meta name="description" content="Pega tu mazo de YGO Omega (YDK o enlace ydke://) y comprueba al momento si cumple la banlist XYZ, con imágenes, estadísticas y probabilidad de robo." />
+    <meta property="og:title" content="Yu-Gi-Oh! XYZ - Validador de mazos" />
+    <meta property="og:description" content="Comprueba si tu mazo es legal con la banlist XYZ, con imágenes, estadísticas y probabilidad de robo." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f5b800" />
+    <meta property="og:url" content="https://xlexyzz.github.io/Yugioh.github.io/porfolio/mazos.html" />
+    <meta property="og:image" content="https://xlexyzz.github.io/Yugioh.github.io/img/og-image.png" />
+    <meta property="og:site_name" content="Yu-Gi-Oh! XYZ" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://xlexyzz.github.io/Yugioh.github.io/porfolio/mazos.html" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="../img/apple-touch-icon.png" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../estilos/styles.css" />
+    <link rel="stylesheet" href="../estilos/interactivo.css" />
+    <script src="../JS/script.js" defer></script>
+    <script src="../JS/interactivo.js" defer></script>
+    <script src="../JS/mazos.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header>
+    <div class="header-inner">
+        <h1>Mazos</h1>
+        <nav class="menu" aria-label="Menú principal">
+            <a href="../index.html">Inicio</a>
+            <a href="./torneos.html">Torneos</a>
+            <a href="./banlist.html">Banlist</a>
+            <a href="./reglas.html">Reglas</a>
+            <a href="./tierlist.html">Tierlist</a>
+            <a href="./mazos.html">Mazos</a>
+            <a href="./herramientas.html">Herramientas</a>
+        </nav>
+    </div>
+</header>
+
+<main id="contenido">
+    <section class="section">
+        <div class="section-head">
+            <h2>Validador de mazos</h2>
+            <p>Pega tu mazo de YGO Omega y comprueba al momento si cumple la banlist XYZ.</p>
+        </div>
+
+        <div class="deck-input" id="deckDrop">
+            <label for="deckText" class="deck-input-label">Mazo en formato YDK o enlace <code>ydke://</code></label>
+            <textarea id="deckText" rows="7" spellcheck="false" autocomplete="off"
+                      placeholder="#main&#10;14558127&#10;14558127&#10;…&#10;#extra&#10;…&#10;!side&#10;…"></textarea>
+            <p class="deck-input-help">Exporta el mazo desde YGO Omega como YDK o como enlace ydke:// y pégalo aquí. También puedes arrastrar un archivo <code>.ydk</code> a este recuadro.</p>
+            <div class="deck-actions">
+                <button type="button" class="button button-primary" id="deckCheck">Comprobar mazo</button>
+                <label class="button button-secondary deck-file">
+                    Abrir archivo .ydk
+                    <input type="file" id="deckFile" accept=".ydk,.txt,text/plain" />
+                </label>
+                <button type="button" class="button button-secondary" id="deckClear">Vaciar</button>
+            </div>
+        </div>
+
+        <div id="deckResult" class="deck-result" hidden>
+            <div class="deck-verdict" id="deckVerdict" role="status" aria-live="polite"></div>
+
+            <div class="deck-meters" id="deckMeters"></div>
+
+            <ul class="deck-issues" id="deckIssues"></ul>
+
+            <div class="deck-tools">
+                <button type="button" class="button button-secondary" id="deckShare">Copiar enlace al mazo</button>
+                <button type="button" class="button button-secondary" id="deckCopyYdke">Copiar ydke://</button>
+                <button type="button" class="button button-secondary" id="deckDownload">Descargar .ydk</button>
+                <label class="deck-hand-toggle">
+                    <input type="checkbox" id="deckSecond" />
+                    <span>Voy segundo (mano de 6)</span>
+                </label>
+            </div>
+
+            <div id="deckSections"></div>
+        </div>
+    </section>
+</main>
+
+<dialog class="card-detail" id="cardDetail" aria-labelledby="cardDetailName">
+    <div class="card-detail-inner">
+        <img alt="" id="cardDetailImg" width="421" height="614" />
+        <div class="card-detail-body">
+            <h3 id="cardDetailName"></h3>
+            <p class="card-detail-meta" id="cardDetailMeta"></p>
+            <p class="card-detail-ban" id="cardDetailBan"></p>
+            <p class="card-detail-desc" id="cardDetailDesc"></p>
+            <p class="card-detail-odds" id="cardDetailOdds"></p>
+            <a class="button button-secondary" id="cardDetailLink" target="_blank" rel="noopener">Ver en YGOPRODeck</a>
+        </div>
+        <button type="button" class="modal-close" id="cardDetailClose" aria-label="Cerrar">×</button>
+    </div>
+</dialog>
+
+<footer>
+    <div class="footer-content">
+        <nav class="footer-links" aria-label="Enlaces externos">
+            <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Jugar en YGO Omega</a>
+            <a href="https://ygoprodeck.com/api-guide/" target="_blank" rel="noopener">Datos de cartas: YGOPRODeck</a>
+            <a href="https://github.com/XLexYzz/Yugioh.github.io" target="_blank" rel="noopener">Código en GitHub</a>
+        </nav>
+        <p class="footer-copyright">© 2026 Yu-Gi-Oh! XYZ</p>
+    </div>
+</footer>
+
+</body>
+</html>
