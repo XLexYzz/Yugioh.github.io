@@ -25,6 +25,9 @@
     <link rel="stylesheet" href="../estilos/styles.css" />
     <link rel="stylesheet" href="../estilos/interactivo.css" />
     <link rel="stylesheet" href="../estilos/arena.css" />
+    <script src="../datos/tierlist.js" defer></script>
+    <script src="../JS/tierlist-datos.js" defer></script>
+    <script src="../JS/tierlist-render.js" defer></script>
     <script src="../JS/script.js" defer></script>
     <script src="../JS/interactivo.js" defer></script>
     <script src="../JS/torneos-datos.js" defer></script>
@@ -65,140 +68,12 @@
                 <span class="visually-hidden">Buscar en la tierlist</span>
                 <input type="search" id="tierSearch" placeholder="Buscar deck o personaje…" autocomplete="off" />
             </label>
-            <div class="tierlist-filter">
-                <button class="active" data-tier="all">Todo</button>
-                <button data-tier="nah">NAH I’D WIN</button>
-                <button data-tier="special">Special Grade</button>
-                <button data-tier="grade1">Grade 1</button>
-                <button data-tier="grade2">Grade 2</button>
-                <button data-tier="semigrade2">Semi Grade 2</button>
-                <button data-tier="ok">Ok</button>
-                <button data-tier="meh">MEH I’D LOSE</button>
-            </div>
+            <div class="tierlist-filter" role="group" aria-label="Filtrar por nivel"></div>
         </div>
 
         <p class="empty-state" id="tierEmpty" hidden>No hay ningún deck que coincida con la búsqueda.</p>
 
-        <div class="tierlist-categories">
-            <section class="tierlist-category" data-tier="nah">
-                <h3>NAH I’D WIN</h3>
-                <div class="tierlist-grid">
-                    <figure><img src="../tierlist/yubel.webp" alt="Deck Yubel" width="1024" height="1457" decoding="async" loading="eager" fetchpriority="high" /><figcaption>Yubel</figcaption></figure>
-                </div>
-            </section>
-
-            <section class="tierlist-category" data-tier="special">
-                <h3>Special Grade</h3>
-                <div class="tierlist-grid">
-                    <figure><img src="../tierlist/Nash.webp" alt="Deck Nash" width="1024" height="536" decoding="async" loading="lazy" /><figcaption>Nash</figcaption></figure>
-                    <figure><img src="../tierlist/yusei.webp" alt="Deck Yusei" width="1024" height="601" decoding="async" loading="lazy" /><figcaption>Yusei</figcaption></figure>
-                    <figure><img src="../tierlist/kaiba.webp" alt="Deck Kaiba" width="735" height="531" decoding="async" loading="lazy" /><figcaption>Kaiba</figcaption></figure>
-                    <figure><img src="../tierlist/snake_eyes.webp" alt="Deck Snake-Eye" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Snake-Eye</figcaption></figure>
-                    <figure><img src="../tierlist/jack.webp" alt="Deck Jack" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Jack</figcaption></figure>
-                </div>
-            </section>
-
-            <section class="tierlist-category" data-tier="grade1">
-                <h3>Grade 1</h3>
-                <div class="tierlist-grid">
-                    <figure><img src="../tierlist/shun.webp" alt="Deck Shun" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Shun</figcaption></figure>
-                    <figure><img src="../tierlist/yuma.webp" alt="Deck Yuma" width="600" height="380" decoding="async" loading="lazy" /><figcaption>Yuma</figcaption></figure>
-                    <figure><img src="../tierlist/playmaker.webp" alt="Deck Playmaker" width="736" height="460" decoding="async" loading="lazy" /><figcaption>Playmaker</figcaption></figure>
-                    <figure><img src="../tierlist/soulburner.webp" alt="Deck Soulburner" width="600" height="424" decoding="async" loading="lazy" /><figcaption>Soulburner</figcaption></figure>
-                    <figure><img src="../tierlist/mirrorjade.webp" alt="Deck Mirrorjade" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Mirrorjade</figcaption></figure>
-                    <figure><img src="../tierlist/quatro.webp" alt="Deck Quatro" width="1005" height="702" decoding="async" loading="lazy" /><figcaption>Quatro</figcaption></figure>
-                    <figure><img src="../tierlist/mizael.webp" alt="Deck Mizael" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Mizael</figcaption></figure>
-                    <figure><img src="../tierlist/dino.webp" alt="Deck Dino" width="1024" height="330" decoding="async" loading="lazy" /><figcaption>Dino</figcaption></figure>
-                    <figure><img src="../tierlist/revolver.webp" alt="Deck Revolver" width="736" height="414" decoding="async" loading="lazy" /><figcaption>Revolver</figcaption></figure>
-                    <figure><img src="../tierlist/six.webp" alt="Deck Six" width="1024" height="601" decoding="async" loading="lazy" /><figcaption>Six</figcaption></figure>
-                </div>
-            </section>
-
-            <section class="tierlist-category" data-tier="grade2">
-                <h3>Grade 2</h3>
-                <div class="tierlist-grid">
-                    <figure><img src="../tierlist/mimighoul.webp" alt="Deck Mimighoul" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Mimighoul</figcaption></figure>
-                    <figure><img src="../tierlist/fiendsmith.webp" alt="Deck Fiendsmith" width="1024" height="512" decoding="async" loading="lazy" /><figcaption>Fiendsmith</figcaption></figure>
-                    <figure><img src="../tierlist/rescue-ace.webp" alt="Deck Rescue-ACE" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Rescue-ACE</figcaption></figure>
-                    <figure><img src="../tierlist/zarc.webp" alt="Deck Zarc" width="985" height="568" decoding="async" loading="lazy" /><figcaption>Zarc</figcaption></figure>
-                    <figure><img src="../tierlist/kaito.webp" alt="Deck Kaito" width="1024" height="597" decoding="async" loading="lazy" /><figcaption>Kaito</figcaption></figure>
-                    <figure><img src="../tierlist/voiless.webp" alt="Deck Voiceless Voice" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Voiceless Voice</figcaption></figure>
-                    <figure><img src="../tierlist/centurion.webp" alt="Deck Centurion" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Centurion</figcaption></figure>
-                    <figure><img src="../tierlist/unchained.webp" alt="Deck Unchained" width="1024" height="597" decoding="async" loading="lazy" /><figcaption>Unchained</figcaption></figure>
-                    <figure><img src="../tierlist/crow.webp" alt="Deck Crow" width="735" height="392" decoding="async" loading="lazy" /><figcaption>Crow</figcaption></figure>
-                    <figure><img src="../tierlist/yugi.webp" alt="Deck Yugi" width="1006" height="567" decoding="async" loading="lazy" /><figcaption>Yugi</figcaption></figure>
-                    <figure><img src="../tierlist/ghost.webp" alt="Deck Ghost" width="985" height="554" decoding="async" loading="lazy" /><figcaption>Ghost</figcaption></figure>
-                </div>
-            </section>
-
-            <section class="tierlist-category" data-tier="semigrade2">
-                <h3>Semi Grade 2</h3>
-                <div class="tierlist-grid">
-                    <figure><img src="../tierlist/typhoon.webp" alt="Deck Typhoon" width="1024" height="661" decoding="async" loading="lazy" /><figcaption>Typhoon</figcaption></figure>
-                    <figure><img src="../tierlist/akaba.webp" alt="Deck Akaba" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Akaba</figcaption></figure>
-                    <figure><img src="../tierlist/magistus.webp" alt="Deck Magistus" width="1024" height="675" decoding="async" loading="lazy" /><figcaption>Magistus</figcaption></figure>
-                    <figure><img src="../tierlist/dracotail.webp" alt="Deck Dracotail" width="1024" height="572" decoding="async" loading="lazy" /><figcaption>Dracotail</figcaption></figure>
-                    <figure><img src="../tierlist/k9.webp" alt="Deck K9" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>K9</figcaption></figure>
-                    <figure><img src="../tierlist/orcust.webp" alt="Deck Orcust" width="500" height="291" decoding="async" loading="lazy" /><figcaption>Orcust</figcaption></figure>
-                    <figure><img src="../tierlist/flame_swordman.webp" alt="Deck Flame Swordsman" width="600" height="567" decoding="async" loading="lazy" /><figcaption>Flame Swordsman</figcaption></figure>
-                </div>
-            </section>
-
-            <section class="tierlist-category" data-tier="ok">
-                <h3>Ok</h3>
-                <div class="tierlist-grid">
-                    <figure><img src="../tierlist/hermanosparadoja.webp" alt="Deck Hermanos Paradoja" width="686" height="386" decoding="async" loading="lazy" /><figcaption>Hermanos Paradoja</figcaption></figure>
-                    <figure><img src="../tierlist/zane.webp" alt="Deck Zane" width="1024" height="596" decoding="async" loading="lazy" /><figcaption>Zane</figcaption></figure>
-                    <figure><img src="../tierlist/sergey.webp" alt="Deck Sergey" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Sergey</figcaption></figure>
-                    <figure><img src="../tierlist/ai.webp" alt="Deck Ai" width="686" height="386" decoding="async" loading="lazy" /><figcaption>Ai</figcaption></figure>
-                    <figure><img src="../tierlist/makotsunami.webp" alt="Deck Mako Tsunami" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Mako Tsunami</figcaption></figure>
-                    <figure><img src="../tierlist/yuto.webp" alt="Deck Yuto" width="728" height="410" decoding="async" loading="lazy" /><figcaption>Yuto</figcaption></figure>
-                    <figure><img src="../tierlist/alito.webp" alt="Deck Alito" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Alito</figcaption></figure>
-                    <figure><img src="../tierlist/flowwandareeze.webp" alt="Deck Floowandereeze" width="900" height="562" decoding="async" loading="lazy" /><figcaption>Floowandereeze</figcaption></figure>
-                    <figure><img src="../tierlist/purrely.webp" alt="Deck Purrely" width="800" height="473" decoding="async" loading="lazy" /><figcaption>Purrely</figcaption></figure>
-                </div>
-            </section>
-
-            <section class="tierlist-category" data-tier="meh">
-                <h3>MEH I’D LOSE</h3>
-                <div class="tierlist-grid">
-                    <figure><img src="../tierlist/crawler.webp" alt="Deck Crawler" width="1024" height="629" decoding="async" loading="lazy" /><figcaption>Crawler</figcaption></figure>
-                    <figure><img src="../tierlist/skull.webp" alt="Deck Skull" width="928" height="862" decoding="async" loading="lazy" /><figcaption>Skull</figcaption></figure>
-                    <figure><img src="../tierlist/ghoti.webp" alt="Deck Ghoti" width="1024" height="575" decoding="async" loading="lazy" /><figcaption>Ghoti</figcaption></figure>
-                    <figure><img src="../tierlist/tenpai.webp" alt="Deck Tenpai" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Tenpai</figcaption></figure>
-                    <figure><img src="../tierlist/swordsoul.webp" alt="Deck Swordsoul" width="825" height="365" decoding="async" loading="lazy" /><figcaption>Swordsoul</figcaption></figure>
-                    <figure><img src="../tierlist/thunderdragon.webp" alt="Deck Thunder Dragon" width="800" height="400" decoding="async" loading="lazy" /><figcaption>Thunder Dragon</figcaption></figure>
-                    <figure><img src="../tierlist/labyrinth.webp" alt="Deck Labyrinth" width="736" height="414" decoding="async" loading="lazy" /><figcaption>Labyrinth</figcaption></figure>
-                    <figure><img src="../tierlist/akiza.webp" alt="Deck Akiza" width="1024" height="682" decoding="async" loading="lazy" /><figcaption>Akiza</figcaption></figure>
-                    <figure><img src="../tierlist/abc.webp" alt="Deck ABC" width="800" height="473" decoding="async" loading="lazy" /><figcaption>ABC</figcaption></figure>
-                    <figure><img src="../tierlist/drytron.webp" alt="Deck Drytron" width="1024" height="569" decoding="async" loading="lazy" /><figcaption>Drytron</figcaption></figure>
-                    <figure><img src="../tierlist/infernoid.webp" alt="Deck Infernoid" width="800" height="473" decoding="async" loading="lazy" /><figcaption>Infernoid</figcaption></figure>
-                    <figure><img src="../tierlist/train.webp" alt="Deck Train" width="1024" height="611" decoding="async" loading="lazy" /><figcaption>Train</figcaption></figure>
-                    <figure><img src="../tierlist/yummy.webp" alt="Deck Yummy" width="720" height="410" decoding="async" loading="lazy" /><figcaption>Yummy</figcaption></figure>
-                    <figure><img src="../tierlist/mannadium.webp" alt="Deck Mannadium" width="720" height="405" decoding="async" loading="lazy" /><figcaption>Mannadium</figcaption></figure>
-                    <figure><img src="../tierlist/artmage.webp" alt="Deck Artmage" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Artmage</figcaption></figure>
-                    <figure><img src="../tierlist/roboppy.webp" alt="Deck Roboppy" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Roboppy</figcaption></figure>
-                    <figure><img src="../tierlist/psy.webp" alt="Deck PSY-Framegear" width="750" height="350" decoding="async" loading="lazy" /><figcaption>PSY-Framegear</figcaption></figure>
-                    <figure><img src="../tierlist/darklords.webp" alt="Deck Darklords" width="1024" height="646" decoding="async" loading="lazy" /><figcaption>Darklords</figcaption></figure>
-                    <figure><img src="../tierlist/elfennotes.webp" alt="Deck Elfnote" width="929" height="540" decoding="async" loading="lazy" /><figcaption>Elfnote</figcaption></figure>
-                    <figure><img src="../tierlist/atem.webp" alt="Deck Atem" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Atem</figcaption></figure>
-                    <figure><img src="../tierlist/whiteforest.webp" alt="Deck White Forest" width="960" height="540" decoding="async" loading="lazy" /><figcaption>White Forest</figcaption></figure>
-                    <figure><img src="../tierlist/memento.webp" alt="Deck Memento" width="1000" height="730" decoding="async" loading="lazy" /><figcaption>Memento</figcaption></figure>
-                    <figure><img src="../tierlist/bakura.webp" alt="Deck Bakura" width="1024" height="582" decoding="async" loading="lazy" /><figcaption>Bakura</figcaption></figure>
-                    <figure><img src="../tierlist/jaden.webp" alt="Deck Jaden" width="800" height="467" decoding="async" loading="lazy" /><figcaption>Jaden</figcaption></figure>
-                    <figure><img src="../tierlist/maxi.webp" alt="Deck Maxi" width="1024" height="597" decoding="async" loading="lazy" /><figcaption>Maxi</figcaption></figure>
-                    <figure><img src="../tierlist/yuri.webp" alt="Deck Yuri" width="736" height="429" decoding="async" loading="lazy" /><figcaption>Yuri</figcaption></figure>
-                    <figure><img src="../tierlist/marincess.webp" alt="Deck Marincess" width="1024" height="512" decoding="async" loading="lazy" /><figcaption>Marincess</figcaption></figure>
-                    <figure><img src="../tierlist/odion.webp" alt="Deck Odion" width="1000" height="523" decoding="async" loading="lazy" /><figcaption>Odion</figcaption></figure>
-                    <figure><img src="../tierlist/marik.webp" alt="Deck Marik" width="1024" height="444" decoding="async" loading="lazy" /><figcaption>Marik</figcaption></figure>
-                    <figure><img src="../tierlist/yugo.webp" alt="Deck Yugo" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Yugo</figcaption></figure>
-                    <figure><img src="../tierlist/battlewasp.webp" alt="Deck Battlewasp" width="686" height="386" decoding="async" loading="lazy" /><figcaption>Battlewasp</figcaption></figure>
-                    <figure><img src="../tierlist/gem.webp" alt="Deck Gem" width="600" height="450" decoding="async" loading="lazy" /><figcaption>Gem</figcaption></figure>
-                    <figure><img src="../tierlist/ryzeal.webp" alt="Deck Ryzeal" width="686" height="386" decoding="async" loading="lazy" /><figcaption>Ryzeal</figcaption></figure>
-                    <figure><img src="../tierlist/sueldo.webp" alt="Deck Sueldo" width="1024" height="576" decoding="async" loading="lazy" /><figcaption>Sueldo</figcaption></figure>
-                </div>
-            </section>
-        </div>
+        <div class="tierlist-categories" aria-live="polite"></div>
     </section>
 
     <section class="section section-dark" id="crea">
@@ -221,7 +96,7 @@
         <p>© 2026 Yu-Gi-Oh! XYZ. Web de la comunidad, sin relación con Konami.</p>
         <nav class="footer-links" aria-label="Más enlaces">
             <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Jugar en YGO Omega</a>
-            <a href="./editor.html">Editar resultados</a>
+            <a href="./editor.html">Panel de organizadores</a>
             <a href="https://ygoprodeck.com/api-guide/" target="_blank" rel="noopener">Datos de cartas: YGOPRODeck</a>
             <a href="https://github.com/XLexYzz/Yugioh.github.io" target="_blank" rel="noopener">Código en GitHub</a>
         </nav>

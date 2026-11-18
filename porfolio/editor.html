@@ -6,10 +6,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Big+Shoulders+Display:wght@700;800;900&display=swap" />
-    <title>Yu-Gi-Oh! XYZ - Editor de resultados</title>
-    <meta name="description" content="Editor de los resultados de los torneos de Yu-Gi-Oh! XYZ: confirma los mazos, corrige partidas y descarga los datos." />
-    <meta property="og:title" content="Yu-Gi-Oh! XYZ - Editor de resultados" />
-    <meta property="og:description" content="Editor de los resultados de los torneos de Yu-Gi-Oh! XYZ: confirma los mazos, corrige partidas y descarga los datos." />
+    <title>Yu-Gi-Oh! XYZ - Panel de organizadores</title>
+    <meta name="description" content="Panel de organizadores de Yu-Gi-Oh! XYZ: torneos, inscripciones, resultados y tierlist." />
+    <meta property="og:title" content="Yu-Gi-Oh! XYZ - Panel de organizadores" />
+    <meta property="og:description" content="Panel de organizadores de Yu-Gi-Oh! XYZ: torneos, inscripciones, resultados y tierlist." />
     <meta property="og:type" content="website" />
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#0f0e1c" />
@@ -25,9 +25,13 @@
     <link rel="stylesheet" href="../estilos/styles.css" />
     <link rel="stylesheet" href="../estilos/interactivo.css" />
     <link rel="stylesheet" href="../estilos/arena.css" />
+    <link rel="stylesheet" href="../estilos/panel.css" />
     <script src="../JS/script.js" defer></script>
     <script src="../JS/interactivo.js" defer></script>
+    <script src="../datos/tierlist.js" defer></script>
+    <script src="../JS/tierlist-datos.js" defer></script>
     <script src="../JS/torneos-datos.js" defer></script>
+    <script src="../JS/github.js" defer></script>
     <script src="../JS/editor.js" defer></script>
 </head>
 <body>
@@ -55,75 +59,163 @@
 <main id="contenido">
     <section class="section">
         <div class="section-head">
-            <h1>Editor de resultados</h1>
-            <p>Corrige los nombres de los mazos y los resultados de cada torneo. Los cambios se guardan en este navegador como borrador; cuando esté listo, descarga <code>torneos.json</code> y súbelo a la carpeta <code>datos/</code> del repositorio.</p>
+            <h1>Panel de organizadores</h1>
+            <p>Crea torneos, apunta a los participantes, genera el cuadro y marca los resultados; añade decks a la tierlist. Todo se guarda en este navegador como borrador hasta que lo publicas en GitHub.</p>
         </div>
 
-        <div class="ed-bar" id="edBar">
+        <div class="ed-bar">
             <p class="ed-status" id="edStatus" role="status" aria-live="polite">Cargando…</p>
             <div class="ed-bar-actions">
                 <label class="stats-check">
                     <input type="checkbox" id="edPreview" />
-                    <span>Ver la web con este borrador</span>
+                    <span>Ver la web con mis cambios</span>
                 </label>
-                <button type="button" class="button button-primary" id="edDownload">Descargar torneos.json</button>
-                <button type="button" class="button button-secondary" id="edCopy">Copiar JSON</button>
-                <button type="button" class="button button-secondary" id="edReset">Descartar borrador</button>
-            </div>
-        </div>
-    </section>
-
-    <section class="section section-dark" id="confirmar">
-        <div class="section-head">
-            <h2>Nombres por confirmar</h2>
-            <p>Estos nombres describen la ilustración del bracket. Escribe el mazo correcto y pulsa Aplicar: se cambia en todos los torneos. Pulsa un torneo para ver la imagen y comprobarlo.</p>
-        </div>
-        <label class="stats-check ed-all">
-            <input type="checkbox" id="edShowAll" />
-            <span>Mostrar también los nombres ya confirmados</span>
-        </label>
-        <div class="ed-names" id="edNames"></div>
-    </section>
-
-    <section class="section" id="partidas">
-        <div class="section-head">
-            <h2>Partidas por torneo</h2>
-            <p>Elige el ganador de cada partida con el botón de su lado. Para un torneo nuevo, escribe los participantes en orden y genera las rondas.</p>
-        </div>
-
-        <div class="ed-tour-bar">
-            <label class="stats-select">
-                <span>Torneo</span>
-                <select id="edTour"></select>
-            </label>
-            <button type="button" class="button button-secondary" id="edNew">Nuevo torneo</button>
-            <button type="button" class="button button-secondary" id="edDelete">Borrar este torneo</button>
-        </div>
-
-        <div class="ed-new" id="edNewForm" hidden>
-            <label for="edEntrants">Participantes en el orden del cuadro (uno por línea; 4, 8, 16 o 32)</label>
-            <textarea id="edEntrants" rows="8" placeholder="Kaiba&#10;Yusei&#10;…"></textarea>
-            <div class="ed-row-actions">
-                <button type="button" class="button button-primary" id="edCreate">Crear torneo</button>
-                <button type="button" class="button button-secondary" id="edCancel">Cancelar</button>
+                <button type="button" class="button button-primary" id="edGoPublish">Publicar</button>
             </div>
         </div>
 
-        <div class="ed-workspace">
-            <figure class="ed-image">
-                <div class="ed-image-scroll" id="edImageScroll">
-                    <img id="edImage" alt="" />
+        <div class="adm-tabs" role="tablist" aria-label="Secciones del panel">
+            <button type="button" role="tab" id="tab-torneos" aria-controls="panel-torneos" aria-selected="true">Torneos</button>
+            <button type="button" role="tab" id="tab-tierlist" aria-controls="panel-tierlist" aria-selected="false" tabindex="-1">Tierlist</button>
+            <button type="button" role="tab" id="tab-publicar" aria-controls="panel-publicar" aria-selected="false" tabindex="-1">Publicar <span class="tier-count" id="edPendingCount" hidden></span></button>
+        </div>
+
+        <!-- ================= TORNEOS ================= -->
+        <div class="adm-panel" id="panel-torneos" role="tabpanel" aria-labelledby="tab-torneos">
+            <div class="ed-tour-bar">
+                <label class="stats-select">
+                    <span>Torneo</span>
+                    <select id="edTour"></select>
+                </label>
+                <button type="button" class="button button-primary" id="edNew">Nuevo torneo</button>
+                <button type="button" class="button button-secondary" id="edDelete">Borrar este torneo</button>
+            </div>
+
+            <form class="adm-card ed-new" id="edNewForm" hidden>
+                <h2>Nuevo torneo</h2>
+                <div class="adm-grid">
+                    <label class="adm-field"><span>Nombre</span><input id="edNewName" required /></label>
+                    <label class="adm-field"><span>Fecha</span><input id="edNewDate" type="date" /></label>
                 </div>
-                <figcaption>
-                    <label>
-                        <span>Zoom</span>
-                        <input type="range" id="edZoom" min="100" max="300" step="10" value="100" />
-                    </label>
-                </figcaption>
-            </figure>
-            <div class="ed-rounds" id="edRounds"></div>
+                <div class="ed-row-actions">
+                    <button type="submit" class="button button-primary">Crear y abrir inscripción</button>
+                    <button type="button" class="button button-secondary" id="edCancel">Cancelar</button>
+                </div>
+            </form>
+
+            <div class="adm-card" id="edInfo"></div>
+
+            <div class="adm-card" id="edEntrants"></div>
+
+            <div class="adm-card">
+                <div class="adm-card-head">
+                    <h2>Partidas</h2>
+                    <p class="adm-hint" id="edRoundsHint">Pulsa la V del mazo que gana cada partida. Cuando una ronda está completa, la siguiente se crea sola.</p>
+                </div>
+                <div class="ed-workspace" id="edWorkspace">
+                    <figure class="ed-image" id="edImageBox" hidden>
+                        <div class="ed-image-scroll">
+                            <img id="edImage" alt="" />
+                        </div>
+                        <figcaption>
+                            <label>
+                                <span>Zoom</span>
+                                <input type="range" id="edZoom" min="100" max="300" step="10" value="100" />
+                            </label>
+                        </figcaption>
+                    </figure>
+                    <div class="ed-rounds" id="edRounds"></div>
+                </div>
+                <ul class="ed-problems" id="edProblems"></ul>
+            </div>
+
+            <details class="adm-card adm-details" id="confirmar">
+                <summary><h2>Nombres de mazos</h2><span class="tier-count" id="edNamesCount"></span></summary>
+                <p class="adm-hint">Cambia un nombre en todos los torneos a la vez. Los que empiezan por "?" describen la ilustración de un bracket antiguo.</p>
+                <label class="stats-check ed-all">
+                    <input type="checkbox" id="edShowAll" />
+                    <span>Mostrar también los nombres ya confirmados</span>
+                </label>
+                <div class="ed-names" id="edNames"></div>
+            </details>
         </div>
-        <ul class="ed-problems" id="edProblems"></ul>
+
+        <!-- ================= TIERLIST ================= -->
+        <div class="adm-panel" id="panel-tierlist" role="tabpanel" aria-labelledby="tab-tierlist" hidden>
+            <form class="adm-card" id="tlAddForm">
+                <h2>Añadir un deck</h2>
+                <div class="adm-grid adm-grid-add">
+                    <label class="adm-field"><span>Nombre</span><input id="tlName" required autocomplete="off" /></label>
+                    <label class="adm-field"><span>Nivel</span><select id="tlLevel"></select></label>
+                    <label class="adm-field adm-file">
+                        <span>Imagen (se convierte a WebP)</span>
+                        <input type="file" id="tlImage" accept="image/*" required />
+                    </label>
+                    <div class="tl-preview" id="tlPreview" aria-live="polite"><span>Sin imagen</span></div>
+                </div>
+                <div class="ed-row-actions">
+                    <button type="submit" class="button button-primary">Añadir a la tierlist</button>
+                </div>
+            </form>
+
+            <div class="adm-card">
+                <div class="adm-card-head">
+                    <h2>Decks por nivel</h2>
+                    <p class="adm-hint">Cambia el nivel, el orden o el nombre. Al renombrar, puedes cambiarlo también en los torneos para que no se pierda su récord.</p>
+                </div>
+                <div id="tlLevels"></div>
+            </div>
+        </div>
+
+        <!-- ================= PUBLICAR ================= -->
+        <div class="adm-panel" id="panel-publicar" role="tabpanel" aria-labelledby="tab-publicar" hidden>
+            <div class="adm-card">
+                <h2>Cambios sin publicar</h2>
+                <ul class="adm-changes" id="pubChanges"></ul>
+                <label class="adm-field"><span>Descripción del cambio</span><input id="pubMessage" placeholder="Torneo 14: inscritos y resultados" /></label>
+                <div class="ed-row-actions">
+                    <button type="button" class="button button-primary" id="pubPublish">Publicar en GitHub</button>
+                    <button type="button" class="button button-secondary" id="pubDiscard">Descartar mis cambios</button>
+                </div>
+                <p class="adm-result" id="pubResult" role="status" aria-live="polite"></p>
+            </div>
+
+            <form class="adm-card" id="ghForm" autocomplete="off">
+                <div class="adm-card-head">
+                    <h2>Conexión con GitHub</h2>
+                    <p class="adm-hint" id="ghStatus"></p>
+                </div>
+                <div class="adm-grid">
+                    <label class="adm-field"><span>Usuario u organización</span><input id="ghOwner" required /></label>
+                    <label class="adm-field"><span>Repositorio</span><input id="ghRepo" required /></label>
+                    <label class="adm-field"><span>Rama que publica la web</span><input id="ghBranch" required /></label>
+                    <label class="adm-field"><span>Token de acceso</span><input id="ghToken" type="password" placeholder="github_pat_…" /></label>
+                </div>
+                <div class="ed-row-actions">
+                    <button type="submit" class="button button-primary">Guardar y comprobar</button>
+                    <button type="button" class="button button-secondary" id="ghForget">Olvidar el token</button>
+                </div>
+                <details class="adm-help">
+                    <summary>Cómo crear el token (una sola vez)</summary>
+                    <ol>
+                        <li>Entra en <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token</a>.</li>
+                        <li>Ponle un nombre (por ejemplo "Panel XYZ") y una caducidad.</li>
+                        <li>En <strong>Repository access</strong> elige <em>Only select repositories</em> y marca solo este repositorio.</li>
+                        <li>En <strong>Permissions → Repository permissions → Contents</strong> elige <em>Read and write</em>. No hace falta nada más.</li>
+                        <li>Genera el token, cópialo y pégalo arriba. Se guarda solo en este navegador; cualquiera con acceso a este navegador podría publicar, así que úsalo en un equipo tuyo.</li>
+                    </ol>
+                </details>
+            </form>
+
+            <div class="adm-card">
+                <h2>Sin GitHub</h2>
+                <p class="adm-hint">También puedes descargar los archivos y subirlos a mano a la carpeta <code>datos/</code> del repositorio (y las imágenes nuevas a <code>tierlist/</code>).</p>
+                <div class="ed-row-actions">
+                    <button type="button" class="button button-secondary" id="dlTorneos">Descargar torneos.json</button>
+                    <button type="button" class="button button-secondary" id="dlTierlist">Descargar tierlist.js</button>
+                </div>
+            </div>
+        </div>
     </section>
 
     <datalist id="edDecks"></datalist>
@@ -135,7 +227,7 @@
         <p>© 2026 Yu-Gi-Oh! XYZ. Web de la comunidad, sin relación con Konami.</p>
         <nav class="footer-links" aria-label="Más enlaces">
             <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Jugar en YGO Omega</a>
-            <a href="./editor.html">Editar resultados</a>
+            <a href="./editor.html">Panel de organizadores</a>
             <a href="https://ygoprodeck.com/api-guide/" target="_blank" rel="noopener">Datos de cartas: YGOPRODeck</a>
             <a href="https://github.com/XLexYzz/Yugioh.github.io" target="_blank" rel="noopener">Código en GitHub</a>
         </nav>

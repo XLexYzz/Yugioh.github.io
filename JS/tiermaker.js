@@ -18,7 +18,7 @@
     const decks = [...document.querySelectorAll('.tierlist-category figure')].map(fig => {
         const img = fig.querySelector('img');
         return {
-            id: img.getAttribute('src').split('/').pop(),
+            id: fig.dataset.imagen || img.getAttribute('src').split('/').pop(),
             src: img.getAttribute('src'),
             nombre: fig.querySelector('figcaption')?.textContent.trim() || img.alt,
             tier: fig.closest('.tierlist-category')?.dataset.tier,

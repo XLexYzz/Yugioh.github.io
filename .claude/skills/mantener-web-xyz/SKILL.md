@@ -16,7 +16,8 @@ principal se publica en GitHub Pages.
 | `estilos/styles.css` | Sistema base "Arena de torneo": tokens en `:root`, cabecera, secciones, tierlist, banlist, visor |
 | `estilos/interactivo.css` | Componentes interactivos (paleta, mazos, LP, fases, campo, test, tiermaker) |
 | `estilos/arena.css` | Portada, estadísticas, cuadros de torneo y editor |
-| `datos/torneos.json` | Resultados de todos los torneos: `[ronda, mazoA, mazoB, ganador 0/1]` por partida |
+| `datos/torneos.json` | Torneos: `estado` (inscripcion / en-juego / terminado), `inscritos` [{mazo, jugador}], `cuadro` (primera ronda, `null` = pase directo) y `partidas` `[ronda, mazoA, mazoB, ganador 0/1/null]` |
+| `datos/tierlist.js` | Tierlist (`window.TIERLIST_DATOS`: niveles y decks con imagen, nivel, ancho y alto). La página la pinta `JS/tierlist-render.js` |
 | `JS/script.js` | Base de todas las páginas: menú activo, visor, filtros, banlist, temporizador, SW |
 | `JS/interactivo.js` | Global: objeto `XYZ` (banlist, `escapar`, `guardar`/`leer` en localStorage), paleta Ctrl+K, zoom del visor, vista previa de cartas, `?q=` |
 | `JS/mazos.js` | Validador de mazos (YDK / ydke://) con la API de YGOPRODeck |
@@ -25,7 +26,9 @@ principal se publica en GitHub Pages.
 | `JS/tiermaker.js` | Crea tu tierlist (lee los decks de la propia tierlist) |
 | `JS/torneos-datos.js` | Objeto `TORNEOS`: carga `datos/torneos.json` (o el borrador del editor) y calcula estadísticas por mazo; mapa nombre → imagen de la tierlist |
 | `JS/torneos.js`, `JS/estadisticas.js`, `JS/inicio.js` | Cuadros interactivos, ranking/ficha de mazo y portada con datos reales |
-| `JS/editor.js` | `porfolio/editor.html`: confirmar nombres, corregir partidas, crear torneos y descargar `torneos.json` |
+| `JS/editor.js` + `estilos/panel.css` | `porfolio/editor.html`, panel de organizadores: torneos (inscripción, cuadro con pases directos, resultados), tierlist (añadir decks con imagen convertida a WebP, ordenar, cambiar nivel) y publicación |
+| `JS/github.js` | Publica en el repositorio con la API de GitHub (un commit con todos los archivos) usando un token fine-grained guardado solo en el navegador del organizador |
+| `JS/tierlist-datos.js` | Objeto `TIERLIST_XYZ`: tierlist publicada o borrador del panel, imágenes pendientes |
 | `banlist/Untitled Banlist.lflist.conf` | Banlist XYZ; la leen la página de banlist, la paleta y el validador |
 | `sw.js` | Service worker (offline) |
 | `scripts/` | `check_refs.py` (enlaces rotos), `e2e.py` (pruebas Playwright), `build_assets.py` (PNG → WebP) |
@@ -36,19 +39,22 @@ todos con `defer`. Los scripts de página usan funciones globales de los anterio
 
 ## Tareas habituales
 
-**Nuevo torneo.** Imagen en `torneos/torneoN.webp` (convierte con `py -3 scripts/build_assets.py`)
-y un `<figure>` en "Imágenes originales" de `porfolio/torneos.html`. Los resultados se meten en
-`porfolio/editor.html` (Nuevo torneo → participantes en orden → marcar ganadores → Generar ronda),
-se descarga `torneos.json` y se sustituye `datos/torneos.json`. Añade `"imagen": "torneoN.webp"` al torneo.
-Las estadísticas, la portada y la tierlist se actualizan solas.
+**Nuevo torneo (sin capturas).** Todo desde el panel `porfolio/editor.html`: Nuevo torneo →
+apuntar participantes (jugador + mazo, o pegar una lista) → "Cerrar inscripción y generar cuadro"
+(sorteo o en orden; si no son potencia de 2 hay pases directos) → marcar ganadores (la ronda
+siguiente se crea sola) → Publicar. Publicar hace un commit en GitHub con el token del organizador;
+sin token, se descargan los archivos y se suben a mano. La portada, la página de torneos y las
+estadísticas muestran solas la inscripción, el cuadro en juego y el campeón.
+
+**Nuevo deck en la tierlist.** Panel → pestaña Tierlist → nombre, nivel e imagen (se reduce a
+1024 px y se convierte a WebP en el navegador) → Publicar sube la imagen a `tierlist/` y actualiza
+`datos/tierlist.js`. Usa el mismo nombre que en los torneos para que salga su récord.
 
 **Nombres por confirmar.** Los mazos que empiezan por `?` describen la ilustración del bracket. Se
 corrigen en el editor (sección "Nombres por confirmar"), que cambia el nombre en todos los torneos.
 Usa el mismo nombre que en la tierlist para que salga su imagen y su récord.
 
-**Nuevo deck en la tierlist.** Imagen WebP en `tierlist/` y un `<figure>` dentro del nivel que toque
-en `porfolio/tierlist.html`. La paleta de búsqueda y "Crea tu tierlist" lo recogen solos.
-Si añades un nivel nuevo, añádelo también a `PRESET` en `JS/tiermaker.js`.
+Si se añade un nivel nuevo a `datos/tierlist.js`, añádelo también a `PRESET` en `JS/tiermaker.js`.
 
 **Banlist.** Sustituye el `.lflist.conf`. No hay que tocar código. Formato de línea:
 `<id> <copias> --<nombre>` (0 prohibida, 1 limitada, 2 semi-limitada).

@@ -87,17 +87,21 @@ function setupCommandPalette() {
         const items = [...estaticos];
         const [cartas, decks, torneos] = await Promise.all([
             XYZ.banlist(),
-            fetch(`${p}tierlist.html`).then(r => r.ok ? r.text() : '').catch(() => ''),
+            window.TIERLIST_DATOS ? Promise.resolve(window.TIERLIST_DATOS)
+                : fetch(`${base}datos/tierlist.js`).then(r => r.ok ? r.text() : '').then(t => (t ? JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1)) : null)).catch(() => null),
             fetch(`${base}datos/torneos.json`).then(r => r.ok ? r.json() : null).catch(() => null),
         ]);
         if (torneos) {
             const record = new Map();
             torneos.torneos.forEach(t => {
-                const total = Math.max(...t.partidas.map(x => x[0]));
-                const final = t.partidas.find(x => x[0] === total);
-                const campeon = final ? final[1 + final[3]] : '';
-                items.push({ grupo: 'Torneos', titulo: t.nombre, detalle: `Campeón: ${campeon.replace(/^\?/, '')}`, url: `${p}torneos.html#torneo-${t.id}` });
-                t.partidas.forEach(([, a, b, g]) => {
+                const estado = t.estado || (t.partidas.length ? 'terminado' : 'inscripcion');
+                const total = Math.max(0, ...t.partidas.map(x => x[0]));
+                const final = t.partidas.find(x => x[0] === total && (x[3] === 0 || x[3] === 1));
+                const detalle = estado === 'inscripcion' ? 'Inscripción abierta'
+                    : estado === 'en-juego' ? 'En juego'
+                    : `Campeón: ${final ? final[1 + final[3]].replace(/^\?/, '') : '—'}`;
+                items.push({ grupo: 'Torneos', titulo: t.nombre, detalle, url: `${p}torneos.html#torneo-${t.id}` });
+                t.partidas.filter(x => x[3] === 0 || x[3] === 1).forEach(([, a, b, g]) => {
                     [[a, g === 0], [b, g === 1]].forEach(([n, gano]) => {
                         const r = record.get(n) || { v: 0, d: 0 };
                         gano ? r.v++ : r.d++;
@@ -110,13 +114,9 @@ function setupCommandPalette() {
             });
         }
         if (decks) {
-            const doc = new DOMParser().parseFromString(decks, 'text/html');
-            doc.querySelectorAll('.tierlist-category').forEach(cat => {
-                const nivel = cat.querySelector('h3')?.textContent.trim() || '';
-                cat.querySelectorAll('figcaption').forEach(fc => {
-                    const nombre = fc.textContent.trim();
-                    items.push({ grupo: 'Decks', titulo: nombre, detalle: nivel, url: `${p}tierlist.html?q=${encodeURIComponent(nombre)}` });
-                });
+            const niveles = new Map(decks.niveles.map(n => [n.id, n.nombre]));
+            decks.decks.forEach(k => {
+                items.push({ grupo: 'Decks', titulo: k.nombre, detalle: niveles.get(k.nivel) || '', url: `${p}tierlist.html?q=${encodeURIComponent(k.nombre)}` });
             });
         }
         cartas.forEach(c => {

@@ -6,7 +6,18 @@
     const p = `${rutaBase()}porfolio/`;
 
     TORNEOS.cargar().then(datos => {
-        const ultimo = datos.torneos[datos.torneos.length - 1];
+        const prox = datos.proximo;
+        if (prox) {
+            const nx = document.getElementById('heroNext');
+            nx.href = `${p}torneos.html#torneo-${prox.id}`;
+            nx.innerHTML = `<span class="live-tag ${prox.estado === 'inscripcion' ? 'is-signup' : ''}">${prox.estado === 'inscripcion' ? 'Inscripción abierta' : 'En juego'}</span>
+                <span class="next-name">${esc(prox.nombre)}</span>
+                <span class="next-sub">${prox.fecha ? `${esc(TORNEOS.fechaTexto(prox.fecha))}, ` : ''}${prox.jugadores} ${prox.jugadores === 1 ? 'participante' : 'participantes'}</span>`;
+            nx.hidden = false;
+        }
+
+        const ultimo = datos.ultimo;
+        if (!ultimo) throw new Error('sin torneos terminados');
         const m = datos.mazos.get(ultimo.campeon);
         const info = m.info;
         champ.href = `${p}torneos.html#torneo-${ultimo.id}`;
@@ -29,7 +40,7 @@
                 </a>
             </li>`).join('');
 
-        document.getElementById('recentTours').innerHTML = datos.torneos.slice(-3).reverse().map(t => `
+        document.getElementById('recentTours').innerHTML = datos.terminados.slice(-3).reverse().map(t => `
             <a class="recent-tour" href="${p}torneos.html#torneo-${t.id}">
                 ${TORNEOS.avatar(t.campeon, 'recent-img')}
                 <span class="recent-body">

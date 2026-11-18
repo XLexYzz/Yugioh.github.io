@@ -246,37 +246,143 @@ with sync_playwright() as p:
     ancho = page.evaluate("(() => { const i = document.querySelector('.tierlist-grid img[src*=dino]'); return Math.round(i.getBoundingClientRect().width / i.getBoundingClientRect().height * 100); })()")
     check(abs(ancho - round(1024 / 330 * 100)) < 4, f"tierlist: imagen de Dino sin recortar (proporción {ancho / 100})")
 
-    # Editor: confirmar un nombre y previsualizar
+    # ---------- Panel de organizadores ----------
+    import base64, struct, zlib
+
+    def png(w, h, color):
+        fila = b"\x00" + bytes(color) * w
+        datos = zlib.compress(fila * h)
+        def trozo(t, d):
+            return struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t + d) & 0xffffffff)
+        return b"\x89PNG\r\n\x1a\n" + trozo(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0)) + trozo(b"IDAT", datos) + trozo(b"IEND", b"")
+
+    ruta_png = os.path.join(OUT, "deck-prueba.png")
+    open(ruta_png, "wb").write(png(300, 160, (200, 40, 90)))
+
+    def limpiar_panel():
+        page.evaluate("""['xyz-torneos-borrador','xyz-tierlist-borrador','xyz-imagenes-pendientes','xyz-usar-borrador','xyz-borrador-base','xyz-github']
+            .forEach(k => localStorage.removeItem(k))""")
+
     page.goto(f"{BASE}/porfolio/editor.html"); page.wait_for_load_state("networkidle")
-    page.evaluate("localStorage.removeItem('xyz-torneos-borrador'); localStorage.removeItem('xyz-usar-borrador')")
+    limpiar_panel()
     page.reload(); page.wait_for_load_state("networkidle")
-    page.wait_for_selector(".ed-name")
-    antes = page.locator(".ed-name.is-pending").count()
-    form = page.locator(".ed-name.is-pending").first
-    form.locator("input").fill("Rata de prueba")
-    form.locator("button[type=submit]").click()
-    check(page.locator(".ed-name.is-pending").count() == antes - 1, "editor: confirmar un nombre lo quita de pendientes")
-    page.check("#edPreview")
-    page.goto(f"{BASE}/porfolio/estadisticas.html#mazo=Rata%20de%20prueba"); page.wait_for_load_state("networkidle")
-    page.wait_for_selector(".deck-panel-title h2")
-    check("RATA DE PRUEBA" in page.inner_text(".deck-panel-title h2").upper(), "editor: la web usa el borrador al previsualizar")
-    check("borrador" in page.inner_text("#statsNotice"), "editor: aviso de borrador en estadísticas")
-    page.goto(f"{BASE}/porfolio/editor.html#torneo-2"); page.wait_for_load_state("networkidle")
-    page.wait_for_selector(".ed-match")
-    check(page.locator(".ed-match").count() == 15, "editor: abre el torneo del enlace")
-    page.locator(".ed-match").first.locator(".ed-win[data-g='1']").click()
-    check(page.locator("#edProblems li").count() >= 1, "editor: avisa si el ganador no coincide con la ronda siguiente")
-    with page.expect_download() as dl:
-        page.click("#edDownload")
-    ruta_json = f"{OUT}/torneos-editor.json"
-    dl.value.save_as(ruta_json)
-    import json
-    exportado = json.load(open(ruta_json, encoding="utf-8"))
-    check(len(exportado["torneos"]) == 13, "editor: descarga un torneos.json válido")
+    page.wait_for_selector("#edTour option", state="attached")
+    check(page.locator("#edTour option").count() == len(DATOS["torneos"]), "panel: lista de torneos")
+
+    # Confirmar nombres (en el desplegable "Nombres de mazos")
+    page.click("#confirmar summary")
+    pendientes = page.locator(".ed-name.is-pending").count()
+    check(pendientes == 3, f"panel: 3 nombres por confirmar ({pendientes})")
+
+    # Torneo nuevo: inscripción -> cuadro con pases directos -> resultados
     page.on("dialog", lambda d: d.accept())
-    page.click("#edReset")
-    page.wait_for_timeout(500)
-    check(page.evaluate("localStorage.getItem('xyz-torneos-borrador')") is None, "editor: descartar borrador")
+    page.click("#edNew")
+    page.fill("#edNewName", "Torneo de prueba")
+    page.click("#edNewForm button[type=submit]")
+    page.wait_for_selector("#edPasteToggle")
+    page.click("#edPasteToggle")
+    page.fill("#edPasteText", "Ana - Kaiba\nLuis - Yusei\nEva - Nash\nTeo - Jack\nSol - Crow")
+    page.click("#edPasteAdd")
+    check(page.locator(".adm-entrant").count() == 5, "panel: pegar lista de participantes")
+    check("3 pases directos" in page.inner_text("#edEntrants"), "panel: avisa de los pases directos")
+    page.check("input[name=edOrder][value=lista]")
+    page.click("#edGenerate")
+    check(page.locator(".ed-match").count() == 1, "panel: cuadro de 8 con 3 pases (1 partida en primera ronda)")
+    page.locator(".ed-match").first.locator(".ed-win[data-g='1']").click()   # gana Crow
+    check(page.locator(".ed-match").count() == 3, "panel: la segunda ronda se crea sola")
+    for _ in range(2):
+        abiertas = page.locator(".ed-match.is-open")
+        abiertas.first.locator(".ed-win[data-g='0']").click()
+    check(page.locator(".ed-match").count() == 4, "panel: final creada")
+    page.locator(".ed-match.is-open").first.locator(".ed-win[data-g='0']").click()
+    check("KAIBA" in page.inner_text(".adm-champion").upper(), "panel: campeón al terminar")
+
+    # Otro torneo en inscripción (para la portada)
+    page.click("#edNew")
+    page.fill("#edNewName", "Torneo futuro")
+    page.click("#edNewForm button[type=submit]")
+    page.click("#edAddEntrant")
+    page.locator(".adm-entrant .adm-deck").last.fill("Yubel")
+    page.locator(".adm-entrant .adm-player").last.fill("Leo")
+    page.locator(".adm-entrant .adm-deck").last.dispatch_event("change")
+
+    # Tierlist: añadir un deck con imagen
+    page.click("#tab-tierlist")
+    page.fill("#tlName", "Deck de prueba")
+    page.select_option("#tlLevel", "grade1")
+    page.set_input_files("#tlImage", ruta_png)
+    page.wait_for_selector("#tlPreview img")
+    page.click("#tlAddForm button[type=submit]")
+    check(page.locator(".tl-row", has_text="").filter(has=page.locator(".tl-new")).count() == 1, "panel: deck nuevo en la tierlist")
+
+    # Ver la web con los cambios
+    page.check("#edPreview")
+    page.goto(f"{BASE}/porfolio/tierlist.html"); page.wait_for_load_state("networkidle")
+    fig_nueva = page.locator(".tierlist-category[data-tier=grade1] figure", has_text="Deck de prueba")
+    check(fig_nueva.count() == 1 and fig_nueva.locator("img").get_attribute("src").startswith("data:image/"), "web con borrador: deck nuevo en la tierlist")
+    page.goto(f"{BASE}/index.html"); page.wait_for_load_state("networkidle")
+    page.wait_for_selector("#heroNext:not([hidden])")
+    check("TORNEO FUTURO" in page.inner_text("#heroNext").upper(), "web con borrador: próximo torneo en la portada")
+    page.goto(f"{BASE}/porfolio/torneos.html"); page.wait_for_load_state("networkidle")
+    page.wait_for_selector(".tour-view .tour-head")
+    check("Inscripción abierta" in page.inner_text(".tour-view") and "Leo" in page.inner_text(".signup-list"), "web con borrador: inscritos del torneo futuro")
+    page.locator(".tour-picker [role=tab]", has_text="Torneo de prueba").click()
+    check("KAIBA" in page.inner_text(".tour-champ").upper(), "web con borrador: campeón del torneo nuevo")
+    page.screenshot(path=f"{OUT}/d-torneo-nuevo.png")
+
+    # Publicar con un GitHub simulado (no toca el repositorio real)
+    enviados = {"blobs": 0, "rutas": [], "patch": False}
+    archivos = {
+        "datos/torneos.json": open(os.path.join(RAIZ, "datos", "torneos.json"), "rb").read(),
+        "datos/tierlist.js": open(os.path.join(RAIZ, "datos", "tierlist.js"), "rb").read(),
+    }
+
+    def github(route):
+        req = route.request
+        url = req.url.split("?")[0]
+        def ok(cuerpo):
+            route.fulfill(status=200, content_type="application/json", body=json.dumps(cuerpo))
+        if url.endswith("/repos/XLexYzz/Yugioh.github.io"):
+            return ok({"permissions": {"push": True}})
+        if "/branches/" in url:
+            return ok({"name": "main"})
+        for ruta, contenido in archivos.items():
+            if url.endswith("/contents/" + ruta):
+                return ok({"content": base64.b64encode(contenido).decode(), "sha": "s"})
+        if url.endswith("/git/ref/heads/main"):
+            return ok({"object": {"sha": "p1"}})
+        if url.endswith("/git/commits/p1"):
+            return ok({"tree": {"sha": "t0"}})
+        if url.endswith("/git/blobs"):
+            enviados["blobs"] += 1
+            return ok({"sha": f"b{enviados['blobs']}"})
+        if url.endswith("/git/trees"):
+            enviados["rutas"] = [x["path"] for x in json.loads(req.post_data)["tree"]]
+            return ok({"sha": "t1"})
+        if url.endswith("/git/commits") and req.method == "POST":
+            return ok({"sha": "c1", "html_url": "https://github.com/XLexYzz/Yugioh.github.io/commit/c1"})
+        if "/git/refs/heads/main" in url and req.method == "PATCH":
+            enviados["patch"] = True
+            return ok({})
+        route.fulfill(status=404, body="{}")
+
+    page.route("https://api.github.com/**", github)
+    page.goto(f"{BASE}/porfolio/editor.html#publicar"); page.wait_for_load_state("networkidle")
+    page.wait_for_selector("#pubChanges li")
+    check(page.locator("#pubChanges li").count() == 3, "panel: tres cambios pendientes (torneos, tierlist, imagen)")
+    page.fill("#ghToken", "token-de-prueba")
+    page.click("#ghForm button[type=submit]")
+    page.wait_for_function("document.getElementById('ghStatus').textContent.includes('permiso')")
+    check(True, "panel: conexión con GitHub comprobada")
+    page.fill("#pubMessage", "Prueba")
+    page.click("#pubPublish")
+    page.wait_for_function("document.getElementById('pubResult').textContent.startsWith('Publicado') || document.getElementById('pubResult').textContent.startsWith('No se ha')")
+    check(page.inner_text("#pubResult").startswith("Publicado"), f"panel: publicar ({page.inner_text('#pubResult')[:80]})")
+    check(sorted(enviados["rutas"]) == ["datos/tierlist.js", "datos/torneos.json", "tierlist/deck-de-prueba.webp"], f"panel: un commit con los 3 archivos ({enviados['rutas']})")
+    check(enviados["patch"], "panel: actualiza la rama")
+    check(page.evaluate("localStorage.getItem('xyz-torneos-borrador') === null && localStorage.getItem('xyz-imagenes-pendientes') === null"), "panel: borrador limpio tras publicar")
+    page.unroute("https://api.github.com/**")
+    limpiar_panel()
     ctx.close()
 
     # ---------- Móvil ----------

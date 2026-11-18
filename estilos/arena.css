@@ -985,7 +985,7 @@
 
 .bracket {
     display: grid;
-    grid-template-columns: repeat(var(--rounds), minmax(190px, 1fr));
+    grid-template-columns: repeat(var(--rounds), minmax(190px, 340px));
     gap: 0 1.75rem;
     min-width: calc(var(--rounds) * 210px);
 }
@@ -1022,8 +1022,8 @@
     background: var(--stage-2);
 }
 
-/* Conector hacia la siguiente ronda */
-.round:not(.is-final) .match::after {
+/* Conector hacia la siguiente ronda (no en la final ni en la última ronda jugada) */
+.round:not(.is-final):not(.is-last) .match::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -1130,7 +1130,7 @@
         min-width: 0;
     }
 
-    .round:not(.is-final) .match::after {
+    .round:not(.is-final):not(.is-last) .match::after {
         right: calc(-1.25rem - 1px);
         width: 1.25rem;
     }
@@ -1485,4 +1485,147 @@
 .section > .chance-result,
 .section > .chance-log {
     text-align: left;
+}
+
+/* ---------- Torneos en inscripción o en juego ---------- */
+.live-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    background: rgba(255, 79, 100, 0.16);
+    color: var(--red);
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.live-tag::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: livePulse 1.6s ease-in-out infinite;
+}
+
+.live-tag.is-signup {
+    background: rgba(57, 208, 240, 0.14);
+    color: var(--cyan);
+}
+
+.live-tag.is-signup::before {
+    animation: none;
+}
+
+@keyframes livePulse {
+    50% { opacity: 0.3; }
+}
+
+.tour-live {
+    display: grid;
+    gap: 0.4rem;
+    justify-items: start;
+    color: var(--muted);
+}
+
+.signup {
+    padding: 1rem 1.25rem 1.5rem;
+}
+
+.signup-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.5rem;
+    counter-reset: ins;
+}
+
+.signup-list li {
+    counter-increment: ins;
+    display: grid;
+    grid-template-columns: 1.6rem 44px minmax(0, 1fr);
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-sm);
+    background: var(--stage-2);
+}
+
+.signup-list li::before {
+    content: counter(ins);
+    color: var(--faint);
+    font: 800 1.1rem/1 var(--display);
+}
+
+.signup-list strong {
+    display: block;
+}
+
+.signup-list small,
+.slot-name small {
+    display: block;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.match.is-open {
+    border-style: dashed;
+}
+
+.slot.is-open {
+    color: var(--text);
+}
+
+.picker-live {
+    display: grid;
+    place-items: center;
+    background: var(--stage-3);
+    color: var(--cyan);
+    font: 800 0.95rem/1 var(--display);
+    text-transform: uppercase;
+}
+
+.next-tour {
+    display: grid;
+    gap: 0.2rem;
+    justify-items: start;
+    margin-top: 1.25rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--cyan);
+    border-radius: var(--radius-sm);
+    background: var(--stage);
+    max-width: 460px;
+    transition: border-color 0.15s ease;
+}
+
+.next-tour:hover,
+.next-tour:focus-visible {
+    border-color: var(--cyan);
+}
+
+.next-name {
+    font: 900 1.8rem/1 var(--display);
+    text-transform: uppercase;
+}
+
+.next-sub {
+    color: var(--muted);
+}
+
+.next-sub::first-letter {
+    text-transform: uppercase;
+}
+
+.round-note {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.85rem;
 }

@@ -11,7 +11,7 @@ Sitio público: <https://xlexyzz.github.io/Yugioh.github.io/>
 | `index.html` | Portada con accesos rápidos y vídeos (se cargan al hacer clic) |
 | `porfolio/torneos.html` | Cuadro interactivo de cada torneo (sigue el camino de un mazo al pasar el ratón) e imágenes originales |
 | `porfolio/estadisticas.html` | Ranking de mazos (victorias, derrotas, % y títulos) y ficha con historial y rivales |
-| `porfolio/editor.html` | Editor de resultados: confirmar mazos, corregir partidas, crear torneos y descargar `datos/torneos.json` |
+| `porfolio/editor.html` | Panel de organizadores: crear torneos, inscribir participantes, generar el cuadro, marcar resultados, añadir decks a la tierlist y publicar en GitHub |
 | `porfolio/banlist.html` | Descarga de la banlist y listado con buscador de las cartas restringidas |
 | `porfolio/reglas.html` | Reglas básicas, fases del turno paso a paso, mapa clicable del campo y test autocorregible |
 | `porfolio/tierlist.html` | Tierlist con filtro y buscador, y **Crea tu tierlist** (arrastrar y soltar, se guarda y se descarga como PNG) |
@@ -24,16 +24,23 @@ Los filtros se pueden compartir con un enlace: por ejemplo `porfolio/tierlist.ht
 
 ## Cómo actualizar el contenido
 
-- **Resultados de torneos:** están en `datos/torneos.json` (una línea por partida: ronda, mazo A, mazo B y ganador).
-  Se editan desde `porfolio/editor.html`: los cambios se guardan como borrador en el navegador, se pueden
-  previsualizar en toda la web y se descargan como `torneos.json` para subirlo a `datos/`.
-  Los nombres que empiezan por `?` se transcribieron de las imágenes y falta confirmar qué mazo son.
+Torneos y tierlist se gestionan desde **`porfolio/editor.html`** (Panel de organizadores, enlazado en el pie):
+
+1. **Conectar GitHub (una vez):** crea un token *fine-grained* en GitHub con acceso solo a este
+   repositorio y el permiso *Contents: Read and write*, y pégalo en la pestaña Publicar. Se guarda
+   únicamente en ese navegador.
+2. **Torneo nuevo:** Nuevo torneo → apunta a los participantes (jugador y mazo, o pega una lista) →
+   genera el cuadro (sorteo u orden de la lista; pases directos si hace falta) → marca los ganadores
+   según se juegan. La siguiente ronda se crea sola.
+3. **Tierlist:** añade decks con su imagen (se convierte a WebP), cambia el nivel o el orden.
+4. **Publicar:** sube todo en un único commit; la web se actualiza en uno o dos minutos.
+
+Mientras no publiques, los cambios se guardan como borrador en el navegador y puedes ver la web con
+ellos activando "Ver la web con mis cambios". Sin token, el panel descarga `datos/torneos.json` y
+`datos/tierlist.js` para subirlos a mano.
 
 - **Banlist:** sustituye `banlist/Untitled Banlist.lflist.conf` por la nueva exportación. La página la lee automáticamente, no hace falta tocar el HTML.
-- **Nuevo torneo:** sube la imagen a `torneos/` como `torneoN.webp` (o conviértela, ver abajo) y añade un bloque `<figure>` en `porfolio/torneos.html` con `width`/`height` reales y `loading="lazy"` (la primera puede ser `loading="eager" fetchpriority="high"`).
-- **Nuevo deck en la tierlist:** sube la imagen a `tierlist/` y añade
-  `<figure><img src="../tierlist/archivo.webp" alt="Deck Nombre" width="W" height="H" loading="lazy" decoding="async" /><figcaption>Nombre</figcaption></figure>`
-  dentro del nivel que corresponda en `porfolio/tierlist.html`.
+- **Bracket original de un torneo antiguo (opcional):** sube la imagen a `torneos/torneoN.webp`, añade un `<figure>` en "Imágenes originales" de `porfolio/torneos.html` y pon `"imagen": "torneoN.webp"` en ese torneo de `datos/torneos.json`.
 
 ### Imágenes: PNG → WebP
 

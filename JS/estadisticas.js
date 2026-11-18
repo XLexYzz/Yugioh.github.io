@@ -53,7 +53,7 @@
         const masTitulos = top(todos, (a, b) => b.titulos - a.titulos || b.finales - a.finales);
         const mejorPct = top(todos.filter(m => m.partidas >= 8), (a, b) => b.porcentaje - a.porcentaje);
         const masPartidas = top(confirmados, (a, b) => b.partidas - a.partidas);
-        const ultimo = datos.torneos[datos.torneos.length - 1];
+        const ultimo = datos.ultimo;
         const tarjeta = (titulo, m, dato) => m ? `
             <button type="button" class="highlight" data-mazo="${esc(m.nombre)}">
                 ${TORNEOS.avatar(m.nombre, 'highlight-img')}
@@ -62,7 +62,7 @@
                 <span class="highlight-data">${dato}</span>
             </button>` : '';
         $('statsHighlights').innerHTML = [
-            tarjeta(`Campeón del ${esc(ultimo.nombre)}`, datos.mazos.get(ultimo.campeon), `Ganó a ${esc(TORNEOS.visible(ultimo.finalista))} en la final`),
+            ultimo ? tarjeta(`Campeón del ${esc(ultimo.nombre)}`, datos.mazos.get(ultimo.campeon), `Ganó a ${esc(TORNEOS.visible(ultimo.finalista))} en la final`) : '',
             tarjeta('Más títulos', masTitulos, `${masTitulos.titulos} ${masTitulos.titulos === 1 ? 'título' : 'títulos'}, ${masTitulos.finales} finales`),
             tarjeta('Mejor % (8+ partidas)', mejorPct, `${TORNEOS.pct(mejorPct.porcentaje)} en ${mejorPct.partidas} partidas`),
             tarjeta('El más jugado', masPartidas, `${masPartidas.partidas} partidas en ${masPartidas.torneos} torneos`),

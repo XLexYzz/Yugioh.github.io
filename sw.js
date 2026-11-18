@@ -5,7 +5,7 @@
    - fuentes de Google: caché sin caducidad
    Aumenta SHELL_VERSION al cambiar el contenido de la cáscara.
 */
-const SHELL_VERSION = 'v5';
+const SHELL_VERSION = 'v6';
 const CACHE_SHELL = `xyz-shell-${SHELL_VERSION}`;
 const CACHE_STATIC = `xyz-static-${SHELL_VERSION}`;
 // Imágenes y datos de cartas de YGOPRODeck: se conservan entre versiones
@@ -38,6 +38,11 @@ const SHELL = [
     './JS/inicio.js',
     './estilos/arena.css',
     './datos/torneos.json',
+    './datos/tierlist.js',
+    './JS/tierlist-datos.js',
+    './JS/tierlist-render.js',
+    './JS/github.js',
+    './estilos/panel.css',
     './estilos/interactivo.css',
     './manifest.webmanifest',
     './favicon.svg',
