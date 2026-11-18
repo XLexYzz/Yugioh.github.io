@@ -833,6 +833,14 @@ body.no-scroll {
     text-transform: uppercase;
 }
 
+.modal-record {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--muted);
+    font: 500 0.9rem/1.4 var(--body);
+    text-transform: none;
+}
+
 .modal-close {
     position: absolute;
     top: 0.6rem;

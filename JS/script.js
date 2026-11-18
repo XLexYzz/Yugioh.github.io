@@ -123,10 +123,21 @@ function setupImageModal() {
 
     function show(img) {
         const figure = img.closest('figure');
-        const text = figure?.querySelector('figcaption')?.textContent || img.alt;
+        const caption = figure?.querySelector('figcaption');
+        // Solo el texto propio del pie (el récord de torneos va en su propia línea)
+        const nombre = caption
+            ? [...caption.childNodes].filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent).join('').trim()
+            : '';
+        const record = caption?.querySelector('.deck-record');
         viewer.image.src = img.src;
         viewer.image.alt = img.alt || 'Imagen ampliada';
-        viewer.caption.textContent = text;
+        viewer.caption.textContent = nombre || img.alt;
+        if (record?.title) {
+            const linea = document.createElement('span');
+            linea.className = 'modal-record';
+            linea.textContent = record.title;
+            viewer.caption.append(linea);
+        }
         current = visibles().indexOf(img);
         const multiple = visibles().length > 1;
         viewer.prev.hidden = !multiple;
