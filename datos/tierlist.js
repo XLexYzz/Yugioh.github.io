@@ -98,6 +98,6 @@ window.TIERLIST_DATOS = {
     {"nombre":"z-one","imagen":"z-one.webp","nivel":"meh","ancho":1024,"alto":1024},
     {"nombre":"Axel","imagen":"axel.webp","nivel":"meh","ancho":596,"alto":335},
     {"nombre":"Aster","imagen":"aster.webp","nivel":"meh","ancho":427,"alto":600},
-    {"nombre":"Tearalaments","imagen":"tearalaments.webp","nivel":"meh","ancho":1024,"alto":745}
+    {"nombre":"Tearlaments","imagen":"tearalaments.webp","nivel":"meh","ancho":1024,"alto":745}
   ]
 };
