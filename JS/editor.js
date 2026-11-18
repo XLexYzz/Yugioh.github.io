@@ -128,11 +128,35 @@
         publicado = { torneos: serializarTorneos(), tierlist: TL.serializar(lPub) };
         torneos = tmpT; tier = tmpL;
 
+        // Un borrador antiguo no debe ocultar lo publicado después: se añaden los
+        // torneos y decks que falten (sin tocar lo que el organizador haya cambiado)
+        const añadidos = [];
+        if (torneos !== tPub) {
+            torneos.nota = tPub.nota;   // la nota no se edita en el panel
+            const ids = new Set(torneos.torneos.map(t => t.id));
+            tPub.torneos.filter(t => !ids.has(t.id)).forEach(t => {
+                torneos.torneos.push(structuredClone(t));
+                añadidos.push(t.nombre);
+            });
+            torneos.torneos.sort((a, b) => a.id - b.id);
+        }
+        if (tier !== lPub) {
+            const imgs = new Set(tier.decks.map(d => d.imagen));
+            lPub.decks.filter(d => !imgs.has(d.imagen)).forEach(d => {
+                tier.decks.push(structuredClone(d));
+                añadidos.push(d.nombre);
+            });
+        }
+
         const desdeHash = Number((location.hash.match(/^#torneo-(\d+)$/) || [])[1]);
         actual = torneos.torneos.some(t => t.id === desdeHash) ? desdeHash : (torneos.torneos[torneos.torneos.length - 1]?.id ?? null);
 
         pintarGH();
         pintarTodo();
+        if (torneos !== tPub || tier !== lPub) guardar();   // si el borrador queda igual que lo publicado, se elimina
+        if (añadidos.length) {
+            mostrarToast(`Añadido a tu borrador lo publicado después: ${añadidos.slice(0, 4).join(', ')}${añadidos.length > 4 ? '…' : ''}`);
+        }
         estado();
         if (location.hash === '#tierlist') elegirTab('tierlist');
         if (location.hash === '#publicar') elegirTab('publicar');

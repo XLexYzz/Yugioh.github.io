@@ -5,7 +5,7 @@
    - fuentes de Google: caché sin caducidad
    Aumenta SHELL_VERSION al cambiar el contenido de la cáscara.
 */
-const SHELL_VERSION = 'v6';
+const SHELL_VERSION = 'v8';
 const CACHE_SHELL = `xyz-shell-${SHELL_VERSION}`;
 const CACHE_STATIC = `xyz-static-${SHELL_VERSION}`;
 // Imágenes y datos de cartas de YGOPRODeck: se conservan entre versiones
@@ -60,9 +60,9 @@ self.addEventListener('install', (event) => {
     event.waitUntil(
         Promise.all([
             caches.open(CACHE_SHELL).then((cache) =>
-                Promise.allSettled(SHELL.map((url) => cache.add(url)))),
+                Promise.allSettled(SHELL.map((url) => cache.add(new Request(url, { cache: 'reload' }))))),
             caches.open(CACHE_STATIC).then((cache) =>
-                Promise.allSettled(SHELL.map((url) => cache.add(url))))
+                Promise.allSettled(SHELL.map((url) => cache.add(new Request(url, { cache: 'reload' })))))
         ])
     );
     self.skipWaiting();
@@ -183,7 +183,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.open(CACHE_STATIC).then(async (cache) => {
             const hit = await cache.match(request);
-            const network = fetch(request).then((response) => {
+            const network = fetch(request, { cache: 'no-cache' }).then((response) => {
                 if (response.ok) {
                     cache.put(request, response.clone()).catch(() => {});
                 }
