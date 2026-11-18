@@ -67,6 +67,8 @@ function setupCommandPalette() {
         { grupo: 'Páginas', titulo: 'Tierlist', detalle: 'Ranking de decks', url: `${p}tierlist.html` },
         { grupo: 'Páginas', titulo: 'Mazos', detalle: 'Comprueba si tu mazo es legal', url: `${p}mazos.html` },
         { grupo: 'Páginas', titulo: 'Herramientas', detalle: 'Puntos de vida, reloj, azar', url: `${p}herramientas.html` },
+        { grupo: 'Páginas', titulo: 'Estadísticas', detalle: 'Victorias y títulos de cada mazo', url: `${p}estadisticas.html`, extra: 'ranking record victorias derrotas' },
+        { grupo: 'Páginas', titulo: 'Editor de resultados', detalle: 'Corregir torneos y mazos', url: `${p}editor.html`, extra: 'editar confirmar' },
         { grupo: 'Herramientas', titulo: 'Contador de puntos de vida', detalle: 'Dos jugadores, historial y deshacer', url: `${p}herramientas.html#vida`, extra: 'lp life points calculadora' },
         { grupo: 'Herramientas', titulo: 'Temporizador de duelo', detalle: '10, 15, 20 o 30 minutos', url: `${p}herramientas.html#temporizador`, extra: 'reloj tiempo' },
         { grupo: 'Herramientas', titulo: 'Lanzar moneda o dado', detalle: 'Para efectos de azar', url: `${p}herramientas.html#azar`, extra: 'coin dice cara cruz' },
@@ -83,10 +85,30 @@ function setupCommandPalette() {
     async function construirIndice() {
         if (indice) return indice;
         const items = [...estaticos];
-        const [cartas, decks] = await Promise.all([
+        const [cartas, decks, torneos] = await Promise.all([
             XYZ.banlist(),
             fetch(`${p}tierlist.html`).then(r => r.ok ? r.text() : '').catch(() => ''),
+            fetch(`${base}datos/torneos.json`).then(r => r.ok ? r.json() : null).catch(() => null),
         ]);
+        if (torneos) {
+            const record = new Map();
+            torneos.torneos.forEach(t => {
+                const total = Math.max(...t.partidas.map(x => x[0]));
+                const final = t.partidas.find(x => x[0] === total);
+                const campeon = final ? final[1 + final[3]] : '';
+                items.push({ grupo: 'Torneos', titulo: t.nombre, detalle: `Campeón: ${campeon.replace(/^\?/, '')}`, url: `${p}torneos.html#torneo-${t.id}` });
+                t.partidas.forEach(([, a, b, g]) => {
+                    [[a, g === 0], [b, g === 1]].forEach(([n, gano]) => {
+                        const r = record.get(n) || { v: 0, d: 0 };
+                        gano ? r.v++ : r.d++;
+                        record.set(n, r);
+                    });
+                });
+            });
+            [...record.entries()].filter(([n]) => !n.startsWith('?')).forEach(([n, r]) => {
+                items.push({ grupo: 'Récord en torneos', titulo: n, detalle: `${r.v}–${r.d}`, url: `${p}estadisticas.html#mazo=${encodeURIComponent(n)}` });
+            });
+        }
         if (decks) {
             const doc = new DOMParser().parseFromString(decks, 'text/html');
             doc.querySelectorAll('.tierlist-category').forEach(cat => {
@@ -128,7 +150,7 @@ function setupCommandPalette() {
     let activo = 0;
 
     function puntuar(item, q) {
-        if (!q) return item.grupo === 'Cartas' || item.grupo === 'Decks' ? -1 : 1;
+        if (!q) return ['Cartas', 'Decks', 'Torneos', 'Récord en torneos'].includes(item.grupo) ? -1 : 1;
         const t = normalizar(item.titulo);
         if (t === q) return 100;
         if (t.startsWith(q)) return 80;
@@ -393,7 +415,35 @@ function setupQueryParam() {
     (document.getElementById('lista') || campo).scrollIntoView({ block: 'start' });
 }
 
+/* ===========================
+   MENÚ EN MÓVIL
+   =========================== */
+function setupMenuToggle() {
+    const boton = document.querySelector('.menu-toggle');
+    const menu = document.getElementById('menu');
+    if (!boton || !menu) return;
+    const cerrar = () => {
+        menu.classList.remove('open');
+        boton.setAttribute('aria-expanded', 'false');
+    };
+    boton.addEventListener('click', () => {
+        const abierto = menu.classList.toggle('open');
+        boton.setAttribute('aria-expanded', String(abierto));
+        if (abierto) menu.querySelector('a.active, a')?.focus();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && menu.classList.contains('open')) {
+            cerrar();
+            boton.focus();
+        }
+    });
+    document.addEventListener('click', (e) => {
+        if (menu.classList.contains('open') && !menu.contains(e.target) && !boton.contains(e.target)) cerrar();
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    setupMenuToggle();
     setupCommandPalette();
     setupModalZoom();
     setupCardPreview();

@@ -5,7 +5,7 @@
    - fuentes de Google: caché sin caducidad
    Aumenta SHELL_VERSION al cambiar el contenido de la cáscara.
 */
-const SHELL_VERSION = 'v3';
+const SHELL_VERSION = 'v4';
 const CACHE_SHELL = `xyz-shell-${SHELL_VERSION}`;
 const CACHE_STATIC = `xyz-static-${SHELL_VERSION}`;
 // Imágenes y datos de cartas de YGOPRODeck: se conservan entre versiones
@@ -21,6 +21,8 @@ const SHELL = [
     './porfolio/tierlist.html',
     './porfolio/herramientas.html',
     './porfolio/mazos.html',
+    './porfolio/estadisticas.html',
+    './porfolio/editor.html',
     './404.html',
     './estilos/styles.css',
     './JS/script.js',
@@ -29,6 +31,13 @@ const SHELL = [
     './JS/herramientas.js',
     './JS/reglas.js',
     './JS/tiermaker.js',
+    './JS/torneos-datos.js',
+    './JS/torneos.js',
+    './JS/estadisticas.js',
+    './JS/editor.js',
+    './JS/inicio.js',
+    './estilos/arena.css',
+    './datos/torneos.json',
     './estilos/interactivo.css',
     './manifest.webmanifest',
     './favicon.svg',
@@ -127,6 +136,22 @@ self.addEventListener('fetch', (event) => {
 
     // Otros orígenes (YouTube, etc.): sin tocar
     if (url.origin !== location.origin) return;
+
+    // Datos de torneos: red primero para ver los resultados recién publicados
+    if (url.pathname.includes('/datos/')) {
+        event.respondWith(
+            fetch(request)
+                .then((response) => {
+                    if (response.ok) {
+                        const copy = response.clone();
+                        caches.open(CACHE_STATIC).then((cache) => cache.put(request, copy)).catch(() => {});
+                    }
+                    return response;
+                })
+                .catch(async () => (await caches.match(request, { ignoreSearch: true })) || Response.error())
+        );
+        return;
+    }
 
     // Navegaciones: red primero; si no hay red, lo que esté en caché
     if (request.mode === 'navigate') {

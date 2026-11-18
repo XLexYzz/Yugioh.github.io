@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;500;700&family=Cinzel+Decorative:wght@700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Big+Shoulders+Display:wght@700;800;900&display=swap" />
     <title>Yu-Gi-Oh! XYZ</title>
     <meta name="description" content="Yu-Gi-Oh! XYZ es tu portal de Yu-Gi-Oh! con torneos, banlist, reglas y análisis del meta. Usa YGO Omega para competir online." />
     <meta property="og:title" content="Yu-Gi-Oh! XYZ - Portal de Yu-Gi-Oh!" />
     <meta property="og:description" content="Yu-Gi-Oh! XYZ es tu portal de Yu-Gi-Oh! con torneos, banlist, reglas y análisis del meta. Usa YGO Omega para competir online." />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#f5b800" />
+    <meta name="theme-color" content="#0f0e1c" />
 
     <meta property="og:url" content="https://xlexyzz.github.io/Yugioh.github.io/" />
     <meta property="og:image" content="https://xlexyzz.github.io/Yugioh.github.io/img/og-image.png" />
@@ -24,62 +24,67 @@
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./estilos/styles.css" />
     <link rel="stylesheet" href="./estilos/interactivo.css" />
+    <link rel="stylesheet" href="./estilos/arena.css" />
     <script src="./JS/script.js" defer></script>
     <script src="./JS/interactivo.js" defer></script>
+    <script src="./JS/torneos-datos.js" defer></script>
+    <script src="./JS/inicio.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-<header>
+<header class="site-header">
     <div class="header-inner">
-        <h1>Yu-Gi-Oh! XYZ</h1>
-        <nav class="menu" aria-label="Menú principal">
+        <a class="brand" href="./index.html"><span class="brand-mark" aria-hidden="true">XYZ</span><span class="brand-name">Yu-Gi-Oh! XYZ</span></a>
+        <nav class="menu" id="menu" aria-label="Menú principal">
             <a href="./index.html">Inicio</a>
             <a href="./porfolio/torneos.html">Torneos</a>
-            <a href="./porfolio/banlist.html">Banlist</a>
-            <a href="./porfolio/reglas.html">Reglas</a>
+            <a href="./porfolio/estadisticas.html">Estadísticas</a>
             <a href="./porfolio/tierlist.html">Tierlist</a>
             <a href="./porfolio/mazos.html">Mazos</a>
+            <a href="./porfolio/banlist.html">Banlist</a>
+            <a href="./porfolio/reglas.html">Reglas</a>
             <a href="./porfolio/herramientas.html">Herramientas</a>
         </nav>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Menú
+        </button>
     </div>
 </header>
 
 <main id="contenido">
-    <section class="hero animate-up">
-        <div class="hero-copy">
-            <span class="eyebrow">Portal de Duelo</span>
-            <h2>Todo lo que necesitas para dominar tus partidas</h2>
-            <p>Descubre torneos, banlists, reglas actualizadas y el meta más relevante de Yu-Gi-Oh! en un solo sitio.</p>
-            <div class="hero-actions">
-                <a class="button button-primary" href="./porfolio/torneos.html">Ver Torneos</a>
-                <a class="button button-secondary" href="./porfolio/banlist.html">Descargar Banlist</a>
-                <a class="button button-secondary" href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Visitar YGO Omega</a>
+    <section class="home-hero">
+        <div class="home-hero-inner">
+            <div class="home-copy">
+                <h1>Torneos, mazos y meta de la comunidad XYZ</h1>
+                <p>Consulta cada cuadro, sigue el récord de tu mazo, comprueba tu lista con la banlist y llévate las herramientas de duelo en el móvil. Jugamos en YGO Omega.</p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="./porfolio/torneos.html">Ver los torneos</a>
+                    <a class="button button-secondary" href="./porfolio/mazos.html">Validar mi mazo</a>
+                    <a class="button button-secondary" href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Jugar en YGO Omega</a>
+                </div>
             </div>
-        </div>
 
-        <div class="hero-visual">
-            <article class="hero-card">
-                <h3>Acceso rápido</h3>
-                <ul>
-                    <li>Banlist personalizada para XYZ</li>
-                    <li>Torneos y brackets en alta resolución</li>
-                    <li>Guía de reglas para duelos competitivos</li>
-                    <li>Tierlist visual para seleccionar tu mejor deck</li>
-                </ul>
-            </article>
-            <article class="hero-card">
-                <h3>Diseñado para jugadores</h3>
-                <p>Interfaz clara, navegación rápida y contenido actualizado para que tus duelos sean más profesionales y efectivos.</p>
-                <span class="card-tag">Experiencia 100% móvil</span>
-            </article>
+            <a class="champ-card" id="heroChamp" href="./porfolio/torneos.html">
+                <span class="champ-label">Último campeón</span>
+                <span class="champ-name">Cargando…</span>
+            </a>
+
+            <div class="home-ranking">
+                <div class="home-ranking-head">
+                    <h2>Más victorias</h2>
+                    <a href="./porfolio/estadisticas.html">Ver todo el ranking</a>
+                </div>
+                <ol class="mini-ranking" id="heroRanking"></ol>
+            </div>
         </div>
     </section>
 
     <section class="section" aria-labelledby="herramientasTitulo">
         <div class="section-head">
             <h2 id="herramientasTitulo">Para tu próximo duelo</h2>
-            <p>Herramientas que funcionan en el móvil, incluso sin conexión. Pulsa <kbd>Ctrl</kbd> <kbd>K</kbd> para buscar cualquier carta o deck.</p>
+            <p>Funcionan en el móvil, incluso sin conexión. Pulsa <kbd>Ctrl</kbd> <kbd>K</kbd> para buscar cualquier carta, mazo o torneo.</p>
         </div>
         <div class="tools-strip">
             <a class="tool-link" href="./porfolio/mazos.html"><b aria-hidden="true">40</b><strong>Validar mi mazo</strong><span>Pega tu YDK y mira si es legal</span></a>
@@ -89,97 +94,51 @@
         </div>
     </section>
 
-    <section class="section animate-up">
+    <section class="section section-dark">
         <div class="section-head">
-            <h2>Explora la plataforma</h2>
-            <p>Secciones pensadas para duelos reales: torneos, normativa, estrategias y datos meta.</p>
+            <h2>Últimos torneos</h2>
+            <p>Los tres más recientes. Pulsa uno para ver su cuadro completo.</p>
         </div>
-        <div class="cards-grid">
-            <a class="card card-link" href="./porfolio/torneos.html">
-                <h3>Torneos</h3>
-                <p>Consulta los resultados, revisa brackets y analiza rivales con imágenes detalladas de cada enfrentamiento.</p>
-                <span class="card-tag">Competencia</span>
-            </a>
-            <a class="card card-link" href="./porfolio/banlist.html">
-                <h3>Banlist</h3>
-                <p>Descarga rápidamente la lista de cartas permitidas, limitadas y prohibidas.</p>
-                <span class="card-tag">Actualizada</span>
-            </a>
-            <a class="card card-link" href="./porfolio/reglas.html">
-                <h3>Reglas</h3>
-                <p>Aprende la estructura de turno, condiciones de victoria y las zonas de campo para evitar errores en el duelo.</p>
-                <span class="card-tag">Personalizada</span>
-            </a>
-            <a class="card card-link" href="./porfolio/tierlist.html">
-                <h3>Tierlist</h3>
-                <p>Consulta la tierlist para elegir la mejor estrategia del meta actual.</p>
-                <span class="card-tag">Meta</span>
-            </a>
-        </div>
+        <div class="recent-tours" id="recentTours"></div>
     </section>
 
-    <section class="section section-dark animate-up">
+    <section class="section">
         <div class="section-head">
-            <h2>🎥 Tutoriales esenciales</h2>
-            <p>Mejora tu juego con videos seleccionados para principiantes y duelistas avanzados.</p>
+            <h2>Tutoriales</h2>
+            <p>Vídeos para empezar y para mejorar tus mazos. Se cargan al pulsar.</p>
         </div>
         <div class="videos-grid">
             <figure class="video-embed" data-video="NyfbetvDGgA" data-title="Tutorial Yu-Gi-Oh Introductorio">
                 <img src="./img/video-1.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" />
                 <button type="button" class="video-play" aria-label="Reproducir: Tutorial Yu-Gi-Oh Introductorio">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor" />
-                    </svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor" /></svg>
                 </button>
             </figure>
             <figure class="video-embed" data-video="q0q90zCd6gE" data-title="Guía avanzada de deckbuilding">
                 <img src="./img/video-2.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" />
                 <button type="button" class="video-play" aria-label="Reproducir: Guía avanzada de deckbuilding">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor" />
-                    </svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor" /></svg>
                 </button>
             </figure>
             <figure class="video-embed" data-video="-LnD1uxP7EA" data-title="Reglas básicas Yu-Gi-Oh">
                 <img src="./img/video-3.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" />
                 <button type="button" class="video-play" aria-label="Reproducir: Reglas básicas Yu-Gi-Oh">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor" />
-                    </svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor" /></svg>
                 </button>
             </figure>
         </div>
     </section>
-
-    <section class="section animate-up">
-        <div class="section-head">
-            <h2>Últimas tendencias</h2>
-            <p>Revisa lo que está marcando el meta y prepara tu próximo duelo con ventaja.</p>
-        </div>
-        <div class="cards-grid">
-            <a class="card card-link" href="./porfolio/tierlist.html">
-                <h3>Meta actual</h3>
-                <p>Los decks más relevantes del momento, con foco en velocidad, control y explosión de campo.</p>
-            </a>
-            <a class="card card-link" href="./porfolio/torneos.html">
-                <h3>Consejos de torneo</h3>
-                <p>Revisa consejos clave para gestionar recursos y tomar mejores decisiones en cada fase de duelo.</p>
-            </a>
-            <a class="card card-link" href="./porfolio/banlist.html">
-                <h3>Actualizaciones</h3>
-                <p>Mantente en línea con las listas oficiales y cambios de reglas para evitar sorpresas en tus partidas.</p>
-            </a>
-        </div>
-    </section>
 </main>
 
-<footer>
+<footer class="site-footer">
     <div class="footer-content">
-        <nav class="footer-links" aria-label="Enlaces externos">
+        <p>© 2026 Yu-Gi-Oh! XYZ. Web de la comunidad, sin relación con Konami.</p>
+        <nav class="footer-links" aria-label="Más enlaces">
             <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Jugar en YGO Omega</a>
+            <a href="./porfolio/editor.html">Editar resultados</a>
+            <a href="https://ygoprodeck.com/api-guide/" target="_blank" rel="noopener">Datos de cartas: YGOPRODeck</a>
             <a href="https://github.com/XLexYzz/Yugioh.github.io" target="_blank" rel="noopener">Código en GitHub</a>
         </nav>
-        <p class="footer-copyright">© 2026 Yu-Gi-Oh! XYZ</p>
     </div>
 </footer>
 

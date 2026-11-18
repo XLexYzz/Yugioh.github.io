@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Big+Shoulders+Display:wght@700;800;900&display=swap" />
+    <title>Yu-Gi-Oh! XYZ - Editor de resultados</title>
+    <meta name="description" content="Editor de los resultados de los torneos de Yu-Gi-Oh! XYZ: confirma los mazos, corrige partidas y descarga los datos." />
+    <meta property="og:title" content="Yu-Gi-Oh! XYZ - Editor de resultados" />
+    <meta property="og:description" content="Editor de los resultados de los torneos de Yu-Gi-Oh! XYZ: confirma los mazos, corrige partidas y descarga los datos." />
+    <meta property="og:type" content="website" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0f0e1c" />
+    <meta property="og:url" content="https://xlexyzz.github.io/Yugioh.github.io/porfolio/editor.html" />
+    <meta property="og:image" content="https://xlexyzz.github.io/Yugioh.github.io/img/og-image.png" />
+    <meta property="og:site_name" content="Yu-Gi-Oh! XYZ" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://xlexyzz.github.io/Yugioh.github.io/porfolio/editor.html" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="../img/apple-touch-icon.png" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../estilos/styles.css" />
+    <link rel="stylesheet" href="../estilos/interactivo.css" />
+    <link rel="stylesheet" href="../estilos/arena.css" />
+    <script src="../JS/script.js" defer></script>
+    <script src="../JS/interactivo.js" defer></script>
+    <script src="../JS/torneos-datos.js" defer></script>
+    <script src="../JS/editor.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">XYZ</span><span class="brand-name">Yu-Gi-Oh! XYZ</span></a>
+        <nav class="menu" id="menu" aria-label="Menú principal">
+            <a href="../index.html">Inicio</a>
+            <a href="./torneos.html">Torneos</a>
+            <a href="./estadisticas.html">Estadísticas</a>
+            <a href="./tierlist.html">Tierlist</a>
+            <a href="./mazos.html">Mazos</a>
+            <a href="./banlist.html">Banlist</a>
+            <a href="./reglas.html">Reglas</a>
+            <a href="./herramientas.html">Herramientas</a>
+        </nav>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Menú
+        </button>
+    </div>
+</header>
+
+<main id="contenido">
+    <section class="section">
+        <div class="section-head">
+            <h1>Editor de resultados</h1>
+            <p>Corrige los nombres de los mazos y los resultados de cada torneo. Los cambios se guardan en este navegador como borrador; cuando esté listo, descarga <code>torneos.json</code> y súbelo a la carpeta <code>datos/</code> del repositorio.</p>
+        </div>
+
+        <div class="ed-bar" id="edBar">
+            <p class="ed-status" id="edStatus" role="status" aria-live="polite">Cargando…</p>
+            <div class="ed-bar-actions">
+                <label class="stats-check">
+                    <input type="checkbox" id="edPreview" />
+                    <span>Ver la web con este borrador</span>
+                </label>
+                <button type="button" class="button button-primary" id="edDownload">Descargar torneos.json</button>
+                <button type="button" class="button button-secondary" id="edCopy">Copiar JSON</button>
+                <button type="button" class="button button-secondary" id="edReset">Descartar borrador</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-dark" id="confirmar">
+        <div class="section-head">
+            <h2>Nombres por confirmar</h2>
+            <p>Estos nombres describen la ilustración del bracket. Escribe el mazo correcto y pulsa Aplicar: se cambia en todos los torneos. Pulsa un torneo para ver la imagen y comprobarlo.</p>
+        </div>
+        <label class="stats-check ed-all">
+            <input type="checkbox" id="edShowAll" />
+            <span>Mostrar también los nombres ya confirmados</span>
+        </label>
+        <div class="ed-names" id="edNames"></div>
+    </section>
+
+    <section class="section" id="partidas">
+        <div class="section-head">
+            <h2>Partidas por torneo</h2>
+            <p>Elige el ganador de cada partida con el botón de su lado. Para un torneo nuevo, escribe los participantes en orden y genera las rondas.</p>
+        </div>
+
+        <div class="ed-tour-bar">
+            <label class="stats-select">
+                <span>Torneo</span>
+                <select id="edTour"></select>
+            </label>
+            <button type="button" class="button button-secondary" id="edNew">Nuevo torneo</button>
+            <button type="button" class="button button-secondary" id="edDelete">Borrar este torneo</button>
+        </div>
+
+        <div class="ed-new" id="edNewForm" hidden>
+            <label for="edEntrants">Participantes en el orden del cuadro (uno por línea; 4, 8, 16 o 32)</label>
+            <textarea id="edEntrants" rows="8" placeholder="Kaiba&#10;Yusei&#10;…"></textarea>
+            <div class="ed-row-actions">
+                <button type="button" class="button button-primary" id="edCreate">Crear torneo</button>
+                <button type="button" class="button button-secondary" id="edCancel">Cancelar</button>
+            </div>
+        </div>
+
+        <div class="ed-workspace">
+            <figure class="ed-image">
+                <div class="ed-image-scroll" id="edImageScroll">
+                    <img id="edImage" alt="" />
+                </div>
+                <figcaption>
+                    <label>
+                        <span>Zoom</span>
+                        <input type="range" id="edZoom" min="100" max="300" step="10" value="100" />
+                    </label>
+                </figcaption>
+            </figure>
+            <div class="ed-rounds" id="edRounds"></div>
+        </div>
+        <ul class="ed-problems" id="edProblems"></ul>
+    </section>
+
+    <datalist id="edDecks"></datalist>
+</main>
+
+
+<footer class="site-footer">
+    <div class="footer-content">
+        <p>© 2026 Yu-Gi-Oh! XYZ. Web de la comunidad, sin relación con Konami.</p>
+        <nav class="footer-links" aria-label="Más enlaces">
+            <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Jugar en YGO Omega</a>
+            <a href="./editor.html">Editar resultados</a>
+            <a href="https://ygoprodeck.com/api-guide/" target="_blank" rel="noopener">Datos de cartas: YGOPRODeck</a>
+            <a href="https://github.com/XLexYzz/Yugioh.github.io" target="_blank" rel="noopener">Código en GitHub</a>
+        </nav>
+    </div>
+</footer>
+
+</body>
+</html>

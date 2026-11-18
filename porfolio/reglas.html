@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;500;700&family=Cinzel+Decorative:wght@700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Big+Shoulders+Display:wght@700;800;900&display=swap" />
     <title>Yu-Gi-Oh! XYZ - Reglas</title>
     <meta name="description" content="Reglas básicas y esenciales de Yu-Gi-Oh! para duelos competitivos. Aprende turnos, zonas del campo y condiciones de victoria." />
     <meta property="og:title" content="Yu-Gi-Oh! XYZ - Reglas" />
     <meta property="og:description" content="Reglas básicas y esenciales de Yu-Gi-Oh! para duelos competitivos. Aprende turnos, zonas del campo y condiciones de victoria." />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#f5b800" />
+    <meta name="theme-color" content="#0f0e1c" />
 
     <meta property="og:url" content="https://xlexyzz.github.io/Yugioh.github.io/porfolio/reglas.html" />
     <meta property="og:image" content="https://xlexyzz.github.io/Yugioh.github.io/img/og-image.png" />
@@ -24,6 +24,7 @@
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../estilos/styles.css" />
     <link rel="stylesheet" href="../estilos/interactivo.css" />
+    <link rel="stylesheet" href="../estilos/arena.css" />
     <script src="../JS/script.js" defer></script>
     <script src="../JS/interactivo.js" defer></script>
     <script src="../JS/reglas.js" defer></script>
@@ -31,25 +32,30 @@
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-<header>
+<header class="site-header">
     <div class="header-inner">
-        <h1>Reglas</h1>
-        <nav class="menu" aria-label="Menú principal">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">XYZ</span><span class="brand-name">Yu-Gi-Oh! XYZ</span></a>
+        <nav class="menu" id="menu" aria-label="Menú principal">
             <a href="../index.html">Inicio</a>
             <a href="./torneos.html">Torneos</a>
-            <a href="./banlist.html">Banlist</a>
-            <a href="./reglas.html">Reglas</a>
+            <a href="./estadisticas.html">Estadísticas</a>
             <a href="./tierlist.html">Tierlist</a>
             <a href="./mazos.html">Mazos</a>
+            <a href="./banlist.html">Banlist</a>
+            <a href="./reglas.html">Reglas</a>
             <a href="./herramientas.html">Herramientas</a>
         </nav>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Menú
+        </button>
     </div>
 </header>
 
 <main id="contenido">
     <section class="section animate-up">
         <div class="section-head">
-            <h2>Reglas del Duelo</h2>
+            <h1>Reglas del Duelo</h1>
             <p>Las normas esenciales que todo duelista debe conocer antes de salir a competir.</p>
         </div>
 
@@ -202,13 +208,15 @@
     </section>
 </main>
 
-<footer>
+<footer class="site-footer">
     <div class="footer-content">
-        <nav class="footer-links" aria-label="Enlaces externos">
+        <p>© 2026 Yu-Gi-Oh! XYZ. Web de la comunidad, sin relación con Konami.</p>
+        <nav class="footer-links" aria-label="Más enlaces">
             <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Jugar en YGO Omega</a>
+            <a href="./editor.html">Editar resultados</a>
+            <a href="https://ygoprodeck.com/api-guide/" target="_blank" rel="noopener">Datos de cartas: YGOPRODeck</a>
             <a href="https://github.com/XLexYzz/Yugioh.github.io" target="_blank" rel="noopener">Código en GitHub</a>
         </nav>
-        <p class="footer-copyright">© 2026 Yu-Gi-Oh! XYZ</p>
     </div>
 </footer>
 

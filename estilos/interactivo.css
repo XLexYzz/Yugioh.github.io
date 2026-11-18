@@ -2,18 +2,16 @@
    COMPONENTES INTERACTIVOS
    Se carga después de styles.css en todas las páginas.
    =========================== */
+/* Los colores base vienen de styles.css; aquí solo se dan nombres a los usados por los componentes */
 :root {
-    --gold: #f5b800;
-    --violet: #7b65ff;
-    --ruby: #ff4d6d;
-    --amber: #ff9f1c;
-    --sky: #5ec8ff;
-    --jade: #4cd790;
-    --panel: #10142a;
-    --panel-2: #161b38;
-    --line: rgba(255, 255, 255, 0.1);
-    --muted: #bfc1d1;
-    --num: 'Barlow Condensed', 'Barlow', sans-serif;
+    --ruby: var(--red);
+    --amber: var(--orange);
+    --sky: var(--cyan);
+    --jade: var(--green);
+    --panel: var(--stage-2);
+    --panel-2: var(--stage-3);
+    --line: var(--rule);
+    --num: var(--display);
     --t-monster: #d98b3a;
     --t-spell: #1d9e74;
     --t-trap: #bc5a84;
@@ -55,15 +53,15 @@ button:disabled {
     flex-shrink: 0;
     padding: 0.55rem 0.7rem 0.55rem 0.85rem;
     border: 1px solid var(--line);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+    background: var(--stage);
     color: var(--muted);
     cursor: pointer;
     transition: border-color 0.2s ease, color 0.2s ease;
 }
 
 .palette-trigger:hover {
-    border-color: rgba(245, 184, 0, 0.5);
+    border-color: rgba(255, 197, 61, 0.5);
     color: var(--text);
 }
 
@@ -77,8 +75,8 @@ button:disabled {
     max-height: min(560px, 80vh);
     margin: 12vh auto auto;
     padding: 0;
-    border: 1px solid rgba(245, 184, 0, 0.35);
-    border-radius: 20px;
+    border: 1px solid rgba(255, 197, 61, 0.35);
+    border-radius: var(--radius);
     background: var(--panel);
     color: var(--text);
     box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
@@ -163,7 +161,7 @@ button:disabled {
 }
 
 .palette-list [aria-selected="true"] {
-    background: rgba(245, 184, 0, 0.14);
+    background: rgba(255, 197, 61, 0.14);
 }
 
 .palette-title {
@@ -201,21 +199,20 @@ button:disabled {
 .ban-dot-limited { --ban-color: var(--amber); }
 .ban-dot-semi { --ban-color: var(--sky); }
 
+@media (max-width: 1120px) {
+    .header-inner > .menu-toggle {
+        margin-left: auto;
+    }
+}
+
 @media (max-width: 768px) {
     .palette-trigger {
-        position: absolute;
-        top: 0.85rem;
-        right: 1rem;
-        padding: 0.5rem;
+        padding: 0.5rem 0.6rem;
     }
 
     .palette-trigger span,
     .palette-trigger kbd {
         display: none;
-    }
-
-    header h1 {
-        padding: 0 2.75rem;
     }
 
     .palette {
@@ -291,15 +288,15 @@ button:disabled {
     max-width: 860px;
     margin: 0 auto;
     padding: 1.5rem;
-    border: 1px dashed rgba(245, 184, 0, 0.35);
-    border-radius: 24px;
+    border: 1px dashed rgba(255, 197, 61, 0.35);
+    border-radius: var(--radius);
     background: var(--surface);
     transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .deck-input.is-drop {
     border-color: var(--gold);
-    background: rgba(245, 184, 0, 0.08);
+    background: rgba(255, 197, 61, 0.08);
 }
 
 .deck-input-label {
@@ -323,7 +320,7 @@ button:disabled {
 .deck-input textarea:focus {
     outline: none;
     border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(245, 184, 0, 0.2);
+    box-shadow: 0 0 0 3px rgba(255, 197, 61, 0.2);
 }
 
 .deck-input-help {
@@ -391,15 +388,15 @@ button:disabled {
 }
 
 .deck-verdict.is-good {
-    border-color: rgba(76, 215, 144, 0.5);
-    background: linear-gradient(90deg, rgba(76, 215, 144, 0.14), var(--panel) 60%);
+    border-color: rgba(69, 217, 142, 0.5);
+    background: linear-gradient(90deg, rgba(69, 217, 142, 0.14), var(--panel) 60%);
 }
 
 .deck-verdict.is-good strong { color: var(--jade); }
 
 .deck-verdict.is-bad {
-    border-color: rgba(255, 77, 109, 0.5);
-    background: linear-gradient(90deg, rgba(255, 77, 109, 0.14), var(--panel) 60%);
+    border-color: rgba(255, 79, 100, 0.5);
+    background: linear-gradient(90deg, rgba(255, 79, 100, 0.14), var(--panel) 60%);
 }
 
 .deck-verdict.is-bad strong { color: var(--ruby); }
@@ -510,7 +507,7 @@ button:disabled {
 .deck-issues li {
     padding: 0.75rem 1rem 0.75rem 2.4rem;
     border-radius: 12px;
-    background: rgba(255, 77, 109, 0.08);
+    background: rgba(255, 79, 100, 0.08);
     position: relative;
     line-height: 1.45;
 }
@@ -563,7 +560,8 @@ button:disabled {
 }
 
 .deck-section h3 {
-    font-family: 'Cinzel Decorative', cursive;
+    font: 800 1.7rem/1 var(--display);
+    text-transform: uppercase;
     color: var(--gold);
     margin-bottom: 0.4rem;
 }
@@ -599,7 +597,7 @@ button:disabled {
 .deck-tile:hover,
 .deck-tile:focus-visible {
     transform: translateY(-3px);
-    border-color: rgba(245, 184, 0, 0.6);
+    border-color: rgba(255, 197, 61, 0.6);
 }
 
 .deck-tile.is-bad {
@@ -648,7 +646,7 @@ button:disabled {
 .tile-odds {
     left: 6px;
     bottom: 34px;
-    background: rgba(245, 184, 0, 0.92);
+    background: rgba(255, 197, 61, 0.92);
     color: #111;
 }
 
@@ -668,7 +666,7 @@ button:disabled {
     margin: auto;
     padding: 0;
     border: 1px solid var(--line);
-    border-radius: 22px;
+    border-radius: var(--radius);
     background: var(--panel);
     color: var(--text);
     box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
@@ -709,7 +707,7 @@ button:disabled {
     margin-bottom: 0.9rem;
     padding: 0.25rem 0.6rem;
     border-radius: 8px;
-    background: rgba(76, 215, 144, 0.14);
+    background: rgba(69, 217, 142, 0.14);
     color: var(--jade);
     font-weight: 700;
 }
@@ -810,7 +808,7 @@ button:disabled {
     justify-content: center;
     gap: 0.9rem;
     padding: 1.6rem 1.25rem;
-    border-radius: 26px;
+    border-radius: var(--radius);
     border: 1px solid var(--line);
     background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 65%), var(--panel);
     transition: border-color 0.3s ease;
@@ -826,7 +824,7 @@ button:disabled {
 
 .lp-player.is-out {
     --accent: var(--ruby);
-    border-color: rgba(255, 77, 109, 0.5);
+    border-color: rgba(255, 79, 100, 0.5);
 }
 
 .lp-name {
@@ -916,7 +914,7 @@ button:disabled {
 .lp-keypad button:hover,
 .lp-chips button:hover,
 .odds-presets button:hover {
-    border-color: rgba(245, 184, 0, 0.45);
+    border-color: rgba(255, 197, 61, 0.45);
 }
 
 .lp-btns button:active,
@@ -926,13 +924,13 @@ button:disabled {
 }
 
 .lp-btns .lp-minus {
-    background: rgba(255, 77, 109, 0.16);
-    border-color: rgba(255, 77, 109, 0.4);
+    background: rgba(255, 79, 100, 0.16);
+    border-color: rgba(255, 79, 100, 0.4);
 }
 
 .lp-btns .lp-plus {
-    background: rgba(76, 215, 144, 0.14);
-    border-color: rgba(76, 215, 144, 0.4);
+    background: rgba(69, 217, 142, 0.14);
+    border-color: rgba(69, 217, 142, 0.4);
 }
 
 .lp-center {
@@ -940,7 +938,7 @@ button:disabled {
     flex-direction: column;
     gap: 0.75rem;
     padding: 1.25rem;
-    border-radius: 26px;
+    border-radius: var(--radius);
     background: var(--surface);
     border: 1px solid var(--line);
 }
@@ -1069,7 +1067,7 @@ button:disabled {
 
     .lp-player {
         padding: 1rem 0.6rem;
-        border-radius: 20px;
+        border-radius: var(--radius);
         gap: 0.6rem;
     }
 
@@ -1130,17 +1128,18 @@ button:disabled {
     place-items: center;
     border-radius: 50%;
     backface-visibility: hidden;
-    font: 700 1.6rem 'Cinzel Decorative', serif;
+    font: 900 2rem/1 var(--display);
+    text-transform: uppercase;
     color: #3a2a00;
     background: radial-gradient(circle at 35% 30%, #ffe27a, var(--gold) 55%, #b88700);
-    box-shadow: inset 0 0 0 6px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(245, 184, 0, 0.25);
+    box-shadow: inset 0 0 0 6px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(255, 197, 61, 0.25);
 }
 
 .coin-tails {
     transform: rotateY(180deg);
     color: #1e1650;
     background: radial-gradient(circle at 35% 30%, #c8bdff, var(--violet) 55%, #4a37c9);
-    box-shadow: inset 0 0 0 6px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(123, 101, 255, 0.25);
+    box-shadow: inset 0 0 0 6px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(139, 107, 255, 0.25);
 }
 
 .die {
@@ -1150,7 +1149,7 @@ button:disabled {
     width: 130px;
     height: 130px;
     padding: 18px;
-    border-radius: 24px;
+    border-radius: var(--radius);
     background: linear-gradient(145deg, #fafaff, #d9dbe8);
     box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.12), 0 10px 30px rgba(0, 0, 0, 0.35);
 }
@@ -1212,7 +1211,7 @@ button:disabled {
     grid-template-columns: 1fr 1fr;
     gap: 0.9rem;
     padding: 1.5rem;
-    border-radius: 22px;
+    border-radius: var(--radius);
     background: var(--panel);
     border: 1px solid var(--line);
 }
@@ -1255,7 +1254,7 @@ button:disabled {
 
 .odds-out {
     padding: 1.5rem;
-    border-radius: 22px;
+    border-radius: var(--radius);
     background: var(--surface);
     border: 1px solid var(--line);
 }
@@ -1394,12 +1393,12 @@ button:disabled {
     background: var(--gold);
     border-color: var(--gold);
     color: #111;
-    box-shadow: 0 0 0 6px rgba(245, 184, 0, 0.18);
+    box-shadow: 0 0 0 6px rgba(255, 197, 61, 0.18);
 }
 
 .phase-panel {
     padding: 1.75rem;
-    border-radius: 22px;
+    border-radius: var(--radius);
     background: var(--surface);
     border: 1px solid var(--line);
     min-height: 240px;
@@ -1414,7 +1413,8 @@ button:disabled {
 }
 
 .phase-panel h3 {
-    font-family: 'Cinzel Decorative', cursive;
+    font: 800 1.7rem/1 var(--display);
+    text-transform: uppercase;
     color: var(--gold);
     margin-bottom: 0.4rem;
 }
@@ -1478,8 +1478,8 @@ button:disabled {
     width: 100%;
     height: auto;
     padding: 0.5rem;
-    border-radius: 22px;
-    background: radial-gradient(ellipse at 50% 40%, rgba(123, 101, 255, 0.14), transparent 70%), var(--panel);
+    border-radius: var(--radius);
+    background: radial-gradient(ellipse at 50% 40%, rgba(139, 107, 255, 0.14), transparent 70%), var(--panel);
     border: 1px solid var(--line);
 }
 
@@ -1509,12 +1509,12 @@ button:disabled {
 
 .zone:hover rect,
 .zone:focus-visible rect {
-    fill: rgba(245, 184, 0, 0.12);
-    stroke: rgba(245, 184, 0, 0.7);
+    fill: rgba(255, 197, 61, 0.12);
+    stroke: rgba(255, 197, 61, 0.7);
 }
 
 .zone.active rect {
-    fill: rgba(245, 184, 0, 0.22);
+    fill: rgba(255, 197, 61, 0.22);
     stroke: var(--gold);
     stroke-width: 2.5;
 }
@@ -1525,14 +1525,15 @@ button:disabled {
 
 .field-info {
     padding: 1.5rem;
-    border-radius: 22px;
+    border-radius: var(--radius);
     background: var(--surface);
     border: 1px solid var(--line);
     min-height: 200px;
 }
 
 .field-info h3 {
-    font-family: 'Cinzel Decorative', cursive;
+    font: 800 1.7rem/1 var(--display);
+    text-transform: uppercase;
     color: var(--gold);
     margin-bottom: 0.7rem;
 }
@@ -1566,7 +1567,7 @@ button:disabled {
     max-width: 720px;
     margin: 0 auto;
     padding: 1.75rem;
-    border-radius: 24px;
+    border-radius: var(--radius);
     background: var(--surface);
     border: 1px solid var(--line);
 }
@@ -1611,8 +1612,8 @@ button:disabled {
 }
 
 .quiz-options button:not(:disabled):hover {
-    border-color: rgba(245, 184, 0, 0.5);
-    background: rgba(245, 184, 0, 0.08);
+    border-color: rgba(255, 197, 61, 0.5);
+    background: rgba(255, 197, 61, 0.08);
 }
 
 .quiz-options button:disabled {
@@ -1623,13 +1624,13 @@ button:disabled {
 .quiz-options button.is-right {
     opacity: 1;
     border-color: var(--jade);
-    background: rgba(76, 215, 144, 0.16);
+    background: rgba(69, 217, 142, 0.16);
 }
 
 .quiz-options button.is-wrong {
     opacity: 1;
     border-color: var(--ruby);
-    background: rgba(255, 77, 109, 0.16);
+    background: rgba(255, 79, 100, 0.16);
 }
 
 .quiz-feedback {
@@ -1740,7 +1741,7 @@ button:disabled {
 
 .tm-drop.is-over,
 .tm.has-selection .tm-drop:hover {
-    background: rgba(245, 184, 0, 0.08);
+    background: rgba(255, 197, 61, 0.08);
 }
 
 .tm.has-selection .tm-drop {
@@ -1802,12 +1803,12 @@ button:disabled {
 
 .tm-chip:hover,
 .tm-chip:focus-visible {
-    border-color: rgba(245, 184, 0, 0.7);
+    border-color: rgba(255, 197, 61, 0.7);
 }
 
 .tm-chip.is-selected {
     border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(245, 184, 0, 0.35);
+    box-shadow: 0 0 0 3px rgba(255, 197, 61, 0.35);
     transform: translateY(-2px);
 }
 
@@ -1888,7 +1889,7 @@ body.tm-grabbing * {
 
 .tool-link:hover,
 .tool-link:focus-visible {
-    border-color: rgba(245, 184, 0, 0.55);
+    border-color: rgba(255, 197, 61, 0.55);
     transform: translateY(-2px);
 }
 
@@ -1899,7 +1900,7 @@ body.tm-grabbing * {
     width: 52px;
     height: 52px;
     border-radius: 14px;
-    background: rgba(245, 184, 0, 0.12);
+    background: rgba(255, 197, 61, 0.12);
     color: var(--gold);
     font: 700 1.3rem var(--num);
 }

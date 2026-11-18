@@ -6,11 +6,11 @@
 
     const KEY = 'xyz-tiermaker-v1';
     const NIVELES = [
-        { nombre: 'S', color: '#ff4d6d' },
-        { nombre: 'A', color: '#ff9f43' },
-        { nombre: 'B', color: '#f5b800' },
-        { nombre: 'C', color: '#4cd790' },
-        { nombre: 'D', color: '#7b65ff' },
+        { nombre: 'S', color: '#ff4f64' },
+        { nombre: 'A', color: '#ff9442' },
+        { nombre: 'B', color: '#ffc53d' },
+        { nombre: 'C', color: '#45d98e' },
+        { nombre: 'D', color: '#8b6bff' },
     ];
     // Del ranking oficial a las 5 filas
     const PRESET = { nah: 0, special: 0, grade1: 1, grade2: 2, semigrade2: 2, ok: 3, meh: 4 };
@@ -268,12 +268,12 @@
             canvas.height = H;
             const ctx = canvas.getContext('2d');
 
-            ctx.fillStyle = '#070912';
+            ctx.fillStyle = '#0f0e1c';
             ctx.fillRect(0, 0, W, H);
-            ctx.fillStyle = '#f5b800';
-            ctx.font = '700 40px "Cinzel Decorative", serif';
+            ctx.fillStyle = '#ffc53d';
+            ctx.font = '900 46px "Big Shoulders Display", sans-serif';
             ctx.textBaseline = 'middle';
-            ctx.fillText('Mi tierlist', PAD, CAB / 2);
+            ctx.fillText('MI TIERLIST', PAD, CAB / 2);
             ctx.fillStyle = '#bfc1d1';
             ctx.font = '500 22px Barlow, sans-serif';
             ctx.textAlign = 'right';
@@ -284,14 +284,14 @@
             let y = CAB;
             for (let i = 0; i < NIVELES.length; i++) {
                 const h = alturas[i];
-                ctx.fillStyle = '#121633';
+                ctx.fillStyle = '#17152b';
                 ctx.fillRect(PAD, y, W - PAD * 2, h);
                 ctx.fillStyle = NIVELES[i].color;
                 ctx.fillRect(PAD, y, LABEL, h);
-                ctx.fillStyle = '#0a0a12';
+                ctx.fillStyle = '#0f0e1c';
                 ctx.textAlign = 'center';
                 const etiqueta = estado.etiquetas[i] || NIVELES[i].nombre;
-                ctx.font = `700 ${etiqueta.length > 3 ? 26 : 54}px "Barlow Condensed", sans-serif`;
+                ctx.font = `700 ${etiqueta.length > 3 ? 26 : 54}px "Big Shoulders Display", sans-serif`;
                 ctx.fillText(etiqueta, PAD + LABEL / 2, y + h / 2, LABEL - 16);
                 ctx.textAlign = 'left';
                 estado.filas[i].forEach((id, k) => {
@@ -303,7 +303,10 @@
                     ctx.roundRect ? ctx.roundRect(x, ty, TW, TH, 8) : ctx.rect(x, ty, TW, TH);
                     ctx.clip();
                     if (img) {
-                        const s = Math.max(TW / img.width, TH / img.height);
+                        // Imagen entera (sin recortar), centrada sobre fondo oscuro
+                        ctx.fillStyle = '#0f0e1c';
+                        ctx.fillRect(x, ty, TW, TH);
+                        const s = Math.min(TW / img.width, TH / img.height);
                         ctx.drawImage(img, x + (TW - img.width * s) / 2, ty + (TH - img.height * s) / 2, img.width * s, img.height * s);
                     }
                     const grad = ctx.createLinearGradient(0, ty + TH - 34, 0, ty + TH);

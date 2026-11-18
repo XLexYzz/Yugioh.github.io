@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;500;700&family=Cinzel+Decorative:wght@700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Big+Shoulders+Display:wght@700;800;900&display=swap" />
     <title>Yu-Gi-Oh! XYZ - Torneos</title>
-    <meta name="description" content="Resultados de torneos de Yu-Gi-Oh! XYZ jugados en YGO Omega. Mira cada torneo y descarga tu banlist para competir con estilo." />
+    <meta name="description" content="Cuadros y resultados de los torneos de Yu-Gi-Oh! XYZ jugados en YGO Omega: campeones, finales y el camino de cada mazo." />
     <meta property="og:title" content="Yu-Gi-Oh! XYZ - Torneos" />
-    <meta property="og:description" content="Resultados de torneos de Yu-Gi-Oh! XYZ jugados en YGO Omega. Mira cada torneo y descarga tu banlist para competir con estilo." />
+    <meta property="og:description" content="Cuadros y resultados de los torneos de Yu-Gi-Oh! XYZ jugados en YGO Omega: campeones, finales y el camino de cada mazo." />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#f5b800" />
+    <meta name="theme-color" content="#0f0e1c" />
 
     <meta property="og:url" content="https://xlexyzz.github.io/Yugioh.github.io/porfolio/torneos.html" />
     <meta property="og:image" content="https://xlexyzz.github.io/Yugioh.github.io/img/og-image.png" />
@@ -24,37 +24,60 @@
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../estilos/styles.css" />
     <link rel="stylesheet" href="../estilos/interactivo.css" />
+    <link rel="stylesheet" href="../estilos/arena.css" />
     <script src="../JS/script.js" defer></script>
     <script src="../JS/interactivo.js" defer></script>
+    <script src="../JS/torneos-datos.js" defer></script>
+    <script src="../JS/torneos.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-<header>
+<header class="site-header">
     <div class="header-inner">
-        <h1>Torneos</h1>
-        <nav class="menu" aria-label="Menú principal">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">XYZ</span><span class="brand-name">Yu-Gi-Oh! XYZ</span></a>
+        <nav class="menu" id="menu" aria-label="Menú principal">
             <a href="../index.html">Inicio</a>
             <a href="./torneos.html">Torneos</a>
-            <a href="./banlist.html">Banlist</a>
-            <a href="./reglas.html">Reglas</a>
+            <a href="./estadisticas.html">Estadísticas</a>
             <a href="./tierlist.html">Tierlist</a>
             <a href="./mazos.html">Mazos</a>
+            <a href="./banlist.html">Banlist</a>
+            <a href="./reglas.html">Reglas</a>
             <a href="./herramientas.html">Herramientas</a>
         </nav>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Menú
+        </button>
     </div>
 </header>
 
 <main id="contenido">
-    <section class="section animate-up">
+    <section class="section">
         <div class="section-head">
-            <h2>Resultados de Torneos</h2>
-            <p class="section-lead">Estos torneos se hicieron en <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">YGO Omega</a>, la plataforma que usamos para jugar, descargar y practicar Yu-Gi-Oh! online.</p>
+            <h1>Torneos</h1>
+            <p class="section-lead">Todos los torneos de la comunidad, jugados en <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">YGO Omega</a>. Elige uno para ver su cuadro; pasa el ratón por un mazo para seguir su camino y pulsa en él para ver sus estadísticas.</p>
+        </div>
+
+        <p class="stats-notice" id="tourNotice" hidden></p>
+
+        <div class="tour-picker" id="tourPicker" role="tablist" aria-label="Torneos"></div>
+
+        <article class="tour-view" id="tourView" aria-live="polite">
+            <p class="empty-state">Cargando torneos…</p>
+        </article>
+    </section>
+
+    <section class="section section-dark" id="imagenes">
+        <div class="section-head">
+            <h2>Imágenes originales</h2>
+            <p>Los brackets tal y como se publicaron. Haz clic para ampliarlos.</p>
         </div>
 
         <div class="image-grid">
             <figure>
-                <img src="../torneos/torneo1.webp" alt="Bracket del Torneo 1" width="1521" height="795" decoding="async" loading="eager" fetchpriority="high" />
+                <img src="../torneos/torneo1.webp" alt="Bracket del Torneo 1" width="1521" height="795" decoding="async" loading="lazy" />
                 <figcaption>Torneo 1</figcaption>
             </figure>
             <figure>
@@ -113,13 +136,15 @@
     </section>
 </main>
 
-<footer>
+<footer class="site-footer">
     <div class="footer-content">
-        <nav class="footer-links" aria-label="Enlaces externos">
+        <p>© 2026 Yu-Gi-Oh! XYZ. Web de la comunidad, sin relación con Konami.</p>
+        <nav class="footer-links" aria-label="Más enlaces">
             <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Jugar en YGO Omega</a>
+            <a href="./editor.html">Editar resultados</a>
+            <a href="https://ygoprodeck.com/api-guide/" target="_blank" rel="noopener">Datos de cartas: YGOPRODeck</a>
             <a href="https://github.com/XLexYzz/Yugioh.github.io" target="_blank" rel="noopener">Código en GitHub</a>
         </nav>
-        <p class="footer-copyright">© 2026 Yu-Gi-Oh! XYZ</p>
     </div>
 </footer>
 

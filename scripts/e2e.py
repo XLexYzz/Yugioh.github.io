@@ -35,7 +35,8 @@ with sync_playwright() as p:
     ctx, page = nueva(b, viewport={"width": 1280, "height": 860})
 
     for ruta in ["index.html", "porfolio/torneos.html", "porfolio/banlist.html", "porfolio/reglas.html",
-                 "porfolio/tierlist.html", "porfolio/mazos.html", "porfolio/herramientas.html"]:
+                 "porfolio/tierlist.html", "porfolio/mazos.html", "porfolio/herramientas.html",
+                 "porfolio/estadisticas.html", "porfolio/editor.html"]:
         page.goto(f"{BASE}/{ruta}")
         page.wait_for_load_state("networkidle")
         check(page.locator(".palette-trigger").count() == 1, f"botón de búsqueda en {ruta}")
@@ -112,9 +113,9 @@ with sync_playwright() as p:
     # Reglas
     page.goto(f"{BASE}/porfolio/reglas.html#fases"); page.wait_for_load_state("networkidle")
     page.click("#phaseNext"); page.click("#phaseNext"); page.click("#phaseNext")
-    check("Battle Phase" in page.inner_text("#phasePanel"), "siguiente fase lleva a Battle")
+    check("BATTLE PHASE" in page.inner_text("#phasePanel").upper(), "siguiente fase lleva a Battle")
     page.locator(".zone[data-zone='gy']").click()
-    check("Cementerio" in page.inner_text("#fieldInfo"), "zona del campo muestra el Cementerio")
+    check("CEMENTERIO" in page.inner_text("#fieldInfo").upper(), "zona del campo muestra el Cementerio")
     for _ in range(10):
         page.locator(".quiz-options button").first.click()
         page.locator(".quiz-next").click()
@@ -170,18 +171,105 @@ with sync_playwright() as p:
     page.wait_for_selector(".deck-tile", timeout=20000)
     check(page.locator(".deck-tile").count() > 5, "el mazo se carga desde el enlace")
     page.screenshot(path=f"{OUT}/d-mazos.png", full_page=True)
+
+    # Portada con datos de torneos
+    page.goto(f"{BASE}/index.html"); page.wait_for_load_state("networkidle")
+    page.wait_for_selector(".champ-name")
+    check("REVOLVER" in page.inner_text("#heroChamp").upper(), "portada: campeón del último torneo")
+    check(page.locator("#heroRanking li").count() == 5, "portada: top 5 por victorias")
+    check(page.locator("#recentTours .recent-tour").count() == 3, "portada: tres últimos torneos")
+
+    # Estadísticas
+    page.goto(f"{BASE}/porfolio/estadisticas.html#mazo=Kaiba"); page.wait_for_load_state("networkidle")
+    page.wait_for_selector(".deck-panel-title h2")
+    check(page.inner_text(".deck-panel-title h2").strip().upper() == "KAIBA", "estadísticas: abre la ficha desde el enlace")
+    check(page.inner_text(".scoreline .score-w") == "11" and page.inner_text(".scoreline .score-l") == "7", "estadísticas: Kaiba 11-7")
+    filas = page.locator("#statsBody tr[data-mazo]").count()
+    check(filas > 50, f"estadísticas: ranking con {filas} mazos")
+    page.uncheck("#statsPending")
+    check(page.locator("#statsBody .pending").count() == 0, "estadísticas: ocultar mazos por confirmar")
+    page.fill("#statsSearch", "nash")
+    check(page.locator("#statsBody tr[data-mazo]").count() == 1, "estadísticas: buscador")
+    page.locator("#statsBody tr[data-mazo]").first.click()
+    check(page.inner_text(".deck-panel-title h2").strip().upper() == "NASH", "estadísticas: clic en una fila abre su ficha")
+    page.screenshot(path=f"{OUT}/d-estadisticas.png")
+
+    # Torneos: cuadro generado
+    page.goto(f"{BASE}/porfolio/torneos.html"); page.wait_for_load_state("networkidle")
+    page.wait_for_selector(".bracket")
+    check(page.locator(".tour-picker [role=tab]").count() == 13, "torneos: 13 torneos en el selector")
+    page.click("#tab-1")
+    check("KAIBA" in page.inner_text(".tour-champ").upper(), "torneos: campeón del torneo 1")
+    check(page.locator(".round").count() == 4 and page.locator(".match").count() == 15, "torneos: cuadro de 16 con 15 partidas")
+    page.locator(".slot[data-mazo='Kaiba']").first.hover()
+    check(page.locator(".slot.is-trace").count() == 4, "torneos: rastro de Kaiba en sus 4 partidas")
+    page.click("#tab-3")
+    check(page.locator(".match").count() == 31, "torneos: cuadro de 32")
+    page.click("[data-original]")
+    page.wait_for_timeout(400)
+    check(page.locator(".modal.active").count() == 1, "torneos: abre la imagen original")
+    page.keyboard.press("Escape")
+    page.screenshot(path=f"{OUT}/d-torneos.png")
+
+    # Tierlist con récord
+    page.goto(f"{BASE}/porfolio/tierlist.html"); page.wait_for_load_state("networkidle")
+    page.wait_for_selector(".deck-record")
+    kaiba = page.locator(".tierlist-grid figure", has_text="Kaiba").first.locator(".deck-record").inner_text()
+    check(kaiba.startswith("11–7"), f"tierlist: récord de Kaiba ({kaiba})")
+    ancho = page.evaluate("(() => { const i = document.querySelector('.tierlist-grid img[src*=dino]'); return Math.round(i.getBoundingClientRect().width / i.getBoundingClientRect().height * 100); })()")
+    check(abs(ancho - round(1024 / 330 * 100)) < 4, f"tierlist: imagen de Dino sin recortar (proporción {ancho / 100})")
+
+    # Editor: confirmar un nombre y previsualizar
+    page.goto(f"{BASE}/porfolio/editor.html"); page.wait_for_load_state("networkidle")
+    page.evaluate("localStorage.removeItem('xyz-torneos-borrador'); localStorage.removeItem('xyz-usar-borrador')")
+    page.reload(); page.wait_for_load_state("networkidle")
+    page.wait_for_selector(".ed-name")
+    antes = page.locator(".ed-name.is-pending").count()
+    form = page.locator(".ed-name[data-nombre='?Rata gris']")
+    form.locator("input").fill("Rata de prueba")
+    form.locator("button[type=submit]").click()
+    check(page.locator(".ed-name.is-pending").count() == antes - 1, "editor: confirmar un nombre lo quita de pendientes")
+    page.check("#edPreview")
+    page.goto(f"{BASE}/porfolio/estadisticas.html#mazo=Rata%20de%20prueba"); page.wait_for_load_state("networkidle")
+    page.wait_for_selector(".deck-panel-title h2")
+    check("RATA DE PRUEBA" in page.inner_text(".deck-panel-title h2").upper(), "editor: la web usa el borrador al previsualizar")
+    check("borrador" in page.inner_text("#statsNotice"), "editor: aviso de borrador en estadísticas")
+    page.goto(f"{BASE}/porfolio/editor.html#torneo-2"); page.wait_for_load_state("networkidle")
+    page.wait_for_selector(".ed-match")
+    check(page.locator(".ed-match").count() == 15, "editor: abre el torneo del enlace")
+    page.locator(".ed-match").first.locator(".ed-win[data-g='1']").click()
+    check(page.locator("#edProblems li").count() >= 1, "editor: avisa si el ganador no coincide con la ronda siguiente")
+    with page.expect_download() as dl:
+        page.click("#edDownload")
+    ruta_json = f"{OUT}/torneos-editor.json"
+    dl.value.save_as(ruta_json)
+    import json
+    exportado = json.load(open(ruta_json, encoding="utf-8"))
+    check(len(exportado["torneos"]) == 13, "editor: descarga un torneos.json válido")
+    page.on("dialog", lambda d: d.accept())
+    page.click("#edReset")
+    page.wait_for_timeout(500)
+    check(page.evaluate("localStorage.getItem('xyz-torneos-borrador')") is None, "editor: descartar borrador")
     ctx.close()
 
     # ---------- Móvil ----------
     ctx, page = nueva(b, viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True, device_scale_factor=2)
     for ruta, nombre in [("index.html", "m-index"), ("porfolio/herramientas.html", "m-herr"),
                          ("porfolio/reglas.html", "m-reglas"), ("porfolio/tierlist.html#crea", "m-tier"),
-                         ("porfolio/mazos.html", "m-mazos")]:
+                         ("porfolio/mazos.html", "m-mazos"), ("porfolio/estadisticas.html", "m-estadisticas"),
+                         ("porfolio/torneos.html", "m-torneos"), ("porfolio/editor.html", "m-editor")]:
         page.goto(f"{BASE}/{ruta}"); page.wait_for_load_state("networkidle")
         page.wait_for_timeout(800)
         sw = page.evaluate("document.documentElement.scrollWidth - innerWidth")
         check(sw <= 0, f"móvil sin scroll horizontal en {ruta} ({sw})")
         page.screenshot(path=f"{OUT}/{nombre}.png", full_page=True)
+    # Menú en móvil
+    page.goto(f"{BASE}/index.html"); page.wait_for_load_state("networkidle")
+    check(not page.locator("#menu").is_visible(), "móvil: menú cerrado al entrar")
+    page.click(".menu-toggle")
+    check(page.locator("#menu").is_visible(), "móvil: el botón Menú abre la navegación")
+    page.keyboard.press("Escape")
+    check(not page.locator("#menu").is_visible(), "móvil: Escape cierra el menú")
     # Tocar y colocar en móvil
     page.goto(f"{BASE}/porfolio/tierlist.html#crea"); page.wait_for_load_state("networkidle")
     page.click("#tmClear")

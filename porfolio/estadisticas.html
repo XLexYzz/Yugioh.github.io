@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Big+Shoulders+Display:wght@700;800;900&display=swap" />
+    <title>Yu-Gi-Oh! XYZ - Estadísticas</title>
+    <meta name="description" content="Victorias, derrotas y títulos de cada mazo en los torneos de Yu-Gi-Oh! XYZ, con historial por torneo y rivales directos." />
+    <meta property="og:title" content="Yu-Gi-Oh! XYZ - Estadísticas" />
+    <meta property="og:description" content="Victorias, derrotas y títulos de cada mazo en los torneos de Yu-Gi-Oh! XYZ, con historial por torneo y rivales directos." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0f0e1c" />
+    <meta property="og:url" content="https://xlexyzz.github.io/Yugioh.github.io/porfolio/estadisticas.html" />
+    <meta property="og:image" content="https://xlexyzz.github.io/Yugioh.github.io/img/og-image.png" />
+    <meta property="og:site_name" content="Yu-Gi-Oh! XYZ" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://xlexyzz.github.io/Yugioh.github.io/porfolio/estadisticas.html" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="../img/apple-touch-icon.png" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../estilos/styles.css" />
+    <link rel="stylesheet" href="../estilos/interactivo.css" />
+    <link rel="stylesheet" href="../estilos/arena.css" />
+    <script src="../JS/script.js" defer></script>
+    <script src="../JS/interactivo.js" defer></script>
+    <script src="../JS/torneos-datos.js" defer></script>
+    <script src="../JS/estadisticas.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">XYZ</span><span class="brand-name">Yu-Gi-Oh! XYZ</span></a>
+        <nav class="menu" id="menu" aria-label="Menú principal">
+            <a href="../index.html">Inicio</a>
+            <a href="./torneos.html">Torneos</a>
+            <a href="./estadisticas.html">Estadísticas</a>
+            <a href="./tierlist.html">Tierlist</a>
+            <a href="./mazos.html">Mazos</a>
+            <a href="./banlist.html">Banlist</a>
+            <a href="./reglas.html">Reglas</a>
+            <a href="./herramientas.html">Herramientas</a>
+        </nav>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Menú
+        </button>
+    </div>
+</header>
+
+<main id="contenido">
+    <section class="section">
+        <div class="section-head">
+            <h1>Estadísticas</h1>
+            <p>Victorias, derrotas y títulos de cada mazo en los torneos de la comunidad. Elige un mazo para ver su historial y sus rivales.</p>
+        </div>
+
+        <p class="stats-notice" id="statsNotice" hidden></p>
+
+        <div class="stats-highlights" id="statsHighlights"></div>
+
+        <div class="stats-toolbar">
+            <label class="search-field">
+                <span class="visually-hidden">Buscar mazo</span>
+                <input type="search" id="statsSearch" placeholder="Buscar mazo…" autocomplete="off" />
+            </label>
+            <label class="stats-select">
+                <span>Ordenar por</span>
+                <select id="statsSort">
+                    <option value="victorias">Victorias</option>
+                    <option value="porcentaje">% de victorias</option>
+                    <option value="titulos">Títulos</option>
+                    <option value="partidas">Partidas jugadas</option>
+                    <option value="torneos">Torneos jugados</option>
+                    <option value="nombre">Nombre</option>
+                </select>
+            </label>
+            <label class="stats-select">
+                <span>Mínimo de partidas</span>
+                <select id="statsMin">
+                    <option value="0">Todas</option>
+                    <option value="3">3 o más</option>
+                    <option value="5">5 o más</option>
+                    <option value="10">10 o más</option>
+                </select>
+            </label>
+            <label class="stats-check">
+                <input type="checkbox" id="statsPending" checked />
+                <span>Incluir mazos por confirmar</span>
+            </label>
+        </div>
+
+        <div class="stats-layout">
+            <div class="stats-table-wrap">
+                <table class="stats-table" id="statsTable">
+                    <caption class="visually-hidden">Ranking de mazos</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" class="col-pos">#</th>
+                            <th scope="col">Mazo</th>
+                            <th scope="col" class="col-num">Torneos</th>
+                            <th scope="col" class="col-num">V–D</th>
+                            <th scope="col" class="col-pct">% victorias</th>
+                            <th scope="col" class="col-num">Títulos</th>
+                            <th scope="col" class="col-best">Mejor resultado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statsBody">
+                        <tr><td colspan="7" class="empty-cell">Cargando torneos…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <aside class="deck-panel" id="deckPanel" aria-live="polite">
+                <p class="deck-panel-empty">Elige un mazo del ranking para ver su historial.</p>
+            </aside>
+        </div>
+    </section>
+</main>
+
+
+<footer class="site-footer">
+    <div class="footer-content">
+        <p>© 2026 Yu-Gi-Oh! XYZ. Web de la comunidad, sin relación con Konami.</p>
+        <nav class="footer-links" aria-label="Más enlaces">
+            <a href="https://omega.duelistsunite.org/" target="_blank" rel="noopener">Jugar en YGO Omega</a>
+            <a href="./editor.html">Editar resultados</a>
+            <a href="https://ygoprodeck.com/api-guide/" target="_blank" rel="noopener">Datos de cartas: YGOPRODeck</a>
+            <a href="https://github.com/XLexYzz/Yugioh.github.io" target="_blank" rel="noopener">Código en GitHub</a>
+        </nav>
+    </div>
+</footer>
+
+</body>
+</html>

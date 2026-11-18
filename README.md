@@ -9,7 +9,9 @@ Sitio público: <https://xlexyzz.github.io/Yugioh.github.io/>
 | Página | Qué contiene |
 | --- | --- |
 | `index.html` | Portada con accesos rápidos y vídeos (se cargan al hacer clic) |
-| `porfolio/torneos.html` | Brackets de cada torneo (se pueden ampliar y pasar con las flechas) |
+| `porfolio/torneos.html` | Cuadro interactivo de cada torneo (sigue el camino de un mazo al pasar el ratón) e imágenes originales |
+| `porfolio/estadisticas.html` | Ranking de mazos (victorias, derrotas, % y títulos) y ficha con historial y rivales |
+| `porfolio/editor.html` | Editor de resultados: confirmar mazos, corregir partidas, crear torneos y descargar `datos/torneos.json` |
 | `porfolio/banlist.html` | Descarga de la banlist y listado con buscador de las cartas restringidas |
 | `porfolio/reglas.html` | Reglas básicas, fases del turno paso a paso, mapa clicable del campo y test autocorregible |
 | `porfolio/tierlist.html` | Tierlist con filtro y buscador, y **Crea tu tierlist** (arrastrar y soltar, se guarda y se descarga como PNG) |
@@ -21,6 +23,11 @@ En todas las páginas, **Ctrl+K** (o `/`) abre un buscador de páginas, herramie
 Los filtros se pueden compartir con un enlace: por ejemplo `porfolio/tierlist.html#grade1`, `porfolio/banlist.html#limitadas` o `porfolio/banlist.html?q=Nibiru`. Un mazo validado se comparte con el enlace `porfolio/mazos.html#ydke=…` que genera el botón "Copiar enlace al mazo".
 
 ## Cómo actualizar el contenido
+
+- **Resultados de torneos:** están en `datos/torneos.json` (una línea por partida: ronda, mazo A, mazo B y ganador).
+  Se editan desde `porfolio/editor.html`: los cambios se guardan como borrador en el navegador, se pueden
+  previsualizar en toda la web y se descargan como `torneos.json` para subirlo a `datos/`.
+  Los nombres que empiezan por `?` se transcribieron de las imágenes y falta confirmar qué mazo son.
 
 - **Banlist:** sustituye `banlist/Untitled Banlist.lflist.conf` por la nueva exportación. La página la lee automáticamente, no hace falta tocar el HTML.
 - **Nuevo torneo:** sube la imagen a `torneos/` como `torneoN.webp` (o conviértela, ver abajo) y añade un bloque `<figure>` en `porfolio/torneos.html` con `width`/`height` reales y `loading="lazy"` (la primera puede ser `loading="eager" fetchpriority="high"`).
