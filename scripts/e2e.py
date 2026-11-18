@@ -7,8 +7,33 @@ Uso:
 Requiere: pip install playwright && playwright install chromium
 La prueba del validador consulta la API pública de YGOPRODeck (necesita conexión).
 """
-import os, sys, tempfile
+import json, os, sys, tempfile
 from playwright.sync_api import sync_playwright
+
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATOS = json.load(open(os.path.join(RAIZ, "datos", "torneos.json"), encoding="utf-8"))
+
+
+def record(mazo):
+    v = d = 0
+    for t in DATOS["torneos"]:
+        for _, a, b, g in t["partidas"]:
+            if mazo in (a, b):
+                gano = (a == mazo and g == 0) or (b == mazo and g == 1)
+                v += gano
+                d += not gano
+    return v, d
+
+
+def campeon(t):
+    r = max(p[0] for p in t["partidas"])
+    f = next(p for p in t["partidas"] if p[0] == r)
+    return f[1 + f[3]]
+
+
+KAIBA = record("Kaiba")
+ULTIMO = campeon(DATOS["torneos"][-1])
+PRIMERO = campeon(DATOS["torneos"][0])
 
 BASE = os.environ.get("XYZ_E2E_BASE", "http://localhost:8765")
 OUT = os.environ.get("XYZ_E2E_OUT", os.path.join(tempfile.gettempdir(), "xyz-e2e"))
@@ -53,9 +78,11 @@ with sync_playwright() as p:
     check(titulos[:1] == ["Yubel"], f"paleta encuentra Yubel ({titulos[:3]})")
     page.screenshot(path=f"{OUT}/d-paleta.png")
     page.keyboard.press("Enter")
-    page.wait_for_url("**/tierlist.html?q=*")
+    page.wait_for_url(lambda u: "tierlist.html?q=" in u or "estadisticas.html#mazo=" in u)
     page.wait_for_load_state("networkidle")
-    check("tierlist.html?q=Yubel" in page.url, "paleta navega a la tierlist")
+    check("Yubel" in page.url, f"paleta navega al resultado ({page.url.split('/')[-1]})")
+    # ?q= rellena el buscador de la tierlist
+    page.goto(f"{BASE}/porfolio/tierlist.html?q=Yubel"); page.wait_for_load_state("networkidle")
     visibles = page.evaluate("[...document.querySelectorAll('.tierlist-category figure')].filter(f=>!f.hidden && !f.closest('[hidden]')).length")
     check(visibles == 1, f"tierlist filtrada por ?q= ({visibles})")
 
@@ -175,7 +202,7 @@ with sync_playwright() as p:
     # Portada con datos de torneos
     page.goto(f"{BASE}/index.html"); page.wait_for_load_state("networkidle")
     page.wait_for_selector(".champ-name")
-    check("REVOLVER" in page.inner_text("#heroChamp").upper(), "portada: campeón del último torneo")
+    check(ULTIMO.upper() in page.inner_text("#heroChamp").upper(), f"portada: campeón del último torneo ({ULTIMO})")
     check(page.locator("#heroRanking li").count() == 5, "portada: top 5 por victorias")
     check(page.locator("#recentTours .recent-tour").count() == 3, "portada: tres últimos torneos")
 
@@ -183,7 +210,7 @@ with sync_playwright() as p:
     page.goto(f"{BASE}/porfolio/estadisticas.html#mazo=Kaiba"); page.wait_for_load_state("networkidle")
     page.wait_for_selector(".deck-panel-title h2")
     check(page.inner_text(".deck-panel-title h2").strip().upper() == "KAIBA", "estadísticas: abre la ficha desde el enlace")
-    check(page.inner_text(".scoreline .score-w") == "11" and page.inner_text(".scoreline .score-l") == "7", "estadísticas: Kaiba 11-7")
+    check(page.inner_text(".scoreline .score-w") == str(KAIBA[0]) and page.inner_text(".scoreline .score-l") == str(KAIBA[1]), f"estadísticas: Kaiba {KAIBA[0]}-{KAIBA[1]}")
     filas = page.locator("#statsBody tr[data-mazo]").count()
     check(filas > 50, f"estadísticas: ranking con {filas} mazos")
     page.uncheck("#statsPending")
@@ -199,7 +226,7 @@ with sync_playwright() as p:
     page.wait_for_selector(".bracket")
     check(page.locator(".tour-picker [role=tab]").count() == 13, "torneos: 13 torneos en el selector")
     page.click("#tab-1")
-    check("KAIBA" in page.inner_text(".tour-champ").upper(), "torneos: campeón del torneo 1")
+    check(PRIMERO.upper() in page.inner_text(".tour-champ").upper(), f"torneos: campeón del torneo 1 ({PRIMERO})")
     check(page.locator(".round").count() == 4 and page.locator(".match").count() == 15, "torneos: cuadro de 16 con 15 partidas")
     page.locator(".slot[data-mazo='Kaiba']").first.hover()
     check(page.locator(".slot.is-trace").count() == 4, "torneos: rastro de Kaiba en sus 4 partidas")
@@ -215,7 +242,7 @@ with sync_playwright() as p:
     page.goto(f"{BASE}/porfolio/tierlist.html"); page.wait_for_load_state("networkidle")
     page.wait_for_selector(".deck-record")
     kaiba = page.locator(".tierlist-grid figure", has_text="Kaiba").first.locator(".deck-record").inner_text()
-    check(kaiba.startswith("11–7"), f"tierlist: récord de Kaiba ({kaiba})")
+    check(kaiba.startswith(f"{KAIBA[0]}–{KAIBA[1]}"), f"tierlist: récord de Kaiba ({kaiba})")
     ancho = page.evaluate("(() => { const i = document.querySelector('.tierlist-grid img[src*=dino]'); return Math.round(i.getBoundingClientRect().width / i.getBoundingClientRect().height * 100); })()")
     check(abs(ancho - round(1024 / 330 * 100)) < 4, f"tierlist: imagen de Dino sin recortar (proporción {ancho / 100})")
 
@@ -225,7 +252,7 @@ with sync_playwright() as p:
     page.reload(); page.wait_for_load_state("networkidle")
     page.wait_for_selector(".ed-name")
     antes = page.locator(".ed-name.is-pending").count()
-    form = page.locator(".ed-name[data-nombre='?Rata gris']")
+    form = page.locator(".ed-name.is-pending").first
     form.locator("input").fill("Rata de prueba")
     form.locator("button[type=submit]").click()
     check(page.locator(".ed-name.is-pending").count() == antes - 1, "editor: confirmar un nombre lo quita de pendientes")
