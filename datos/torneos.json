@@ -409,6 +409,72 @@
         [3, "Revolver", "Yubel", 0],
         [4, "Typhoon", "Revolver", 1]
       ]
+    },
+    {
+      "id": 14,
+      "nombre": "Torneo 14",
+      "imagen": "torneo14.webp",
+      "ancho": 1378,
+      "alto": 696,
+      "revisar": "Transcrito del bracket: en semifinales de la izquierda las imágenes de Typhoon y Kaiba(H) están cambiadas de sitio.",
+      "partidas": [
+        [1, "Quatro", "Yuma", 1],
+        [1, "Dracotail", "Soulburner", 0],
+        [1, "Odion", "Crow", 1],
+        [1, "Typhoon", "Kaiba", 0],
+        [1, "Yubel", "Ai", 0],
+        [1, "Nash", "Lightsworn", 1],
+        [1, "Kaiba(H)", "Yugo", 0],
+        [1, "?Foto (pelo naranja)", "Kewl Tune", 1],
+        [1, "Playmaker", "Yuto", 0],
+        [1, "Revolver", "Orcust", 0],
+        [1, "K9", "Magistus", 0],
+        [1, "Akaba", "Jack", 0],
+        [1, "Shun", "Mimighoul", 1],
+        [1, "Kaito", "PSY-Framegear", 0],
+        [1, "Hecamanos", "Centurion", 1],
+        [1, "Yusei", "Six", 0],
+        [2, "Yuma", "Dracotail", 0],
+        [2, "Crow", "Typhoon", 1],
+        [2, "Yubel", "Lightsworn", 1],
+        [2, "Kaiba(H)", "Kewl Tune", 0],
+        [2, "Playmaker", "Revolver", 0],
+        [2, "K9", "Akaba", 0],
+        [2, "Mimighoul", "Kaito", 1],
+        [2, "Centurion", "Yusei", 0],
+        [3, "Yuma", "Kaiba(H)", 0],
+        [3, "Lightsworn", "Typhoon", 1],
+        [3, "Playmaker", "K9", 1],
+        [3, "Kaito", "Centurion", 0],
+        [4, "Yuma", "Typhoon", 0],
+        [4, "K9", "Kaito", 1],
+        [5, "Yuma", "Kaito", 0]
+      ]
+    },
+    {
+      "id": 15,
+      "nombre": "Torneo 15",
+      "imagen": "torneo15.webp",
+      "ancho": 1429,
+      "alto": 816,
+      "revisar": "Transcrito del bracket: varias imágenes de la primera ronda están en el lado contrario (aster, Revolver y Yuri).",
+      "partidas": [
+        [1, "?Pelo plateado con marcas rojas", "aster", 1],
+        [1, "Kaito", "Lightsworn", 0],
+        [1, "Kaiba", "Mirrorjade", 0],
+        [1, "Revolver", "Atem", 0],
+        [1, "Yubel", "Centurion", 0],
+        [1, "Kewl Tune", "Yusei", 0],
+        [1, "Jaden", "Dracotail", 0],
+        [1, "Yuri", "Six", 0],
+        [2, "aster", "Kaito", 1],
+        [2, "Kaiba", "Revolver", 0],
+        [2, "Yubel", "Kewl Tune", 0],
+        [2, "Jaden", "Yuri", 0],
+        [3, "Kaito", "Kaiba", 1],
+        [3, "Yubel", "Jaden", 1],
+        [4, "Kaiba", "Jaden", 0]
+      ]
     }
   ]
 }

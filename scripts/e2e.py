@@ -224,7 +224,7 @@ with sync_playwright() as p:
     # Torneos: cuadro generado
     page.goto(f"{BASE}/porfolio/torneos.html"); page.wait_for_load_state("networkidle")
     page.wait_for_selector(".bracket")
-    check(page.locator(".tour-picker [role=tab]").count() == 13, "torneos: 13 torneos en el selector")
+    check(page.locator(".tour-picker [role=tab]").count() == len(DATOS["torneos"]), f"torneos: {len(DATOS['torneos'])} torneos en el selector")
     page.click("#tab-1")
     check(PRIMERO.upper() in page.inner_text(".tour-champ").upper(), f"torneos: campeón del torneo 1 ({PRIMERO})")
     check(page.locator(".round").count() == 4 and page.locator(".match").count() == 15, "torneos: cuadro de 16 con 15 partidas")
@@ -272,7 +272,8 @@ with sync_playwright() as p:
     # Confirmar nombres (en el desplegable "Nombres de mazos")
     page.click("#confirmar summary")
     pendientes = page.locator(".ed-name.is-pending").count()
-    check(pendientes == 3, f"panel: 3 nombres por confirmar ({pendientes})")
+    esperados = len({n for t in DATOS["torneos"] for p in t["partidas"] for n in (p[1], p[2]) if n.startswith("?")})
+    check(pendientes == esperados, f"panel: {esperados} nombres por confirmar ({pendientes})")
 
     # Torneo nuevo: inscripción -> cuadro con pases directos -> resultados
     page.on("dialog", lambda d: d.accept())
