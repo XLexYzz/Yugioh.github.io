@@ -98,6 +98,26 @@ window.TIERLIST_DATOS = {
     {"nombre":"z-one","imagen":"z-one.webp","nivel":"meh","ancho":1024,"alto":1024},
     {"nombre":"Axel","imagen":"axel.webp","nivel":"meh","ancho":596,"alto":335},
     {"nombre":"Aster","imagen":"aster.webp","nivel":"meh","ancho":427,"alto":600},
-    {"nombre":"Tearlaments","imagen":"tearalaments.webp","nivel":"meh","ancho":1024,"alto":745}
+    {"nombre":"Tearlaments","imagen":"tearalaments.webp","nivel":"meh","ancho":1024,"alto":745},
+    {"nombre":"Avatar doble","imagen":"avatar-doble.webp","nivel":"meh","ancho":360,"alto":360},
+    {"nombre":"Bruno","imagen":"bruno.webp","nivel":"meh","ancho":1008,"alto":633},
+    {"nombre":"Chazz","imagen":"chazz.webp","nivel":"meh","ancho":480,"alto":645},
+    {"nombre":"Dark World","imagen":"dark-world.webp","nivel":"meh","ancho":900,"alto":490},
+    {"nombre":"Diva","imagen":"diva.webp","nivel":"meh","ancho":250,"alto":140},
+    {"nombre":"Goblin Biker","imagen":"goblin-biker.webp","nivel":"meh","ancho":827,"alto":827},
+    {"nombre":"Gongenzaka","imagen":"gongenzaka.webp","nivel":"meh","ancho":424,"alto":600},
+    {"nombre":"Hecamanos","imagen":"hecamanos.webp","nivel":"meh","ancho":554,"alto":554},
+    {"nombre":"Ice barrier","imagen":"ice-barrier.webp","nivel":"meh","ancho":1024,"alto":576},
+    {"nombre":"Ishizu","imagen":"ishizu.webp","nivel":"meh","ancho":701,"alto":1281},
+    {"nombre":"Jesse","imagen":"jesse.webp","nivel":"meh","ancho":433,"alto":600},
+    {"nombre":"Mai","imagen":"mai.webp","nivel":"meh","ancho":720,"alto":1319},
+    {"nombre":"Monarcas","imagen":"monarcas.webp","nivel":"meh","ancho":1024,"alto":447},
+    {"nombre":"Mundo virtual","imagen":"mundo-virtual.webp","nivel":"meh","ancho":618,"alto":323},
+    {"nombre":"Scareclaw","imagen":"scareclaw.webp","nivel":"meh","ancho":1024,"alto":1024},
+    {"nombre":"Vanquish","imagen":"vanquish.webp","nivel":"meh","ancho":900,"alto":461},
+    {"nombre":"Vector","imagen":"vector.webp","nivel":"meh","ancho":405,"alto":600},
+    {"nombre":"Viper","imagen":"viper.webp","nivel":"meh","ancho":360,"alto":360},
+    {"nombre":"Paleozoic","imagen":"paleozoic.webp","nivel":"meh","ancho":586,"alto":341},
+    {"nombre":"Traptrix","imagen":"traptrix.webp","nivel":"meh","ancho":512,"alto":512}
   ]
 };
