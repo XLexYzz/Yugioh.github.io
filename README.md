@@ -24,7 +24,7 @@ Los filtros se pueden compartir con un enlace: por ejemplo `porfolio/tierlist.ht
 
 ## Cómo actualizar el contenido
 
-Torneos y tierlist se gestionan desde **`porfolio/editor.html`** (Panel de organizadores, enlazado en el pie):
+Torneos, tierlist y banlist se gestionan desde **`porfolio/editor.html`** (Panel de organizadores, enlazado en el pie):
 
 1. **Conectar GitHub (una vez):** crea un token *fine-grained* en GitHub con acceso solo a este
    repositorio y el permiso *Contents: Read and write*, y pégalo en la pestaña Publicar. Se guarda
@@ -33,13 +33,16 @@ Torneos y tierlist se gestionan desde **`porfolio/editor.html`** (Panel de organ
    genera el cuadro (sorteo u orden de la lista; pases directos si hace falta) → marca los ganadores
    según se juegan. La siguiente ronda se crea sola.
 3. **Tierlist:** añade decks con su imagen (se convierte a WebP), cambia el nivel o el orden.
-4. **Publicar:** sube todo en un único commit; la web se actualiza en uno o dos minutos.
+4. **Banlist:** sube el `.lflist.conf` nuevo (o pega su texto) y revisa qué cartas cambian antes de
+   aplicarlo, o busca una carta por nombre o ID y elige Prohibida, Limitada, Semi-limitada o sin límite.
+   La lista de "Cambios respecto a la publicada" permite deshacer carta a carta.
+5. **Publicar:** sube todo en un único commit; la web se actualiza en uno o dos minutos.
 
 Mientras no publiques, los cambios se guardan como borrador en el navegador y puedes ver la web con
-ellos activando "Ver la web con mis cambios". Sin token, el panel descarga `datos/torneos.json` y
-`datos/tierlist.js` para subirlos a mano.
+ellos activando "Ver la web con mis cambios". Sin token, el panel descarga `datos/torneos.json`,
+`datos/tierlist.js` y la banlist para subirlos a mano.
 
-- **Banlist:** sustituye `banlist/Untitled Banlist.lflist.conf` por la nueva exportación. La página la lee automáticamente, no hace falta tocar el HTML.
+- **Banlist a mano:** sustituye `banlist/Untitled Banlist.lflist.conf` por la nueva exportación. La página y el botón de descarga leen siempre la última versión publicada (el service worker la pide a la red primero).
 - **Bracket original de un torneo antiguo (opcional):** sube la imagen a `torneos/torneoN.webp`, añade un `<figure>` en "Imágenes originales" de `porfolio/torneos.html` y pon `"imagen": "torneoN.webp"` en ese torneo de `datos/torneos.json`.
 
 ### Imágenes: PNG → WebP

@@ -5,7 +5,7 @@
    - fuentes de Google: caché sin caducidad
    Aumenta SHELL_VERSION al cambiar el contenido de la cáscara.
 */
-const SHELL_VERSION = 'v8';
+const SHELL_VERSION = 'v9';
 const CACHE_SHELL = `xyz-shell-${SHELL_VERSION}`;
 const CACHE_STATIC = `xyz-static-${SHELL_VERSION}`;
 // Imágenes y datos de cartas de YGOPRODeck: se conservan entre versiones
@@ -142,8 +142,8 @@ self.addEventListener('fetch', (event) => {
     // Otros orígenes (YouTube, etc.): sin tocar
     if (url.origin !== location.origin) return;
 
-    // Datos de torneos: red primero para ver los resultados recién publicados
-    if (url.pathname.includes('/datos/')) {
+    // Datos de torneos y banlist: red primero para ver lo recién publicado
+    if (url.pathname.includes('/datos/') || url.pathname.includes('/banlist/')) {
         event.respondWith(
             fetch(request)
                 .then((response) => {

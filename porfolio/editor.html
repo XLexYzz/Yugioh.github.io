@@ -7,9 +7,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Big+Shoulders+Display:wght@700;800;900&display=swap" />
     <title>Yu-Gi-Oh! XYZ - Panel de organizadores</title>
-    <meta name="description" content="Panel de organizadores de Yu-Gi-Oh! XYZ: torneos, inscripciones, resultados y tierlist." />
+    <meta name="description" content="Panel de organizadores de Yu-Gi-Oh! XYZ: torneos, inscripciones, resultados, tierlist y banlist." />
     <meta property="og:title" content="Yu-Gi-Oh! XYZ - Panel de organizadores" />
-    <meta property="og:description" content="Panel de organizadores de Yu-Gi-Oh! XYZ: torneos, inscripciones, resultados y tierlist." />
+    <meta property="og:description" content="Panel de organizadores de Yu-Gi-Oh! XYZ: torneos, inscripciones, resultados, tierlist y banlist." />
     <meta property="og:type" content="website" />
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#0f0e1c" />
@@ -60,7 +60,7 @@
     <section class="section">
         <div class="section-head">
             <h1>Panel de organizadores</h1>
-            <p>Crea torneos, apunta a los participantes, genera el cuadro y marca los resultados; añade decks a la tierlist. Todo se guarda en este navegador como borrador hasta que lo publicas en GitHub.</p>
+            <p>Crea torneos, apunta a los participantes, genera el cuadro y marca los resultados; añade decks a la tierlist y actualiza la banlist. Todo se guarda en este navegador como borrador hasta que lo publicas en GitHub.</p>
         </div>
 
         <div class="ed-bar">
@@ -77,6 +77,7 @@
         <div class="adm-tabs" role="tablist" aria-label="Secciones del panel">
             <button type="button" role="tab" id="tab-torneos" aria-controls="panel-torneos" aria-selected="true">Torneos</button>
             <button type="button" role="tab" id="tab-tierlist" aria-controls="panel-tierlist" aria-selected="false" tabindex="-1">Tierlist</button>
+            <button type="button" role="tab" id="tab-banlist" aria-controls="panel-banlist" aria-selected="false" tabindex="-1">Banlist</button>
             <button type="button" role="tab" id="tab-publicar" aria-controls="panel-publicar" aria-selected="false" tabindex="-1">Publicar <span class="tier-count" id="edPendingCount" hidden></span></button>
         </div>
 
@@ -167,6 +168,62 @@
             </div>
         </div>
 
+        <!-- ================= BANLIST ================= -->
+        <div class="adm-panel" id="panel-banlist" role="tabpanel" aria-labelledby="tab-banlist" hidden>
+            <div class="adm-card">
+                <div class="adm-card-head">
+                    <h2>Subir una banlist nueva</h2>
+                    <p class="adm-hint">Sustituye la banlist entera por un archivo <code>.lflist.conf</code> (EDOPro, YGO Omega, BanlistBuilder…). Antes de aplicarla verás qué cambia.</p>
+                </div>
+                <div class="adm-grid">
+                    <label class="adm-field adm-file">
+                        <span>Archivo .lflist.conf</span>
+                        <input type="file" id="banFile" accept=".conf,.lflist,.txt,text/plain" />
+                    </label>
+                    <label class="adm-field">
+                        <span>…o pega su contenido</span>
+                        <textarea id="banPaste" rows="3" placeholder="!Banlist&#10;#forbidden&#10;27204311 0 --Nibiru, the Primal Being"></textarea>
+                    </label>
+                </div>
+                <div class="ed-row-actions">
+                    <button type="button" class="button button-secondary" id="banPasteApply">Usar el texto pegado</button>
+                </div>
+                <div class="ban-import" id="banImport" hidden></div>
+            </div>
+
+            <div class="adm-card">
+                <div class="adm-card-head">
+                    <h2>Añadir o cambiar una carta</h2>
+                    <p class="adm-hint">Busca por nombre en inglés (o pega su ID) y elige cuántas copias se permiten.</p>
+                </div>
+                <label class="adm-field">
+                    <span>Carta</span>
+                    <input type="search" id="banFind" placeholder="Ej.: Ash Blossom" autocomplete="off" />
+                </label>
+                <ul class="ban-results" id="banResults" aria-live="polite"></ul>
+            </div>
+
+            <div class="adm-card" id="banDiffCard" hidden>
+                <div class="adm-card-head">
+                    <h2>Cambios respecto a la publicada</h2>
+                    <button type="button" class="button button-secondary" id="banUndoAll">Deshacer todos</button>
+                </div>
+                <ul class="ban-diff" id="banDiff"></ul>
+            </div>
+
+            <div class="adm-card">
+                <div class="adm-card-head">
+                    <h2>Banlist actual <span class="tier-count" id="banTotal"></span></h2>
+                    <button type="button" class="button button-secondary" id="banDownload">Descargar .lflist.conf</button>
+                </div>
+                <div class="adm-grid ban-tools">
+                    <label class="adm-field"><span>Nombre de la lista</span><input id="banTitle" maxlength="60" /></label>
+                    <label class="adm-field"><span>Filtrar</span><input type="search" id="banFilterList" placeholder="Buscar en la banlist…" autocomplete="off" /></label>
+                </div>
+                <div class="ban-edit" id="banList"></div>
+            </div>
+        </div>
+
         <!-- ================= PUBLICAR ================= -->
         <div class="adm-panel" id="panel-publicar" role="tabpanel" aria-labelledby="tab-publicar" hidden>
             <div class="adm-card">
@@ -209,10 +266,11 @@
 
             <div class="adm-card">
                 <h2>Sin GitHub</h2>
-                <p class="adm-hint">También puedes descargar los archivos y subirlos a mano a la carpeta <code>datos/</code> del repositorio (y las imágenes nuevas a <code>tierlist/</code>).</p>
+                <p class="adm-hint">También puedes descargar los archivos y subirlos a mano a la carpeta <code>datos/</code> del repositorio (las imágenes nuevas a <code>tierlist/</code> y la banlist a <code>banlist/Untitled Banlist.lflist.conf</code>).</p>
                 <div class="ed-row-actions">
                     <button type="button" class="button button-secondary" id="dlTorneos">Descargar torneos.json</button>
                     <button type="button" class="button button-secondary" id="dlTierlist">Descargar tierlist.js</button>
+                    <button type="button" class="button button-secondary" id="dlBanlist">Descargar la banlist</button>
                 </div>
             </div>
         </div>

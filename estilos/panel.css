@@ -3,9 +3,11 @@
 .adm-tabs {
     display: flex;
     gap: 0.25rem;
-    margin: 1.5rem 0 1rem;
+    /* margin auto: centrada con el resto de la sección (.section > *) */
+    margin: 1.5rem auto 1rem;
     border-bottom: 1px solid var(--rule);
     overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .adm-tabs [role="tab"] {
@@ -33,7 +35,7 @@
     position: absolute;
     left: 0.75rem;
     right: 0.75rem;
-    bottom: -1px;
+    bottom: 0;
     height: 3px;
     border-radius: 3px 3px 0 0;
     background: var(--gold);
@@ -344,6 +346,205 @@
     font-weight: 700;
 }
 
+/* ---------- Banlist ---------- */
+.ban-s0 { --ban-color: var(--red); }
+.ban-s1 { --ban-color: var(--orange); }
+.ban-s2 { --ban-color: var(--cyan); }
+.ban-s3 { --ban-color: var(--green); }
+
+.ban-import {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    border: 1px dashed var(--rule);
+    border-radius: var(--radius-sm);
+}
+
+.ban-results {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+    list-style: none;
+}
+
+.ban-result {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.35rem;
+    border-radius: var(--radius-sm);
+}
+
+.ban-result:hover {
+    background: var(--stage-2);
+}
+
+.ban-result img,
+.ban-noimg {
+    width: 42px;
+    height: 61px;
+    border-radius: 3px;
+    background: #000;
+    object-fit: cover;
+}
+
+.ban-result-info {
+    display: grid;
+    min-width: 0;
+}
+
+.ban-result-info span {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.ban-choice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.ban-choice button {
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: var(--stage-2);
+    color: var(--text);
+    font: 600 0.85rem/1 var(--body);
+    cursor: pointer;
+}
+
+.ban-choice button:hover {
+    border-color: var(--ban-color);
+}
+
+.ban-choice button[aria-pressed="true"] {
+    border-color: var(--ban-color);
+    background: var(--ban-color);
+    color: var(--ink);
+}
+
+.ban-diff {
+    display: grid;
+    gap: 0.3rem;
+    list-style: none;
+}
+
+.ban-diff li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.2rem 0.5rem;
+}
+
+.ban-from {
+    color: var(--muted);
+    text-decoration: line-through;
+}
+
+.ban-to {
+    color: var(--ban-color);
+    font-weight: 700;
+}
+
+.ban-undo {
+    margin-left: auto;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.ban-undo:hover {
+    color: var(--text);
+    border-color: var(--cyan);
+}
+
+.ban-tools {
+    margin-bottom: 1rem;
+}
+
+.ban-edit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    align-items: start;
+}
+
+.ban-col h3 {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 2px solid var(--ban-color);
+    font: 800 1.2rem/1 var(--display);
+    text-transform: uppercase;
+}
+
+.ban-col-0 { --ban-color: var(--red); }
+.ban-col-1 { --ban-color: var(--orange); }
+.ban-col-2 { --ban-color: var(--cyan); }
+
+.ban-col ul {
+    display: grid;
+    gap: 0.15rem;
+    list-style: none;
+}
+
+.ban-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 28px;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.3rem;
+    border-radius: 6px;
+}
+
+.ban-row:hover {
+    background: var(--stage-2);
+}
+
+.ban-row.is-changed {
+    box-shadow: inset 3px 0 0 var(--gold);
+    background: color-mix(in srgb, var(--gold) 8%, transparent);
+}
+
+.ban-row a {
+    overflow: hidden;
+    color: var(--text);
+    font-size: 0.92rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ban-row select {
+    padding: 0.2rem 0.3rem;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--ink);
+    color: var(--text);
+    font-size: 0.8rem;
+}
+
+.ban-x {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    color: var(--muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.ban-x:hover {
+    background: color-mix(in srgb, var(--red) 20%, transparent);
+    color: var(--text);
+}
+
 /* ---------- Publicar ---------- */
 .adm-changes {
     display: grid;
@@ -435,5 +636,13 @@
 
     .ed-match {
         grid-template-columns: minmax(0, 1fr) 34px 34px minmax(0, 1fr) 0;
+    }
+
+    .ban-result {
+        grid-template-columns: 42px minmax(0, 1fr);
+    }
+
+    .ban-choice {
+        grid-column: 1 / -1;
     }
 }

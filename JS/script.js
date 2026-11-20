@@ -21,15 +21,45 @@ function rutaBase() {
     return window.location.pathname.includes('/porfolio/') ? '../' : './';
 }
 
-function descargarBanlist() {
+// Borrador de la banlist del panel (texto .lflist.conf) y casilla "Ver la web con mis cambios"
+const BANLIST_BORRADOR_KEY = 'xyz-banlist-borrador';
+
+function banlistBorrador() {
+    try {
+        if (localStorage.getItem('xyz-usar-borrador') !== 'true') return null;
+        const texto = JSON.parse(localStorage.getItem(BANLIST_BORRADOR_KEY) || 'null');
+        return typeof texto === 'string' && texto ? texto : null;
+    } catch {
+        return null;
+    }
+}
+
+// Texto de la banlist: el borrador si se está previsualizando; si no, siempre la última publicada
+async function textoBanlist() {
+    const borrador = banlistBorrador();
+    if (borrador) return borrador;
+    const r = await fetch(`${rutaBase()}banlist/${encodeURIComponent(BANLIST_FILE)}`, { cache: 'no-cache' });
+    if (!r.ok) throw new Error(r.status);
+    return r.text();
+}
+
+async function descargarBanlist() {
+    let url, temporal = false;
+    try {
+        url = URL.createObjectURL(new Blob([await textoBanlist()], { type: 'text/plain' }));
+        temporal = true;
+    } catch {
+        url = `${rutaBase()}banlist/${BANLIST_FILE}`;
+    }
     const enlace = document.createElement('a');
-    enlace.href = `${rutaBase()}banlist/${BANLIST_FILE}`;
+    enlace.href = url;
     enlace.download = '!XYZ-banlist.lflist.conf';
     document.body.appendChild(enlace);
     enlace.click();
     enlace.remove();
+    if (temporal) setTimeout(() => URL.revokeObjectURL(url), 1000);
 
-    mostrarToast('¡Descarga de la banlist iniciada!');
+    mostrarToast(banlistBorrador() ? 'Descargando tu borrador de la banlist (sin publicar)' : '¡Descarga de la banlist iniciada!');
 }
 
 function highlightActiveMenu() {
@@ -327,12 +357,36 @@ const BAN_STATUS = {
     2: { titulo: 'Semi-limitadas', clase: 'semi', copias: '2 copias', slug: 'semilimitadas' },
 };
 
-// Formato .lflist.conf: "<id> <copias> --<nombre>"
+// Formato .lflist.conf: "<id> <copias> --<nombre>" (el nombre es opcional; 3 copias = sin límite)
 function parseBanlist(texto) {
-    return texto.split(/\r?\n/)
-        .map(linea => linea.match(/^(\d+)\s+(\d)\s*--\s*(.+)$/))
-        .filter(Boolean)
-        .map(([, id, status, name]) => ({ id, status: Number(status), name: name.trim() }));
+    const porId = new Map();
+    texto.split(/\r?\n/).forEach(linea => {
+        const m = linea.trim().match(/^(\d+)\s+(\d)\b\s*(?:--\s*(.*))?$/);
+        if (!m) return;
+        const [, id, status, name] = m;
+        if (Number(status) > 2) porId.delete(id);
+        else porId.set(id, { id, status: Number(status), name: (name || '').trim() || `ID ${id}` });
+    });
+    return [...porId.values()];
+}
+
+// "Actualizada el ..." con la fecha del último commit que tocó la banlist
+async function mostrarFechaBanlist() {
+    const p = document.getElementById('banUpdated');
+    if (!p) return;
+    if (banlistBorrador()) {
+        p.textContent = 'Estás viendo tu borrador del panel, sin publicar.';
+        p.hidden = false;
+        return;
+    }
+    try {
+        const r = await fetch(`https://api.github.com/repos/XLexYzz/Yugioh.github.io/commits?path=${encodeURIComponent(`banlist/${BANLIST_FILE}`)}&per_page=1`);
+        if (!r.ok) return;
+        const fecha = (await r.json())[0]?.commit?.committer?.date;
+        if (!fecha) return;
+        p.textContent = `Última actualización: ${new Date(fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}.`;
+        p.hidden = false;
+    } catch { /* sin conexión o sin cuota de la API: no se muestra */ }
 }
 
 async function setupBanlistViewer() {
@@ -345,13 +399,12 @@ async function setupBanlistViewer() {
     let selected = 'all';
 
     try {
-        const response = await fetch(`${rutaBase()}banlist/${encodeURIComponent(BANLIST_FILE)}`);
-        if (!response.ok) throw new Error(response.status);
-        cards = parseBanlist(await response.text());
+        cards = parseBanlist(await textoBanlist());
     } catch {
         view.innerHTML = '<p class="empty-state">No se pudo cargar la banlist aquí. Puedes descargarla con el botón de arriba.</p>';
         return;
     }
+    mostrarFechaBanlist();
 
     buttons.forEach(button => {
         const status = button.dataset.status;

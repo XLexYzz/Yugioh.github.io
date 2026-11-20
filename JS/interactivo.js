@@ -14,11 +14,7 @@ const XYZ = (() => {
     // Map id -> estado (0 prohibida, 1 limitada, 2 semi). Si no está, se permite a 3.
     function banlist() {
         if (!banlistPromise) {
-            banlistPromise = fetch(`${rutaBase()}banlist/${encodeURIComponent(BANLIST_FILE)}`)
-                .then(r => {
-                    if (!r.ok) throw new Error(r.status);
-                    return r.text();
-                })
+            banlistPromise = textoBanlist()
                 .then(texto => parseBanlist(texto))
                 .catch(() => []);
         }

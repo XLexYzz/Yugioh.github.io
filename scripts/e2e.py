@@ -91,7 +91,8 @@ with sync_playwright() as p:
     page.evaluate("localStorage.removeItem('xyz-tiermaker-v1')")
     page.reload(); page.wait_for_load_state("networkidle")
     total = page.locator(".tm-pool .tm-chip").count()
-    check(total == 77, f"77 decks en el pool ({total})")
+    n_decks = open(os.path.join(RAIZ, "datos", "tierlist.js"), encoding="utf-8").read().count('"imagen":')
+    check(total == n_decks, f"{n_decks} decks en el pool ({total})")
     page.evaluate("window.scrollTo({top: document.querySelector('#tiermaker').getBoundingClientRect().top + scrollY - 160, behavior: 'instant'})")
     page.wait_for_timeout(300)
     chip = page.locator(".tm-pool .tm-chip").first
@@ -260,7 +261,7 @@ with sync_playwright() as p:
     open(ruta_png, "wb").write(png(300, 160, (200, 40, 90)))
 
     def limpiar_panel():
-        page.evaluate("""['xyz-torneos-borrador','xyz-tierlist-borrador','xyz-imagenes-pendientes','xyz-usar-borrador','xyz-borrador-base','xyz-github']
+        page.evaluate("""['xyz-torneos-borrador','xyz-tierlist-borrador','xyz-imagenes-pendientes','xyz-usar-borrador','xyz-borrador-base','xyz-github','xyz-banlist-borrador']
             .forEach(k => localStorage.removeItem(k))""")
 
     page.goto(f"{BASE}/porfolio/editor.html"); page.wait_for_load_state("networkidle")
@@ -316,8 +317,34 @@ with sync_playwright() as p:
     page.click("#tlAddForm button[type=submit]")
     check(page.locator(".tl-row", has_text="").filter(has=page.locator(".tl-new")).count() == 1, "panel: deck nuevo en la tierlist")
 
+    # Banlist: subir un archivo nuevo y añadir una carta buscándola (API de cartas simulada)
+    BAN_RUTA = os.path.join(RAIZ, "banlist", "Untitled Banlist.lflist.conf")
+    ban_orig = open(BAN_RUTA, encoding="utf-8").read()
+    ruta_ban = os.path.join(OUT, "nueva.lflist.conf")
+    open(ruta_ban, "w", encoding="utf-8", newline="\r\n").write(ban_orig.replace("27204311 0 --Nibiru", "27204311 1 --Nibiru"))
+
+    def ygopro(route):
+        route.fulfill(status=200, content_type="application/json", body=json.dumps({"data": [
+            {"id": 14558127, "name": "Ash Blossom & Joyous Spring", "type": "Tuner Monster",
+             "card_images": [{"id": 14558127, "image_url_small": ""}]}]}))
+    page.route("https://db.ygoprodeck.com/**", ygopro)
+    page.click("#tab-banlist")
+    page.set_input_files("#banFile", ruta_ban)
+    page.wait_for_selector("#banImportApply")
+    check("cambian 1 carta" in page.inner_text("#banImport"), f"banlist: vista previa del archivo subido ({page.inner_text('#banImport')[:90]!r})")
+    page.click("#banImportApply")
+    page.fill("#banFind", "Ash Blossom")
+    page.wait_for_selector(".ban-result [data-n='1']")
+    page.click(".ban-result [data-n='1']")
+    check(page.locator("#banDiff li").count() == 2, "banlist: dos cambios (archivo + carta añadida)")
+    check(page.locator(".ban-col-1 .ban-row", has_text="Ash Blossom").count() == 1, "banlist: carta añadida en Limitadas")
+    page.unroute("https://db.ygoprodeck.com/**")
+
     # Ver la web con los cambios
     page.check("#edPreview")
+    page.goto(f"{BASE}/porfolio/banlist.html"); page.wait_for_load_state("networkidle")
+    page.wait_for_selector(".ban-column")
+    check("Ash Blossom" in page.inner_text(".ban-limited") and "borrador" in page.inner_text("#banUpdated"), "web con borrador: banlist con la carta nueva")
     page.goto(f"{BASE}/porfolio/tierlist.html"); page.wait_for_load_state("networkidle")
     fig_nueva = page.locator(".tierlist-category[data-tier=grade1] figure", has_text="Deck de prueba")
     check(fig_nueva.count() == 1 and fig_nueva.locator("img").get_attribute("src").startswith("data:image/"), "web con borrador: deck nuevo en la tierlist")
@@ -332,10 +359,11 @@ with sync_playwright() as p:
     page.screenshot(path=f"{OUT}/d-torneo-nuevo.png")
 
     # Publicar con un GitHub simulado (no toca el repositorio real)
-    enviados = {"blobs": 0, "rutas": [], "patch": False}
+    enviados = {"blobs": 0, "rutas": [], "patch": False, "textos": []}
     archivos = {
         "datos/torneos.json": open(os.path.join(RAIZ, "datos", "torneos.json"), "rb").read(),
         "datos/tierlist.js": open(os.path.join(RAIZ, "datos", "tierlist.js"), "rb").read(),
+        "banlist/Untitled%20Banlist.lflist.conf": open(BAN_RUTA, "rb").read(),
     }
 
     def github(route):
@@ -356,6 +384,10 @@ with sync_playwright() as p:
             return ok({"tree": {"sha": "t0"}})
         if url.endswith("/git/blobs"):
             enviados["blobs"] += 1
+            try:
+                enviados["textos"].append(base64.b64decode(json.loads(req.post_data)["content"]).decode("utf-8"))
+            except UnicodeDecodeError:
+                pass
             return ok({"sha": f"b{enviados['blobs']}"})
         if url.endswith("/git/trees"):
             enviados["rutas"] = [x["path"] for x in json.loads(req.post_data)["tree"]]
@@ -370,7 +402,7 @@ with sync_playwright() as p:
     page.route("https://api.github.com/**", github)
     page.goto(f"{BASE}/porfolio/editor.html#publicar"); page.wait_for_load_state("networkidle")
     page.wait_for_selector("#pubChanges li")
-    check(page.locator("#pubChanges li").count() == 3, "panel: tres cambios pendientes (torneos, tierlist, imagen)")
+    check(page.locator("#pubChanges li").count() == 4, "panel: cuatro cambios pendientes (torneos, tierlist, banlist, imagen)")
     page.fill("#ghToken", "token-de-prueba")
     page.click("#ghForm button[type=submit]")
     page.wait_for_function("document.getElementById('ghStatus').textContent.includes('permiso')")
@@ -379,7 +411,13 @@ with sync_playwright() as p:
     page.click("#pubPublish")
     page.wait_for_function("document.getElementById('pubResult').textContent.startsWith('Publicado') || document.getElementById('pubResult').textContent.startsWith('No se ha')")
     check(page.inner_text("#pubResult").startswith("Publicado"), f"panel: publicar ({page.inner_text('#pubResult')[:80]})")
-    check(sorted(enviados["rutas"]) == ["datos/tierlist.js", "datos/torneos.json", "tierlist/deck-de-prueba.webp"], f"panel: un commit con los 3 archivos ({enviados['rutas']})")
+    check(sorted(enviados["rutas"]) == ["banlist/Untitled Banlist.lflist.conf", "datos/tierlist.js", "datos/torneos.json", "tierlist/deck-de-prueba.webp"], f"panel: un commit con los 4 archivos ({enviados['rutas']})")
+    check(page.evaluate("localStorage.getItem('xyz-banlist-borrador') === null"), "panel: borrador de la banlist limpio tras publicar")
+    ban_pub = next((x for x in enviados["textos"] if x.startswith("!")), "")
+    lineas_pub = ban_pub.split(chr(13) + chr(10))
+    check("14558127 1 --Ash Blossom & Joyous Spring" in lineas_pub and "27204311 1 --Nibiru, the Primal Being" in lineas_pub
+          and len(lineas_pub) == len(ban_orig.splitlines()) + 2,
+          "panel: la banlist publicada lleva los dos cambios y el mismo formato")
     check(enviados["patch"], "panel: actualiza la rama")
     check(page.evaluate("localStorage.getItem('xyz-torneos-borrador') === null && localStorage.getItem('xyz-imagenes-pendientes') === null"), "panel: borrador limpio tras publicar")
     page.unroute("https://api.github.com/**")

@@ -12,7 +12,8 @@
     let torneos = null;     // { version, nota, torneos: [...] }
     let tier = null;        // { niveles, decks }
     let imagenes = {};      // archivo -> dataURL (pendientes de publicar)
-    let publicado = { torneos: '', tierlist: '' };  // texto publicado (para saber si hay cambios)
+    let ban = null;         // { titulo, cartas: [{ id, status, name }] }
+    let publicado = { torneos: '', tierlist: '', banlist: '' };  // texto publicado (para saber si hay cambios)
     let actual = null;
     let resaltado = null;
 
@@ -42,10 +43,26 @@
         return L.join('\n');
     }
 
+    // Banlist en formato .lflist.conf (con CRLF, como el archivo del repositorio)
+    const BAN_SECCIONES = [[0, 'forbidden'], [1, 'limited'], [2, 'semi-limited']];
+    function parsearBan(texto) {
+        const titulo = (texto.split(/\r?\n/).find(l => l.trim().startsWith('!')) || '!XYZ Banlist').trim();
+        return { titulo, cartas: parseBanlist(texto) };
+    }
+    function serializarBan(b) {
+        const L = [b.titulo.startsWith('!') ? b.titulo : `!${b.titulo}`];
+        BAN_SECCIONES.forEach(([n, nombre]) => {
+            L.push(`#${nombre}`);
+            b.cartas.filter(c => c.status === n).forEach(c => L.push(`${c.id} ${n} --${c.name}`));
+        });
+        return L.join('\r\n') + '\r\n';
+    }
+
     function cambios() {
         return {
             torneos: serializarTorneos() !== publicado.torneos,
             tierlist: TL.serializar(tier) !== publicado.tierlist,
+            banlist: diffBan().length > 0 || ban.titulo !== parsearBan(publicado.banlist).titulo,
             imagenes: Object.keys(imagenes).length,
         };
     }
@@ -57,12 +74,16 @@
             else localStorage.removeItem(TORNEOS.BORRADOR_KEY);
             if (c.tierlist) XYZ.guardar(TL.BORRADOR_KEY, tier);
             else localStorage.removeItem(TL.BORRADOR_KEY);
+            if (c.banlist) XYZ.guardar(BANLIST_BORRADOR_KEY, serializarBan(ban));
+            else localStorage.removeItem(BANLIST_BORRADOR_KEY);
             localStorage.setItem(TL.IMAGENES_KEY, JSON.stringify(imagenes));
         } catch {
             mostrarToast('El navegador no deja guardar más: publica los cambios o quita alguna imagen');
         }
-        if (!XYZ.leer(BASE_KEY, null)) XYZ.guardar(BASE_KEY, { torneos: huella(publicado.torneos), tierlist: huella(publicado.tierlist) });
-        if (!c.torneos && !c.tierlist && !c.imagenes) {
+        const base = XYZ.leer(BASE_KEY, null);
+        if (!base) XYZ.guardar(BASE_KEY, { torneos: huella(publicado.torneos), tierlist: huella(publicado.tierlist), banlist: huella(publicado.banlist) });
+        else if (!base.banlist) XYZ.guardar(BASE_KEY, { ...base, banlist: huella(publicado.banlist) });
+        if (!c.torneos && !c.tierlist && !c.banlist && !c.imagenes) {
             try { localStorage.removeItem(BASE_KEY); } catch { /* nada */ }
         }
         estado();
@@ -70,7 +91,7 @@
 
     function estado() {
         const c = cambios();
-        const n = (c.torneos ? 1 : 0) + (c.tierlist ? 1 : 0) + c.imagenes;
+        const n = (c.torneos ? 1 : 0) + (c.tierlist ? 1 : 0) + (c.banlist ? 1 : 0) + c.imagenes;
         const hay = n > 0;
         $('edStatus').innerHTML = hay
             ? `<strong>Tienes cambios sin publicar</strong> guardados en este navegador. Revísalos y pulsa Publicar.`
@@ -93,20 +114,27 @@
     /* =========================================================
        CARGA
        ========================================================= */
+    const RUTA_BANLIST = `banlist/${BANLIST_FILE}`;
+
     async function cargarPublicado() {
         if (GH.listo()) {
             try {
-                const [t, l] = await Promise.all([GH.leerArchivo('datos/torneos.json'), GH.leerArchivo('datos/tierlist.js')]);
-                return { torneos: t.texto, tierlist: l.texto, origen: 'GitHub' };
+                const [t, l, b] = await Promise.all([GH.leerArchivo('datos/torneos.json'), GH.leerArchivo('datos/tierlist.js'), GH.leerArchivo(RUTA_BANLIST)]);
+                return { torneos: t.texto, tierlist: l.texto, banlist: b.texto, origen: 'GitHub' };
             } catch (e) {
                 mostrarToast(`No se ha podido leer de GitHub: ${e.message} Se usan los datos de la web.`);
             }
         }
-        const [t, l] = await Promise.all([
-            fetch(`${rutaBase()}datos/torneos.json`, { cache: 'no-cache' }).then(r => r.text()),
-            fetch(`${rutaBase()}datos/tierlist.js`, { cache: 'no-cache' }).then(r => r.text()),
+        const leer = (ruta) => fetch(`${rutaBase()}${ruta}`, { cache: 'no-cache' }).then(r => {
+            if (!r.ok) throw new Error(`${ruta}: ${r.status}`);
+            return r.text();
+        });
+        const [t, l, b] = await Promise.all([
+            leer('datos/torneos.json'),
+            leer('datos/tierlist.js'),
+            leer(RUTA_BANLIST.split('/').map(encodeURIComponent).join('/')),
         ]);
-        return { torneos: t, tierlist: l, origen: 'web' };
+        return { torneos: t, tierlist: l, banlist: b, origen: 'web' };
     }
 
     async function iniciar() {
@@ -125,8 +153,10 @@
         // El texto "publicado" se normaliza con nuestro propio formato para comparar
         const tmpT = torneos, tmpL = tier;
         torneos = tPub; tier = lPub;
-        publicado = { torneos: serializarTorneos(), tierlist: TL.serializar(lPub) };
+        publicado = { torneos: serializarTorneos(), tierlist: TL.serializar(lPub), banlist: serializarBan(parsearBan(base.banlist)) };
         torneos = tmpT; tier = tmpL;
+        const banGuardada = XYZ.leer(BANLIST_BORRADOR_KEY, null);
+        ban = parsearBan(typeof banGuardada === 'string' ? banGuardada : base.banlist);
 
         // Un borrador antiguo no debe ocultar lo publicado después: se añaden los
         // torneos y decks que falten (sin tocar lo que el organizador haya cambiado)
@@ -153,13 +183,12 @@
 
         pintarGH();
         pintarTodo();
-        if (torneos !== tPub || tier !== lPub) guardar();   // si el borrador queda igual que lo publicado, se elimina
+        if (torneos !== tPub || tier !== lPub || banGuardada) guardar();   // si el borrador queda igual que lo publicado, se elimina
         if (añadidos.length) {
             mostrarToast(`Añadido a tu borrador lo publicado después: ${añadidos.slice(0, 4).join(', ')}${añadidos.length > 4 ? '…' : ''}`);
         }
         estado();
-        if (location.hash === '#tierlist') elegirTab('tierlist');
-        if (location.hash === '#publicar') elegirTab('publicar');
+        if (['#tierlist', '#banlist', '#publicar'].includes(location.hash)) elegirTab(location.hash.slice(1));
     }
 
     function pintarTodo() {
@@ -168,12 +197,13 @@
         pintarTorneo();
         pintarNombres();
         pintarTierlist();
+        pintarBanlist();
     }
 
     /* =========================================================
        PESTAÑAS
        ========================================================= */
-    const tabs = ['torneos', 'tierlist', 'publicar'];
+    const tabs = ['torneos', 'tierlist', 'banlist', 'publicar'];
     function elegirTab(id) {
         tabs.forEach(t => {
             const sel = t === id;
@@ -796,12 +826,260 @@
     /* =========================================================
        PUBLICAR
        ========================================================= */
+    /* =========================================================
+       BANLIST
+       ========================================================= */
+    const API_CARTAS = 'https://db.ygoprodeck.com/api/v7/cardinfo.php';
+    const BAN_NOMBRES = { 0: 'Prohibida', 1: 'Limitada', 2: 'Semi-limitada', 3: 'Sin límite' };
+    const mapaBan = (cartas) => new Map(cartas.map(c => [c.id, c]));
+    const banPub = () => mapaBan(parsearBan(publicado.banlist).cartas);
+    let banImportada = null;    // banlist subida, pendiente de confirmar
+    let resultados = [];        // última búsqueda en YGOPRODeck
+
+    // Diferencias entre dos banlists: [{ id, name, antes, despues }] (3 = sin límite)
+    function diffBan(cartas = ban.cartas, antes = banPub()) {
+        const ahora = mapaBan(cartas);
+        const out = [];
+        ahora.forEach((c, id) => {
+            const a = antes.get(id)?.status ?? 3;
+            if (a !== c.status) out.push({ id, name: c.name, antes: a, despues: c.status });
+        });
+        antes.forEach((c, id) => { if (!ahora.has(id)) out.push({ id, name: c.name, antes: c.status, despues: 3 }); });
+        return out.sort((x, y) => x.name.localeCompare(y.name));
+    }
+
+    function ponerEstado(id, status, name) {
+        id = String(id);
+        const i = ban.cartas.findIndex(c => c.id === id);
+        if (status === 3) {
+            if (i >= 0) ban.cartas.splice(i, 1);
+        } else if (i >= 0) {
+            ban.cartas[i].status = status;
+        } else {
+            ban.cartas.push({ id, status, name: name || `ID ${id}` });
+        }
+        guardar();
+        pintarBanlist();
+        pintarResultados();
+    }
+
+    const opcionesEstado = (actual) => [0, 1, 2, 3]
+        .map(n => `<option value="${n}"${n === actual ? ' selected' : ''}>${BAN_NOMBRES[n]}</option>`).join('');
+
+    function pintarBanlist() {
+        if (!ban) return;
+        if (document.activeElement !== $('banTitle')) $('banTitle').value = ban.titulo.replace(/^!/, '');
+        $('banTotal').textContent = ban.cartas.length;
+        const pub = banPub();
+        const q = normalizar($('banFilterList').value.trim());
+        $('banList').innerHTML = BAN_SECCIONES.map(([n]) => {
+            const lista = ban.cartas
+                .filter(c => c.status === n && (!q || normalizar(c.name).includes(q) || c.id.includes(q)))
+                .sort((a, b) => a.name.localeCompare(b.name));
+            const filas = lista.map(c => {
+                const cambiada = (pub.get(c.id)?.status ?? 3) !== c.status;
+                return `<li class="ban-row${cambiada ? ' is-changed' : ''}">
+                    <a href="https://ygoprodeck.com/card/?search=${encodeURIComponent(c.id)}" target="_blank" rel="noopener">${esc(c.name)}</a>
+                    <select data-estado="${esc(c.id)}" aria-label="Copias de ${esc(c.name)}">${opcionesEstado(c.status)}</select>
+                    <button type="button" class="ban-x" data-quitar="${esc(c.id)}" aria-label="Quitar ${esc(c.name)} de la banlist" title="Quitar (vuelve a 3 copias)">×</button>
+                </li>`;
+            }).join('');
+            return `<section class="ban-col ban-col-${n}">
+                <h3>${BAN_STATUS[n].titulo} <span class="tier-count">${lista.length}</span></h3>
+                <ul>${filas || '<li class="adm-hint">Ninguna</li>'}</ul>
+            </section>`;
+        }).join('');
+
+        const d = diffBan(ban.cartas, pub);
+        $('banDiffCard').hidden = !d.length;
+        $('banDiff').innerHTML = d.map(x => `<li>
+            <strong>${esc(x.name)}</strong>
+            <span class="ban-from">${BAN_NOMBRES[x.antes]}</span> → <span class="ban-to ban-s${x.despues}">${BAN_NOMBRES[x.despues]}</span>
+            <button type="button" class="ban-undo" data-deshacer="${esc(x.id)}">Deshacer</button>
+        </li>`).join('');
+    }
+
+    $('banList').addEventListener('change', (e) => {
+        const id = e.target.dataset.estado;
+        if (id) ponerEstado(id, Number(e.target.value));
+    });
+    $('banList').addEventListener('click', (e) => {
+        const id = e.target.closest('[data-quitar]')?.dataset.quitar;
+        if (!id) return;
+        const c = ban.cartas.find(x => x.id === id);
+        ponerEstado(id, 3);
+        mostrarToast(`${c?.name || id} sale de la banlist (3 copias)`);
+    });
+    $('banDiff').addEventListener('click', (e) => {
+        const id = e.target.closest('[data-deshacer]')?.dataset.deshacer;
+        if (!id) return;
+        const p = banPub().get(id);
+        ponerEstado(id, p ? p.status : 3, p?.name);
+    });
+    $('banUndoAll').addEventListener('click', () => {
+        if (!confirm('¿Deshacer todos los cambios de la banlist y volver a la publicada?')) return;
+        ban = parsearBan(publicado.banlist);
+        guardar();
+        pintarBanlist();
+        pintarResultados();
+    });
+    $('banFilterList').addEventListener('input', pintarBanlist);
+    $('banTitle').addEventListener('input', () => {
+        ban.titulo = `!${$('banTitle').value.trim() || 'XYZ Banlist'}`;
+        guardar();
+    });
+    $('banDownload').addEventListener('click', () => descargar(BANLIST_FILE, serializarBan(ban), 'text/plain'));
+
+    /* ----- Buscar una carta y elegir sus copias ----- */
+    let esperaBusqueda = null;
+    let busqueda = 0;
+    $('banFind').addEventListener('input', () => {
+        clearTimeout(esperaBusqueda);
+        esperaBusqueda = setTimeout(buscarCarta, 350);
+    });
+    $('banFind').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); clearTimeout(esperaBusqueda); buscarCarta(); }
+    });
+
+    async function buscarCarta() {
+        const q = $('banFind').value.trim();
+        const yo = ++busqueda;
+        const esId = /^\d+$/.test(q);
+        if (!esId && q.length < 3) {
+            resultados = [];
+            $('banResults').innerHTML = q ? '<li class="adm-hint">Escribe al menos 3 letras.</li>' : '';
+            return;
+        }
+        $('banResults').innerHTML = '<li class="adm-hint">Buscando…</li>';
+        let mensaje = '';
+        let cartas = [];
+        try {
+            const r = await fetch(`${API_CARTAS}?${esId ? 'id' : 'fname'}=${encodeURIComponent(q)}`);
+            if (r.ok) cartas = (await r.json()).data || [];
+            else if (r.status !== 400) mensaje = `YGOPRODeck ha respondido con un error (${r.status}).`;
+        } catch {
+            mensaje = 'No se ha podido conectar con YGOPRODeck. Comprueba la conexión.';
+        }
+        if (yo !== busqueda) return;   // ya hay una búsqueda más reciente
+        const nq = normalizar(q);
+        const orden = (c) => (normalizar(c.name) === nq ? 0 : normalizar(c.name).startsWith(nq) ? 1 : 2);
+        resultados = cartas
+            .sort((a, b) => orden(a) - orden(b) || a.name.localeCompare(b.name))
+            .slice(0, 12)
+            .map(c => ({ id: String(c.id), name: c.name, tipo: c.type, img: c.card_images?.[0]?.image_url_small || '' }));
+        if (!resultados.length) {
+            $('banResults').innerHTML = `<li class="adm-hint">${mensaje || 'No se ha encontrado ninguna carta con ese nombre. Prueba con el nombre en inglés o con su ID.'}</li>`;
+            return;
+        }
+        pintarResultados();
+    }
+
+    function pintarResultados() {
+        if (!resultados.length) return;
+        const actual = mapaBan(ban.cartas);
+        $('banResults').innerHTML = resultados.map(c => {
+            const st = actual.get(c.id)?.status ?? 3;
+            return `<li class="ban-result">
+                ${c.img ? `<img src="${esc(c.img)}" alt="" loading="lazy" width="42" height="61" />` : '<span class="ban-noimg"></span>'}
+                <div class="ban-result-info"><strong>${esc(c.name)}</strong><span>${esc(c.tipo || '')} · ID ${esc(c.id)}</span></div>
+                <div class="ban-choice" role="group" aria-label="Copias de ${esc(c.name)}">
+                    ${[0, 1, 2, 3].map(n => `<button type="button" class="ban-s${n}" data-poner="${esc(c.id)}" data-n="${n}" aria-pressed="${n === st}">${n === 3 ? '3 (sin límite)' : BAN_NOMBRES[n]}</button>`).join('')}
+                </div>
+            </li>`;
+        }).join('');
+    }
+
+    $('banResults').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-poner]');
+        if (!b) return;
+        const c = resultados.find(x => x.id === b.dataset.poner);
+        const n = Number(b.dataset.n);
+        const antes = mapaBan(ban.cartas).get(c.id)?.status ?? 3;
+        if (antes === n) return;
+        ponerEstado(c.id, n, c.name);
+        mostrarToast(`${c.name}: ${BAN_NOMBRES[antes]} → ${BAN_NOMBRES[n]}`);
+    });
+
+    /* ----- Subir o pegar una banlist completa ----- */
+    // Las líneas sin nombre ("12345 1") se completan con la API
+    async function completarNombres(cartas) {
+        const sin = cartas.filter(c => /^ID \d+$/.test(c.name));
+        for (let i = 0; i < sin.length; i += 40) {
+            const lote = sin.slice(i, i + 40);
+            try {
+                const r = await fetch(`${API_CARTAS}?id=${lote.map(c => c.id).join(',')}`);
+                if (!r.ok) continue;
+                const nombres = new Map();
+                ((await r.json()).data || []).forEach(d => (d.card_images || [{ id: d.id }]).forEach(img => nombres.set(String(img.id), d.name)));
+                lote.forEach(c => { if (nombres.has(c.id)) c.name = nombres.get(c.id); });
+            } catch { /* se quedan como "ID ..." */ }
+        }
+    }
+
+    async function prepararImportacion(texto) {
+        const caja = $('banImport');
+        caja.hidden = false;
+        const nueva = parsearBan(texto);
+        if (!nueva.cartas.length) {
+            banImportada = null;
+            caja.innerHTML = '<p class="adm-hint">No se ha encontrado ninguna carta. Cada línea debe tener la forma <code>27204311 0 --Nibiru, the Primal Being</code>.</p>';
+            return;
+        }
+        caja.innerHTML = '<p class="adm-hint">Leyendo la banlist…</p>';
+        await completarNombres(nueva.cartas);
+        banImportada = nueva;
+        const d = diffBan(nueva.cartas, mapaBan(ban.cartas));
+        const cuenta = (n) => nueva.cartas.filter(c => c.status === n).length;
+        const mostrar = d.slice(0, 60);
+        caja.innerHTML = `
+            <p><strong>${esc(nueva.titulo.replace(/^!/, ''))}</strong>: ${cuenta(0)} prohibidas, ${cuenta(1)} limitadas y ${cuenta(2)} semi-limitadas.
+            ${d.length ? `Respecto a tu banlist actual cambian <strong>${d.length}</strong> ${d.length === 1 ? 'carta' : 'cartas'}:` : 'Es igual que tu banlist actual.'}</p>
+            ${d.length ? `<ul class="ban-diff">${mostrar.map(x => `<li><strong>${esc(x.name)}</strong> <span class="ban-from">${BAN_NOMBRES[x.antes]}</span> → <span class="ban-to ban-s${x.despues}">${BAN_NOMBRES[x.despues]}</span></li>`).join('')}${d.length > mostrar.length ? `<li class="adm-hint">… y ${d.length - mostrar.length} más</li>` : ''}</ul>` : ''}
+            <div class="ed-row-actions">
+                <button type="button" class="button button-primary" id="banImportApply"${d.length || nueva.titulo !== ban.titulo ? '' : ' disabled'}>Sustituir la banlist por esta</button>
+                <button type="button" class="button button-secondary" id="banImportCancel">Cancelar</button>
+            </div>`;
+    }
+
+    $('banFile').addEventListener('change', async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        if (f.size > 1024 * 1024) { mostrarToast('El archivo es demasiado grande para ser una banlist'); return; }
+        await prepararImportacion(await f.text());
+        e.target.value = '';
+    });
+    $('banPasteApply').addEventListener('click', () => {
+        const t = $('banPaste').value;
+        if (!t.trim()) { $('banPaste').focus(); return; }
+        prepararImportacion(t);
+    });
+    $('banImport').addEventListener('click', (e) => {
+        if (e.target.id === 'banImportCancel') {
+            banImportada = null;
+            $('banImport').hidden = true;
+        }
+        if (e.target.id === 'banImportApply' && banImportada) {
+            ban = banImportada;
+            banImportada = null;
+            $('banImport').hidden = true;
+            $('banPaste').value = '';
+            guardar();
+            pintarBanlist();
+            pintarResultados();
+            mostrarToast('Banlist sustituida en tu borrador. Revisa los cambios y publícala.');
+        }
+    });
+
     function pintarCambios() {
-        if (!torneos || !tier) return;
+        if (!torneos || !tier || !ban) return;
         const c = cambios();
         const items = [];
         if (c.torneos) items.push('Torneos y resultados (<code>datos/torneos.json</code>)');
         if (c.tierlist) items.push('Tierlist (<code>datos/tierlist.js</code>)');
+        if (c.banlist) {
+            const n = diffBan().length;
+            items.push(`Banlist: ${n} ${n === 1 ? 'carta cambia' : 'cartas cambian'} (<code>${esc(RUTA_BANLIST)}</code>)`);
+        }
         Object.keys(imagenes).forEach(f => items.push(`Imagen nueva <code>tierlist/${esc(f)}</code>`));
         $('pubChanges').innerHTML = items.length ? items.map(x => `<li>${x}</li>`).join('') : '<li class="adm-hint">No hay nada pendiente.</li>';
         $('pubPublish').disabled = !items.length;
@@ -853,14 +1131,16 @@
             const c = cambios();
             // ¿Alguien ha publicado después de que empezaras a editar?
             const base = XYZ.leer(BASE_KEY, null);
-            const remoto = await Promise.all([GH.leerArchivo('datos/torneos.json'), GH.leerArchivo('datos/tierlist.js')]);
+            const remoto = await Promise.all([GH.leerArchivo('datos/torneos.json'), GH.leerArchivo('datos/tierlist.js'), GH.leerArchivo(RUTA_BANLIST)]);
             const remT = JSON.parse(remoto[0].texto);
             const remL = TL.parsear(remoto[1].texto);
             const tmpT = torneos, tmpL = tier;
             torneos = remT; tier = remL;
-            const remotoNorm = { torneos: serializarTorneos(), tierlist: TL.serializar(remL) };
+            const remotoNorm = { torneos: serializarTorneos(), tierlist: TL.serializar(remL), banlist: serializarBan(parsearBan(remoto[2].texto)) };
             torneos = tmpT; tier = tmpL;
-            const ajenos = base && ((c.torneos && huella(remotoNorm.torneos) !== base.torneos) || (c.tierlist && huella(remotoNorm.tierlist) !== base.tierlist));
+            const ajenos = base && ((c.torneos && huella(remotoNorm.torneos) !== base.torneos)
+                || (c.tierlist && huella(remotoNorm.tierlist) !== base.tierlist)
+                || (c.banlist && base.banlist && huella(remotoNorm.banlist) !== base.banlist));
             if (ajenos && !confirm('Alguien ha publicado cambios después de que empezaras a editar. Si sigues, los tuyos los sustituyen. ¿Publicar igualmente?')) {
                 $('pubResult').textContent = 'Publicación cancelada. Descarta tus cambios para cargar la versión nueva, o publica igualmente.';
                 return;
@@ -868,19 +1148,22 @@
             const archivos = [];
             if (c.torneos) archivos.push({ ruta: 'datos/torneos.json', texto: serializarTorneos() });
             if (c.tierlist) archivos.push({ ruta: 'datos/tierlist.js', texto: TL.serializar(tier) });
+            if (c.banlist) archivos.push({ ruta: RUTA_BANLIST, texto: serializarBan(ban) });
             Object.entries(imagenes).forEach(([f, url]) => {
                 if (tier.decks.some(d => d.imagen === f)) archivos.push({ ruta: `tierlist/${f}`, base64: url.split(',')[1] });
             });
-            const mensaje = $('pubMessage').value.trim() || 'Actualizar torneos y tierlist desde el panel';
+            const partes = [c.torneos && 'torneos', c.tierlist && 'tierlist', c.banlist && 'banlist'].filter(Boolean);
+            const mensaje = $('pubMessage').value.trim() || `Actualizar ${partes.join(', ').replace(/, ([^,]*)$/, ' y $1') || 'imágenes'} desde el panel`;
             const res = await GH.publicar(archivos, mensaje);
-            publicado = { torneos: serializarTorneos(), tierlist: TL.serializar(tier) };
+            publicado = { torneos: serializarTorneos(), tierlist: TL.serializar(tier), banlist: serializarBan(ban) };
             imagenes = {};
             try {
-                [TORNEOS.BORRADOR_KEY, TL.BORRADOR_KEY, TL.IMAGENES_KEY, BASE_KEY, TORNEOS.USAR_BORRADOR_KEY].forEach(k => localStorage.removeItem(k));
+                [TORNEOS.BORRADOR_KEY, TL.BORRADOR_KEY, TL.IMAGENES_KEY, BANLIST_BORRADOR_KEY, BASE_KEY, TORNEOS.USAR_BORRADOR_KEY].forEach(k => localStorage.removeItem(k));
             } catch { /* nada */ }
             $('pubMessage').value = '';
             $('pubResult').innerHTML = `Publicado. La web se actualiza en uno o dos minutos. <a href="${esc(res.url)}" target="_blank" rel="noopener">Ver el cambio en GitHub</a>`;
             pintarTierlist();
+            pintarBanlist();
             estado();
             mostrarToast('Publicado en GitHub');
         } catch (err) {
@@ -891,9 +1174,9 @@
     });
 
     $('pubDiscard').addEventListener('click', async () => {
-        if (!confirm('¿Descartar todos tus cambios sin publicar (torneos, tierlist e imágenes nuevas)?')) return;
+        if (!confirm('¿Descartar todos tus cambios sin publicar (torneos, tierlist, banlist e imágenes nuevas)?')) return;
         try {
-            [TORNEOS.BORRADOR_KEY, TL.BORRADOR_KEY, TL.IMAGENES_KEY, BASE_KEY, TORNEOS.USAR_BORRADOR_KEY].forEach(k => localStorage.removeItem(k));
+            [TORNEOS.BORRADOR_KEY, TL.BORRADOR_KEY, TL.IMAGENES_KEY, BANLIST_BORRADOR_KEY, BASE_KEY, TORNEOS.USAR_BORRADOR_KEY].forEach(k => localStorage.removeItem(k));
         } catch { /* nada */ }
         $('pubResult').textContent = '';
         await iniciar();
@@ -905,6 +1188,7 @@
         descargar('tierlist.js', TL.serializar(tier), 'text/javascript');
         if (Object.keys(imagenes).length) mostrarToast('Las imágenes nuevas solo se publican con GitHub conectado');
     });
+    $('dlBanlist').addEventListener('click', () => descargar(BANLIST_FILE, serializarBan(ban), 'text/plain'));
 
     window.addEventListener('hashchange', () => {
         const n = Number((location.hash.match(/^#torneo-(\d+)$/) || [])[1]);
@@ -913,7 +1197,7 @@
             elegirTab('torneos');
             pintarSelector();
             pintarTorneo();
-        } else if (location.hash === '#tierlist' || location.hash === '#publicar') {
+        } else if (['#tierlist', '#banlist', '#publicar'].includes(location.hash)) {
             elegirTab(location.hash.slice(1));
         }
     });
